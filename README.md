@@ -6,23 +6,23 @@ Thanks to Nomics (https://nomics.com) for their free API.
 
 Donations BTC: bc1qejj6y2gvya5rrun4sfsl08qdeyv36ndhm0ml85
 
-# AUTHOR
+## AUTHOR
 
 Created in 2019 by François Grabenstaetter <francoisgrabenstaetter@gmail.com>
 
-# LICENSE
+## LICENSE
 
 This program is distributed under the GNU GPL 3.0 License.
 
 For more informations: https://www.gnu.org/licenses/gpl-3.0.en.html
 
-# REQUIRED PACKAGES 
+## REQUIRED PACKAGES 
 
 - gtk (3.X)
 - python-gobject (3.X)
 - python (3.X)
 
-# INSTALL AND RUN
+## INSTALL AND RUN
 
 ```bash
 	sudo make
