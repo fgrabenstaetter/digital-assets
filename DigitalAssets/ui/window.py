@@ -43,7 +43,7 @@ class Window (Gtk.Window):
         self.sharePath = sharePath
         self.configPath = configPath
 
-        icon = GdkPixbuf.Pixbuf().new_from_file_at_scale(self.sharePath + 'icons/scalable/digital-assets.svg', 128, 128, True)
+        icon = GdkPixbuf.Pixbuf().new_from_file_at_scale(self.sharePath + 'img/BTC.svg', 128, 128, True)
         self.set_default_icon(icon)
 
         # keys

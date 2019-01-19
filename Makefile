@@ -1,3 +1,4 @@
+PYTHON_DIR_NAME = python$(shell python3 --version | cut -f 2 -d " " | cut -f 1,2 -d ".")
 DATA_DIR = data/
 
 RESOURCES_DIR = $(DATA_DIR)resources/
@@ -9,7 +10,7 @@ EXEC_FILE = digital-assets
 USER_RESOURCES_DIR = /usr/share/digital-assets/
 USER_ICONS_DIR = /usr/share/icons/hicolor/
 USER_DESKTOP_FILE_DIR = /usr/share/applications/
-USER_PACKAGE_DIR = /usr/lib/python3.7/site-packages/
+USER_PACKAGE_DIR = /usr/lib/$(PYTHON_DIR_NAME)/site-packages/
 USER_EXEC_FILE_DIR = /usr/bin/
 
 install: $(DATA_DIR) $(PACKAGE_DIR) $(EXEC_FILE)
