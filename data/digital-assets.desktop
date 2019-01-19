@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Digital Assets
+Comment=Digital Assets prices, statistics and informations
+Type=Application
+Exec=digital-assets
+Terminal=false
+Icon=digital-assets

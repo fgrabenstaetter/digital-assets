@@ -1,0 +1,95 @@
+# Digital Assets
+# GNU GPL 3.0
+# François Grabenstaetter <francoisgrabenstaetter@gmail.com>, 2019
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2019-01-14 13:33+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: src/ui/currencyView.py:40 src/ui/headerBar.py:175
+msgid "Change"
+msgstr ""
+
+#: src/ui/currencyView.py:43
+msgid "Markep Cap"
+msgstr ""
+
+#: src/ui/currencyView.py:47
+msgid "Volume"
+msgstr ""
+
+#: src/ui/currencyView.py:54 src/ui/headerBar.py:173
+msgid "Rank"
+msgstr ""
+
+#: src/ui/currencyView.py:57
+msgid "Circulating Supply"
+msgstr ""
+
+#: src/ui/currencyView.py:61
+msgid "Max Supply"
+msgstr ""
+
+#: src/ui/currencyView.py:65
+msgid "Website"
+msgstr ""
+
+#: src/ui/currencyView.py:162
+msgid "Year"
+msgstr ""
+
+#: src/ui/currencyView.py:162 src/ui/graph.py:116
+msgid "Day"
+msgstr ""
+
+#: src/ui/currencyView.py:162 src/ui/graph.py:118
+msgid "Month"
+msgstr ""
+
+#: src/ui/currencyView.py:268
+msgid "Undefined"
+msgstr ""
+
+#: src/ui/currencyView.py:282
+msgid "Unlimited"
+msgstr ""
+
+#: src/ui/graph.py:114
+msgid "Hour"
+msgstr ""
+
+#: src/ui/graph.py:129
+msgid "Price"
+msgstr ""
+
+#: src/ui/headerBar.py:56
+msgid ""
+"Prices, statistics and informations about Digital Assets\n"
+"Thanks to Nomics (https://nomics.com) for their free API\n"
+"Donations"
+msgstr ""
+
+#: src/ui/headerBar.py:62
+msgid "About"
+msgstr ""
+
+#: src/ui/headerBar.py:64
+msgid "Quit"
+msgstr ""
+
+#: src/ui/headerBar.py:174
+msgid "Name"
+msgstr ""
+
+#: src/ui/window.py:92
+msgid "There is a network problem, please verify your connection and try again"
+msgstr ""

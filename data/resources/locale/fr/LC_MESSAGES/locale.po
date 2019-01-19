@@ -1,0 +1,108 @@
+# Digital Assets
+# GNU GPL 3.0
+# François Grabenstaetter <francoisgrabenstaetter@gmail.com>, 2019
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2019-01-14 13:33+0100\n"
+"PO-Revision-Date: 2019-01-14 13:34+0100\n"
+"Last-Translator: François Grabenstaetter <francoisgrabenstaetter@gmail.com>\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 2.0.6\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: src/ui/currencyView.py:40 src/ui/headerBar.py:175
+msgid "Change"
+msgstr "Variation"
+
+#: src/ui/currencyView.py:43
+msgid "Markep Cap"
+msgstr "Cap. Marché"
+
+#: src/ui/currencyView.py:47
+msgid "Volume"
+msgstr "Volume"
+
+#: src/ui/currencyView.py:54 src/ui/headerBar.py:173
+msgid "Rank"
+msgstr "Rang"
+
+#: src/ui/currencyView.py:57
+msgid "Circulating Supply"
+msgstr "Offre en circulation"
+
+#: src/ui/currencyView.py:61
+msgid "Max Supply"
+msgstr "Offre Max"
+
+#: src/ui/currencyView.py:65
+msgid "Website"
+msgstr "Site internet"
+
+#: src/ui/currencyView.py:162
+msgid "Year"
+msgstr "Année"
+
+#: src/ui/currencyView.py:162 src/ui/graph.py:116
+msgid "Day"
+msgstr "Jour"
+
+#: src/ui/currencyView.py:162 src/ui/graph.py:118
+msgid "Month"
+msgstr "Mois"
+
+#: src/ui/currencyView.py:268
+msgid "Undefined"
+msgstr "Indéfini"
+
+#: src/ui/currencyView.py:282
+msgid "Unlimited"
+msgstr "Illimité"
+
+#: src/ui/graph.py:114
+msgid "Hour"
+msgstr "Heure"
+
+#: src/ui/graph.py:129
+msgid "Price"
+msgstr "Prix"
+
+#: src/ui/headerBar.py:56
+msgid ""
+"Prices, statistics and informations about Digital Assets\n"
+"Thanks to Nomics (https://nomics.com) for their free API\n"
+"Donations"
+msgstr ""
+"Prix, statistiques et informations des cryptomonnaies\n"
+"Merci à Nomics (https://nomics.com) pour leur API gratuite\n"
+"Dons"
+
+#: src/ui/headerBar.py:62
+msgid "About"
+msgstr "À propos"
+
+#: src/ui/headerBar.py:64
+msgid "Quit"
+msgstr "Quitter"
+
+#: src/ui/headerBar.py:174
+msgid "Name"
+msgstr "Nom"
+
+#: src/ui/window.py:92
+msgid "There is a network problem, please verify your connection and try again"
+msgstr ""
+"Un problème de réseau est survenu, veuillez vérifier votre connexion et "
+"réessayer"
+
+#~ msgid "Week"
+#~ msgstr "Semaine"
+
+#~ msgid "Day change"
+#~ msgstr "Variation (24h)"

@@ -1,0 +1,63 @@
+/*
+FILE: style.CSS
+AUTHOR: François Grabenstaetter
+LICENSE: GPL 3.0
+*/
+
+#bottomBox
+{
+	background-color: @theme_base_color;
+	border-radius: 10px;
+	padding: 20px;
+}
+
+#infosBox > box
+{
+	padding: 20px;
+}
+
+#currencySwitcher
+{
+	background-color: lighter(@theme_base_color);
+}
+
+#priceGreen
+{
+	color: #66BB6A;
+}
+
+#priceRed
+{
+	color: #EF5350;
+}
+
+#currencyName
+{
+	font-size: 20px;
+	font-weight: bold;
+}
+
+#currencySymbol
+{
+	font-size: 16px;
+}
+
+#currencyPrice
+{
+	font-size: 18px;
+}
+
+#infoTitle
+{
+	font-weight: bold;
+}
+
+#infoBarText
+{
+	font-weight: bold;
+}
+
+#linkButton
+{
+	padding: 10px;
+}
