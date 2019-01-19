@@ -26,13 +26,17 @@ from DigitalAssets.ui.currencyView import CurrencyView
 from DigitalAssets.data.apiData import APIData
 from DigitalAssets.data import currencies
 from DigitalAssets.data.currency import Currency
-import pickle, pathlib
+import pickle, pathlib, os
 
+# general paths
 sharePath = '/usr/share/digital-assets/'
 configPath = str(pathlib.Path.home()) + '/.config/digital-assets/'
 import gettext
 tr = gettext.translation('locale', localedir = sharePath + 'locale')
 tr.install()
+
+# create config path if not exists
+os.makedirs(os.path.dirname(configPath), exist_ok = True)
 
 class Window (Gtk.Window):
     def __init__ (self):
