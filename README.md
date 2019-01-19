@@ -1,7 +1,9 @@
 # Digital Assets
 
 Prices, statistics and informations about Digital Assets.
+
 Thanks to Nomics (https://nomics.com) for their free API.
+
 Donations BTC: bc1qejj6y2gvya5rrun4sfsl08qdeyv36ndhm0ml85
 
 # AUTHOR
