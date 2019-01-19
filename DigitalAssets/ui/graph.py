@@ -89,6 +89,9 @@ class Graph (Gtk.DrawingArea):
             ctx.fill()
             return
 
+        fontColor = self.get_style_context().get_color(Gtk.StateFlags.NORMAL)
+        fontColor.parse('rgba')
+
         areaWidth = self.get_size_request()[0] - self.padding['left'] - self.padding['right']
         areaHeight = self.get_size_request()[1] - self.padding['top'] - self.padding['bottom']
 
@@ -135,7 +138,7 @@ class Graph (Gtk.DrawingArea):
                 else:
                     return
 
-                ctx.set_source_rgb(0.9, 0.9, 0.9)
+                ctx.set_source_rgba(fontColor.red, fontColor.green, fontColor.blue, fontColor.alpha)
                 ctx.move_to(dateTextX, dateTextY)
                 ctx.show_text(dateStr)
 
@@ -157,7 +160,7 @@ class Graph (Gtk.DrawingArea):
                 price = self.graphInfos['minPrice'] + (self.graphInfos['maxPrice'] - self.graphInfos['minPrice']) * (((nbPricesToShow - 1) - i) / (nbPricesToShow - 1))
                 pricesToDraw.append(price)
 
-        ctx.set_source_rgb(0.9, 0.9, 0.9)
+        ctx.set_source_rgba(fontColor.red, fontColor.green, fontColor.blue, fontColor.alpha)
 
         for price in pricesToDraw:
             priceRounded = round(price, self.priceNbDigitsAfterDecimalPoint)
@@ -167,7 +170,6 @@ class Graph (Gtk.DrawingArea):
             priceTextY += priceTextYAdd
 
         # show date column name
-        ctx.set_source_rgb(1, 1, 1)
         ctx.select_font_face('', cairo.FontSlant.NORMAL, cairo.FontWeight.BOLD)
 
         if (self.graphInfos['time'] == 'day'):

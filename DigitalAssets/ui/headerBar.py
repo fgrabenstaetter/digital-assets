@@ -67,7 +67,7 @@ class HeaderBar (Gtk.HeaderBar):
                 authors = ['François Grabenstaetter'],
                 license_type = Gtk.License.GPL_3_0_ONLY,
                 program_name = 'Digital Assets',
-                version = '1.0.0',
+                version = '1.0.1',
                 comments = _('Prices, statistics and informations about Digital Assets\nThanks to Nomics (https://nomics.com) for their free API\nDonations') + ' BTC:   bc1qejj6y2gvya5rrun4sfsl08qdeyv36ndhm0ml85'
             )
             aboutDialog.set_modal(True)
