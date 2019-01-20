@@ -189,7 +189,8 @@ class HeaderBar (Gtk.HeaderBar):
         sortMethodNames = (
             ('rank', _('Rank')),
             ('name', _('Name')),
-            ('dayPriceChange', _('Change'))
+            ('dayPriceChange', _('Change')),
+            ('volume', _('Volume'))
         )
 
         def rowClickedEvent (obj, data = None):

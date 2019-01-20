@@ -1,11 +1,11 @@
-# Digital Assets
-# GNU GPL 3.0
-# François Grabenstaetter <francoisgrabenstaetter@gmail.com>, 2019
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2019-01-14 13:33+0100\n"
+"POT-Creation-Date: 2019-01-20 15:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,81 +15,82 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: src/ui/currencyView.py:40 src/ui/headerBar.py:175
+#: DigitalAssets/ui/currencyView.py:55 DigitalAssets/ui/headerBar.py:192
 msgid "Change"
 msgstr ""
 
-#: src/ui/currencyView.py:43
+#: DigitalAssets/ui/currencyView.py:58
 msgid "Markep Cap"
 msgstr ""
 
-#: src/ui/currencyView.py:47
+#: DigitalAssets/ui/currencyView.py:62 DigitalAssets/ui/headerBar.py:193
 msgid "Volume"
 msgstr ""
 
-#: src/ui/currencyView.py:54 src/ui/headerBar.py:173
+#: DigitalAssets/ui/currencyView.py:69 DigitalAssets/ui/headerBar.py:190
 msgid "Rank"
 msgstr ""
 
-#: src/ui/currencyView.py:57
+#: DigitalAssets/ui/currencyView.py:72
 msgid "Circulating Supply"
 msgstr ""
 
-#: src/ui/currencyView.py:61
+#: DigitalAssets/ui/currencyView.py:76
 msgid "Max Supply"
 msgstr ""
 
-#: src/ui/currencyView.py:65
+#: DigitalAssets/ui/currencyView.py:80
 msgid "Website"
 msgstr ""
 
-#: src/ui/currencyView.py:162
+#: DigitalAssets/ui/currencyView.py:177
 msgid "Year"
 msgstr ""
 
-#: src/ui/currencyView.py:162 src/ui/graph.py:116
+#: DigitalAssets/ui/currencyView.py:177 DigitalAssets/ui/graph.py:178
 msgid "Day"
 msgstr ""
 
-#: src/ui/currencyView.py:162 src/ui/graph.py:118
+#: DigitalAssets/ui/currencyView.py:177 DigitalAssets/ui/graph.py:180
 msgid "Month"
 msgstr ""
 
-#: src/ui/currencyView.py:268
+#: DigitalAssets/ui/currencyView.py:284
 msgid "Undefined"
 msgstr ""
 
-#: src/ui/currencyView.py:282
+#: DigitalAssets/ui/currencyView.py:298
 msgid "Unlimited"
 msgstr ""
 
-#: src/ui/graph.py:114
+#: DigitalAssets/ui/graph.py:176
 msgid "Hour"
 msgstr ""
 
-#: src/ui/graph.py:129
+#: DigitalAssets/ui/graph.py:189
 msgid "Price"
 msgstr ""
 
-#: src/ui/headerBar.py:56
+#: DigitalAssets/ui/headerBar.py:71
 msgid ""
 "Prices, statistics and informations about Digital Assets\n"
 "Thanks to Nomics (https://nomics.com) for their free API\n"
 "Donations"
 msgstr ""
 
-#: src/ui/headerBar.py:62
+#: DigitalAssets/ui/headerBar.py:77
 msgid "About"
 msgstr ""
 
-#: src/ui/headerBar.py:64
+#: DigitalAssets/ui/headerBar.py:79
 msgid "Quit"
 msgstr ""
 
-#: src/ui/headerBar.py:174
+#: DigitalAssets/ui/headerBar.py:191
 msgid "Name"
 msgstr ""
 
-#: src/ui/window.py:92
+#: DigitalAssets/ui/window.py:108
 msgid "There is a network problem, please verify your connection and try again"
 msgstr ""
+

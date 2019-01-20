@@ -133,3 +133,8 @@ class CurrencySwitcher (Gtk.ListBox):
                     return -1
                 else:
                     return 1
+            elif (sortMethodName == 'volume'):
+                if (row1Cur.dayVolume > row2Cur.dayVolume):
+                    return -1
+                else:
+                    return 1
