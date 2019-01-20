@@ -4,7 +4,7 @@ Prices, statistics and informations about Digital Assets.
 
 Thanks to Nomics (https://nomics.com) for their free API.
 
-Donations BTC: bc1qejj6y2gvya5rrun4sfsl08qdeyv36ndhm0ml85
+**Donations BTC: bc1qejj6y2gvya5rrun4sfsl08qdeyv36ndhm0ml85**
 
 ## AUTHOR
 
@@ -19,8 +19,9 @@ For more informations: https://www.gnu.org/licenses/gpl-3.0.en.html
 ## REQUIRED PACKAGES 
 
 - gtk (3.X)
-- python-gobject (3.X)
 - python (3.X)
+- python-gobject (3.X)
+- python-cairo
 
 ## INSTALL AND RUN
 
