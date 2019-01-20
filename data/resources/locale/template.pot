@@ -1,6 +1,6 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR ORGANIZATION
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Digital Assets
+# GNU GPL 3.0
+# François Grabenstaetter <francoisgrabenstaetter@gmail.com>, 2019
 #
 msgid ""
 msgstr ""
