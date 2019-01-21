@@ -26,14 +26,19 @@ from DigitalAssets.ui.currencyView import CurrencyView
 from DigitalAssets.data.apiData import APIData
 from DigitalAssets.data import currencies
 from DigitalAssets.data.currency import Currency
-import pickle, pathlib, os
+import pickle, pathlib, os, gettext
 
 # general paths
 sharePath = '/usr/share/digital-assets/'
 configPath = str(pathlib.Path.home()) + '/.config/digital-assets/'
-import gettext
-tr = gettext.translation('locale', localedir = sharePath + 'locale')
-tr.install()
+
+# init translations
+try:
+    tr = gettext.translation('locale', localedir = sharePath + 'locale/')
+    tr.install()
+except OSError:
+    # translation loading error
+    pass
 
 # create config path if not exists
 os.makedirs(os.path.dirname(configPath), exist_ok = True)

@@ -35,6 +35,7 @@ install: $(DATA_DIR) $(PACKAGE_DIR) $(EXEC_FILE)
 	cp $(EXEC_FILE) $(USER_EXEC_FILE_DIR)
 
 	# copy package
+	mkdir -p $(USER_PACKAGE_DIR)
 	cp -R $(PACKAGE_DIR) -t $(USER_PACKAGE_DIR)
 
 	# update gtk icon cache
