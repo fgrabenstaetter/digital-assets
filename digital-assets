@@ -18,9 +18,16 @@
  along with Digital Assets. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import gi
+import gi, platform, sys
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+
+# be sure the package is found
+fullVersion = platform.python_version().split('.')
+pythonLibDirName = 'python' + str(fullVersion[0] + '.' + fullVersion[1])
+moduleParentDirPath = '/usr/lib/' + pythonLibDirName + '/site-packages/'
+sys.path.append(moduleParentDirPath)
+
 from DigitalAssets.ui.window import Window
 
 Window()
