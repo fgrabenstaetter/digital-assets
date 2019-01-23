@@ -169,7 +169,7 @@ class APIData ():
         lastDayTime = datetime.datetime.today() - datetime.timedelta(days = 1)
         toReload.append(('day', self.datetimeToStr(lastDayTime)))
 
-        # reload only once mont and year graphs (when the app start)
+        # reload only once month and year graphs (when the app start)
         if (self.mainWindow.currencies['BTC'].monthGraphData is None):
             lastMonthTime = datetime.datetime.today() - datetime.timedelta(days = 30)
             toReload.append(('month', self.datetimeToStr(lastMonthTime)))
