@@ -99,7 +99,7 @@ class Graph (Gtk.DrawingArea):
         ctx.set_source_rgb(0.2, 0.7, 0.8)
 
         lastX, lastY = None, None
-        dateTextModulo = self.graphInfos['nbPrices'] // 8
+        dateTextModulo = math.ceil(self.graphInfos['nbPrices'] / 8)
 
         i = 0
         for dateTime, price in self.graphData:
