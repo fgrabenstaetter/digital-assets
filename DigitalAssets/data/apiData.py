@@ -74,7 +74,7 @@ class APIData ():
     def reloadCurrentView (self):
         # reload actual currency view values
 
-        actualCurrency = self.mainWindow.currencies[self.mainWindow.currencySwitcher.currentRow.curSymbol]
+        actualCurrency = self.mainWindow.getActualCurrency()
         self.mainWindow.currencyView.reload(actualCurrency)
 
     def datetimeToStr (self, dt):

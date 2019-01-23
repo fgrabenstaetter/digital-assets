@@ -235,3 +235,17 @@ class Window (Gtk.Window):
         except OSError:
             # not created now, skip
             pass
+
+    def getCurrencyBySymbol (self, symbol):
+        return self.currencies[symbol]
+
+    def getActualCurrency (self):
+        symbol = self.currencySwitcher.actualRow.curSymbol
+        return self.currencies[symbol]
+
+    def getActualBaseCurrency (self):
+        symbol = self.headerBar.actualBaseCurrencySymbol
+        return self.currencies[symbol]
+
+    def getActualSortMethodName (self):
+        return self.headerBar.actualSortMethodName

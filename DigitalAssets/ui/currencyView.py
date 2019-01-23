@@ -214,7 +214,7 @@ class CurrencyView (Gtk.Box):
     def reload (self, currency, animate = False):
         # set widgets value
 
-        baseCurrency = self.mainWindow.currencies[self.mainWindow.headerBar.actualBaseCurrencySymbol]
+        baseCurrency = self.mainWindow.getActualBaseCurrency()
 
         if (isinstance(self.spinner1, Gtk.Widget)):
             self.create()
@@ -345,10 +345,10 @@ class CurrencyView (Gtk.Box):
         currency.favorite = not currency.favorite
         if (currency.favorite is True):
             self.favoriteButtonImage.set_from_icon_name('starred-symbolic', 1)
-            self.mainWindow.currencySwitcher.currentRow.favoriteImageRevealer.set_reveal_child(True)
+            self.mainWindow.currencySwitcher.actualRow.favoriteImageRevealer.set_reveal_child(True)
         else:
             self.favoriteButtonImage.set_from_icon_name('non-starred-symbolic', 1)
-            self.mainWindow.currencySwitcher.currentRow.favoriteImageRevealer.set_reveal_child(False)
+            self.mainWindow.currencySwitcher.actualRow.favoriteImageRevealer.set_reveal_child(False)
 
         self.mainWindow.currencySwitcher.invalidate_sort()
 
@@ -364,7 +364,7 @@ class CurrencyView (Gtk.Box):
 
         self.actualGraphTime = obj.name
         currency = self.mainWindow.currencies[self.actualCurrencySymbol]
-        baseCurrency = self.mainWindow.currencies[self.mainWindow.headerBar.actualBaseCurrencySymbol]
+        baseCurrency = self.mainWindow.getActualBaseCurrency()
         nbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(currency.price, baseCurrency.price)
 
         self.graph.setGraph(getattr(currency, obj.name + 'GraphData'), obj.name, baseCurrency, nbDigitsAfterDecimalPoint)

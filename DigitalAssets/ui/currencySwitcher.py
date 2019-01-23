@@ -26,7 +26,7 @@ class CurrencySwitcher (Gtk.ListBox):
     def __init__ (self, mainWindow):
         Gtk.ListBox.__init__(self, name = 'currencySwitcher')
         self.mainWindow = mainWindow
-        self.currentRow = None
+        self.actualRow = None
         self.set_sort_func(self.currenciesSort)
         self.connect('row-activated', self.rowActivatedEvent)
 
@@ -34,7 +34,7 @@ class CurrencySwitcher (Gtk.ListBox):
             if (symbol != 'USD'):
                 self.addCurrency(self.mainWindow.currencies[symbol])
 
-        self.currentRow = self.get_children()[0]
+        self.actualRow = self.get_children()[0]
         self.show_all()
 
     def addCurrency (self, currency):
@@ -83,13 +83,13 @@ class CurrencySwitcher (Gtk.ListBox):
     def rowActivatedEvent (self, obj, row):
         # a currency button has been activated
 
-        if (self.currentRow is not None):
-            if (self.currentRow is not row):
+        if (self.actualRow is not None):
+            if (self.actualRow is not row):
                 # load stack
                 if (self.mainWindow.currencies[row.curSymbol].price is not None):
                     self.mainWindow.currencyView.reload(self.mainWindow.currencies[row.curSymbol], True)
 
-        self.currentRow = row
+        self.actualRow = row
 
         # if search entry showed, hide it
         if (self.mainWindow.headerBar.searchButton.get_active() is True):
@@ -98,7 +98,7 @@ class CurrencySwitcher (Gtk.ListBox):
     def currenciesSort (self, row1, row2):
         # sort currencies in the currencies switcher
 
-        sortMethodName = self.mainWindow.headerBar.actualSortMethodName
+        sortMethodName = self.mainWindow.getActualSortMethodName()
         row1Cur = self.mainWindow.currencies[row1.curSymbol]
         row2Cur = self.mainWindow.currencies[row2.curSymbol]
 
@@ -121,7 +121,7 @@ class CurrencySwitcher (Gtk.ListBox):
                 else:
                     return 1
             elif (sortMethodName == 'dayPriceChange'):
-                baseCurrency = self.mainWindow.currencies[self.mainWindow.headerBar.actualBaseCurrencySymbol]
+                baseCurrency = self.mainWindow.getActualBaseCurrency()
 
                 row1DayPriceChange = float(row1Cur.lastDayPrice) / float(baseCurrency.lastDayPrice)
                 row1DayPriceChange = (float(row1Cur.price) / float(baseCurrency.price)) / row1DayPriceChange
