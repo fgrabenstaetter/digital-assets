@@ -175,9 +175,20 @@ class CurrencyView (Gtk.Box):
         # graph box
         self.graphSwitcher = Gtk.StackSwitcher(halign = Gtk.Align.CENTER)
         for name, str in (('day', _('Day')), ('month', _('Month')), ('year', _('Year'))):
-            button = Gtk.ToggleButton(str)
+            button = Gtk.ToggleButton(sensitive = False)
             button.name = name
             button.handlerID = button.connect('toggled', self.graphSwitcherButtonToggledEvent)
+
+            buttonBox = Gtk.Box(spacing = 8, border_width = 4, halign = Gtk.Align.CENTER)
+            buttonLabel = Gtk.Label(str)
+            buttonSpinner = Gtk.Spinner(active = True)
+            button.spinner = buttonSpinner
+
+            buttonBox.add(buttonLabel)
+            buttonBox.add(buttonSpinner)
+            button.add(buttonBox)
+
+            button.set_size_request(100, -1)
             self.graphSwitcher.add(button)
 
         graphBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, halign = Gtk.Align.CENTER, spacing = 30, name = 'graphBox')
@@ -312,13 +323,23 @@ class CurrencyView (Gtk.Box):
                     self.favoriteButton.set_active(True)
                     self.favoriteButtonImage.set_from_icon_name('starred-symbolic', 1)
 
-            if (currency.yearGraphData is not None): # year graph prices is the last loaded
+            if (currency.dayGraphData is not None): # day graph prices is the first loaded
                 if (isinstance(self.spinner2, Gtk.Spinner)):
                     self.spinner2.destroy()
                     self.spinner2 = None
 
                 if (self.graphBoxRevealer.get_child_revealed() is False):
                     self.graphBoxRevealer.set_reveal_child(True)
+
+                # change graphSwitcher buttons sensitivity if needed
+                for child in self.graphSwitcher.get_children():
+                    childGraphData = getattr(currency, child.name + 'GraphData')
+
+                    if ((child.get_sensitive() is False) and (childGraphData is not None)):
+                        child.set_sensitive(True)
+                        child.spinner.destroy()
+                    elif ((child.get_sensitive() is True) and (childGraphData is None)):
+                        child.set_sensitive(False)
 
                 # graph set value
                 if ((self.actualGraphTime is None) and (len(self.graphSwitcher.get_children()) > 0)):
