@@ -72,7 +72,9 @@ def getCurrencies ():
         ('Komodo', 'KMD', 'https://komodoplatform.com/'),
         ('Populous', 'PPT', 'https://populous.world/'),
         ('Status', 'SNT', 'http://status.im/'),
-        ('Storj', 'STORJ', 'https://storj.io/')
+        ('Storj', 'STORJ', 'https://storj.io/'),
+        ('IOST', 'IOST', 'http://iost.io/'),
+        ('Aeternity', 'AE', 'https://www.aeternity.com/')
     ]
 
 def getBaseCurrencies ():
