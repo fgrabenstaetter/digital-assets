@@ -14,7 +14,7 @@
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with Digital Assets. If not, see <http://www.gnu.org/licenses/>.
+ along with Digital Assets. If not, see <https://www.gnu.org/licenses/>.
 """
 
 def getCurrencies ():
@@ -35,14 +35,14 @@ def getCurrencies ():
         ('Binance Coin', 'BNB', 'https://www.binance.com/'),
         ('Monero', 'XMR', 'https://ww.getmonero.org/'),
         ('Dash', 'DASH', 'https://www.dash.org/'),
-        ('NEM', 'XEM', 'http://nem.io/'),
+        ('NEM', 'XEM', 'https://nem.io/'),
         ('Ethereum Classic', 'ETC', 'https://ethereumclassic.org/'),
         ('NEO', 'NEO', 'https://neo.org/'),
         ('Maker', 'MKR', 'https://makerdao.com/'),
         ('Zcash', 'ZEC', 'https://z.cash/'),
         ('Waves', 'WAVES', 'https://wavesplatform.com/'),
         ('Tezos', 'XTZ', 'https://www.tezos.com/'),
-        ('Dogecoin', 'DOGE', 'http://dogecoin.com/'),
+        ('Dogecoin', 'DOGE', 'https://dogecoin.com/'),
         ('VeChain', 'VET', 'https://www.vechain.org/'),
         ('TrueUSD', 'TUSD', 'https://www.trusttoken.com/trueusd/'),
         ('Qtum', 'QTUM', 'https://qtum.org/'),
@@ -53,27 +53,27 @@ def getCurrencies ():
         ('Basic Attention Token', 'BAT', 'https://basicattentiontoken.org/'),
         ('Lisk', 'LSK', 'https://lisk.io/'),
         ('Decred', 'DCR', 'https://www.decred.org/'),
-        ('Nano', 'NANO', 'http://nano.org/'),
-        ('DigiByte', 'DGB', 'http://www.digibyte.io/'),
-        ('Stratis', 'STRAT', 'http://stratisplatform.com/'),
+        ('Nano', 'NANO', 'https://nano.org/'),
+        ('DigiByte', 'DGB', 'https://www.digibyte.io/'),
+        ('Stratis', 'STRAT', 'https://stratisplatform.com/'),
         ('Chainlink', 'LINK', 'https://chain.link/'),
-        ('Augur', 'REP', 'http://www.augur.net/'),
+        ('Augur', 'REP', 'https://www.augur.net/'),
         ('Pundi X', 'NPXS', 'https://pundix.com/'),
         ('Golem', 'GNT', 'https://golem.network/'),
         ('Holo', 'HOT', 'https://holochain.org/'),
         ('Siacoin', 'SC', 'https://sia.tech/'),
         ('Steem', 'STEEM', 'https://steem.com/'),
         ('Factom', 'FCT', 'https://www.factomprotocol.org/'),
-        ('Ark', 'ARK', 'http://ark.io/'),
+        ('Ark', 'ARK', 'https://ark.io/'),
         ('Aion', 'AION', 'https://aion.network/'),
         ('BitShares', 'BTS', 'https://bitshares.org/'),
-        ('Verge', 'XVG', 'http://vergecurrency.com/'),
+        ('Verge', 'XVG', 'https://vergecurrency.com/'),
         ('Paxos Standard Token', 'PAX', 'https://paxos.com/standard/'),
         ('Komodo', 'KMD', 'https://komodoplatform.com/'),
         ('Populous', 'PPT', 'https://populous.world/'),
-        ('Status', 'SNT', 'http://status.im/'),
+        ('Status', 'SNT', 'https://status.im/'),
         ('Storj', 'STORJ', 'https://storj.io/'),
-        ('IOST', 'IOST', 'http://iost.io/'),
+        ('IOST', 'IOST', 'https://iost.io/'),
         ('Aeternity', 'AE', 'https://www.aeternity.com/')
     ]
 
