@@ -135,6 +135,8 @@ class Graph (Gtk.DrawingArea):
                     dateStr = str(dateTime.day).zfill(2)
                 elif (self.graphInfos['time'] == 'year'):
                     dateStr = str(dateTime.month).zfill(2)
+                elif (self.graphInfos['time'] == 'all'):
+                    dateStr = str(dateTime.year).zfill(2)
                 else:
                     return
 
@@ -178,6 +180,8 @@ class Graph (Gtk.DrawingArea):
             timeDataType = _('Day')
         elif (self.graphInfos['time'] == 'year'):
             timeDataType = _('Month')
+        elif (self.graphInfos['time'] == 'all'):
+            timeDataType = _('Year')
         else:
             return
 

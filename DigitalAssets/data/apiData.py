@@ -178,6 +178,10 @@ class APIData ():
             lastYearTime = datetime.datetime.today() - datetime.timedelta(days = 365)
             toReload.append(('year', self.datetimeToStr(lastYearTime)))
 
+        if (self.mainWindow.currencies['BTC'].allGraphData is None):
+            allTime = datetime.datetime(2010, 1, 1)
+            toReload.append(('all', self.datetimeToStr(allTime)))
+
         for graphTime in toReload:
             try:
                 res = urllib.request.urlopen('https://api.nomics.com/v1/currencies/sparkline?key=' + self.APIKey + '&start=' + graphTime[1]).read()

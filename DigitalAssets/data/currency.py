@@ -36,6 +36,7 @@ class Currency ():
         self.dayGraphData = None
         self.monthGraphData = None
         self.yearGraphData = None
+        self.allGraphData = None
 
         self.websiteURL = websiteURL
         self.favorite = False

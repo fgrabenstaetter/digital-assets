@@ -174,7 +174,7 @@ class CurrencyView (Gtk.Box):
 
         # graph box
         self.graphSwitcher = Gtk.StackSwitcher(halign = Gtk.Align.CENTER)
-        for name, str in (('day', _('Day')), ('month', _('Month')), ('year', _('Year'))):
+        for name, str in (('day', _('Day')), ('month', _('Month')), ('year', _('Year')), ('all', _('All'))):
             button = Gtk.ToggleButton(sensitive = False)
             button.name = name
             button.handlerID = button.connect('toggled', self.graphSwitcherButtonToggledEvent)
