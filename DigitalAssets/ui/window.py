@@ -169,7 +169,7 @@ class Window (Gtk.Window):
     def searchEntryKeyPressEvent (self, obj, data):
         # a button has been pressed in the search entry
 
-        if (data.get_keyval() == (True, Gdk.KEY_Escape)):
+        if ((data.get_keyval() == (True, Gdk.KEY_Escape)) and (self.headerBar.searchButton.get_active() is True)):
             self.headerBar.searchButton.clicked()
 
     def searchEntrySearchEvent (self, obj, data = None):
