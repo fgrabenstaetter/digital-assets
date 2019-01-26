@@ -49,7 +49,7 @@ class HeaderBar (Gtk.HeaderBar):
         menuButton.add(image)
         self.pack_end(menuButton)
 
-        menuPopover = Gtk.Popover(relative_to = menuButton)
+        menuPopover = Gtk.Popover(relative_to = menuButton, border_width = 6)
         menuPopoverBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
         menuPopover.add(menuPopoverBox)
 
@@ -79,9 +79,9 @@ class HeaderBar (Gtk.HeaderBar):
             aboutDialog.set_transient_for(self.mainWindow)
             aboutDialog.show()
 
-        menuPopoverButtonAbout = Gtk.Button(_('About'), relief = Gtk.ReliefStyle.NONE)
+        menuPopoverButtonAbout = Gtk.ModelButton(_('About'), xalign = 0)
         menuPopoverButtonAbout.connect('clicked', showAboutDialog)
-        menuPopoverButtonQuit = Gtk.Button(_('Quit'), relief = Gtk.ReliefStyle.NONE)
+        menuPopoverButtonQuit = Gtk.ModelButton(_('Quit'), xalign = 0)
         menuPopoverButtonQuit.connect('clicked', self.mainWindow.quit)
 
         menuPopoverBox.add(menuPopoverButtonAbout)
@@ -103,7 +103,7 @@ class HeaderBar (Gtk.HeaderBar):
         self.pack_start(switchButton)
 
         # pop-over
-        popover = Gtk.Popover(relative_to = switchButton)
+        popover = Gtk.Popover(relative_to = switchButton, border_width = 6)
         popoverBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
         popover.add(popoverBox)
 
@@ -145,7 +145,7 @@ class HeaderBar (Gtk.HeaderBar):
 
         popoverButtons = []
         for str in self.baseCurrencies[1:]:
-            button = Gtk.Button(str[0] + ' (' + str[1] + ')', xalign = 0, relief = Gtk.ReliefStyle.NONE)
+            button = Gtk.ModelButton(str[0] + ' (' + str[1] + ')', xalign = 0)
             button.curSymbol = str[1]
             button.connect('clicked', changeBaseCurrency)
             popoverBox.add(button)
@@ -182,7 +182,7 @@ class HeaderBar (Gtk.HeaderBar):
                 popover.popup()
 
         # popover
-        popover = Gtk.Popover(relative_to = button)
+        popover = Gtk.Popover(relative_to = button, border_width = 6)
         popOverBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 
         def popOverClosedEvent (obj = None, data = None):
@@ -205,11 +205,11 @@ class HeaderBar (Gtk.HeaderBar):
             self.mainWindow.currencySwitcher.invalidate_sort()
 
         for name, str in sortMethodNames:
-            row = Gtk.Button(relief = Gtk.ReliefStyle.NONE)
+            row = Gtk.ModelButton()
             row.name = name
             row.connect('clicked', rowClickedEvent)
 
-            rowBox = Gtk.Box(spacing = 10)
+            rowBox = row.get_children()[0]
             label = Gtk.Label(str)
 
             popOverBoxChildren = popOverBox.get_children()
@@ -222,7 +222,6 @@ class HeaderBar (Gtk.HeaderBar):
             rowBox.pack_end(radioButton, False, False, 0)
 
             row.radioButton = radioButton
-            row.add(rowBox)
             popOverBox.add(row)
 
         popover.add(popOverBox)
