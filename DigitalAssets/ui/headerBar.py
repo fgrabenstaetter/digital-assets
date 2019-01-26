@@ -23,7 +23,7 @@ from gi.repository import Gtk
 import gettext
 
 # app version
-appVersion = '1.0.2'
+appVersion = '2.0'
 
 class HeaderBar (Gtk.HeaderBar):
     def __init__ (self, mainWindow):
