@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2019-01-20 15:30+0100\n"
-"PO-Revision-Date: 2019-01-20 15:38+0100\n"
+"POT-Creation-Date: 2019-01-26 12:39+0100\n"
+"PO-Revision-Date: 2019-01-26 12:46+0100\n"
 "Last-Translator: François Grabenstaetter <francoisgrabenstaetter@gmail.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Generator: Poedit 2.2\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: DigitalAssets/ui/currencyView.py:55 DigitalAssets/ui/headerBar.py:192
+#: DigitalAssets/ui/currencyView.py:55 DigitalAssets/ui/headerBar.py:197
 msgid "Change"
 msgstr "Variation"
 
@@ -25,11 +25,11 @@ msgstr "Variation"
 msgid "Markep Cap"
 msgstr "Cap. Marché"
 
-#: DigitalAssets/ui/currencyView.py:62 DigitalAssets/ui/headerBar.py:193
+#: DigitalAssets/ui/currencyView.py:62 DigitalAssets/ui/headerBar.py:198
 msgid "Volume"
 msgstr "Volume"
 
-#: DigitalAssets/ui/currencyView.py:69 DigitalAssets/ui/headerBar.py:190
+#: DigitalAssets/ui/currencyView.py:69 DigitalAssets/ui/headerBar.py:195
 msgid "Rank"
 msgstr "Rang"
 
@@ -46,34 +46,38 @@ msgid "Website"
 msgstr "Site internet"
 
 #: DigitalAssets/ui/currencyView.py:177
-msgid "Year"
-msgstr "Année"
+msgid "All"
+msgstr "Tout"
 
-#: DigitalAssets/ui/currencyView.py:177 DigitalAssets/ui/graph.py:178
+#: DigitalAssets/ui/currencyView.py:177 DigitalAssets/ui/graph.py:180
 msgid "Day"
 msgstr "Jour"
 
-#: DigitalAssets/ui/currencyView.py:177 DigitalAssets/ui/graph.py:180
+#: DigitalAssets/ui/currencyView.py:177 DigitalAssets/ui/graph.py:182
 msgid "Month"
 msgstr "Mois"
 
-#: DigitalAssets/ui/currencyView.py:284
+#: DigitalAssets/ui/currencyView.py:177 DigitalAssets/ui/graph.py:184
+msgid "Year"
+msgstr "Année"
+
+#: DigitalAssets/ui/currencyView.py:295
 msgid "Undefined"
 msgstr "Indéfini"
 
-#: DigitalAssets/ui/currencyView.py:298
+#: DigitalAssets/ui/currencyView.py:309
 msgid "Unlimited"
 msgstr "Illimité"
 
-#: DigitalAssets/ui/graph.py:176
+#: DigitalAssets/ui/graph.py:178
 msgid "Hour"
 msgstr "Heure"
 
-#: DigitalAssets/ui/graph.py:189
+#: DigitalAssets/ui/graph.py:193
 msgid "Price"
 msgstr "Prix"
 
-#: DigitalAssets/ui/headerBar.py:71
+#: DigitalAssets/ui/headerBar.py:74
 msgid ""
 "Prices, statistics and informations about Digital Assets\n"
 "Thanks to Nomics (https://nomics.com) for their free API\n"
@@ -83,19 +87,19 @@ msgstr ""
 "Merci à Nomics (https://nomics.com) pour leur API gratuite\n"
 "Dons"
 
-#: DigitalAssets/ui/headerBar.py:77
+#: DigitalAssets/ui/headerBar.py:82
 msgid "About"
 msgstr "À propos"
 
-#: DigitalAssets/ui/headerBar.py:79
+#: DigitalAssets/ui/headerBar.py:84
 msgid "Quit"
 msgstr "Quitter"
 
-#: DigitalAssets/ui/headerBar.py:191
+#: DigitalAssets/ui/headerBar.py:196
 msgid "Name"
 msgstr "Nom"
 
-#: DigitalAssets/ui/window.py:108
+#: DigitalAssets/ui/window.py:113
 msgid "There is a network problem, please verify your connection and try again"
 msgstr ""
 "Un problème de réseau est survenu, veuillez vérifier votre connexion et "

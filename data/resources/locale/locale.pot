@@ -1,11 +1,11 @@
 # Digital Assets
-# GNU GPL 3.0
-# François Grabenstaetter <francoisgrabenstaetter@gmail.com>, 2019
+# GNU GPL v3
+# François Grabenstaetter <francoisgrabenstaetter@gmail.com>, 2019.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2019-01-20 15:30+0100\n"
+"POT-Creation-Date: 2019-01-26 12:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: DigitalAssets/ui/currencyView.py:55 DigitalAssets/ui/headerBar.py:192
+#: DigitalAssets/ui/currencyView.py:55 DigitalAssets/ui/headerBar.py:197
 msgid "Change"
 msgstr ""
 
@@ -23,11 +23,11 @@ msgstr ""
 msgid "Markep Cap"
 msgstr ""
 
-#: DigitalAssets/ui/currencyView.py:62 DigitalAssets/ui/headerBar.py:193
+#: DigitalAssets/ui/currencyView.py:62 DigitalAssets/ui/headerBar.py:198
 msgid "Volume"
 msgstr ""
 
-#: DigitalAssets/ui/currencyView.py:69 DigitalAssets/ui/headerBar.py:190
+#: DigitalAssets/ui/currencyView.py:69 DigitalAssets/ui/headerBar.py:195
 msgid "Rank"
 msgstr ""
 
@@ -44,53 +44,56 @@ msgid "Website"
 msgstr ""
 
 #: DigitalAssets/ui/currencyView.py:177
-msgid "Year"
-msgstr ""
-
-#: DigitalAssets/ui/currencyView.py:177 DigitalAssets/ui/graph.py:178
-msgid "Day"
+msgid "All"
 msgstr ""
 
 #: DigitalAssets/ui/currencyView.py:177 DigitalAssets/ui/graph.py:180
+msgid "Day"
+msgstr ""
+
+#: DigitalAssets/ui/currencyView.py:177 DigitalAssets/ui/graph.py:182
 msgid "Month"
 msgstr ""
 
-#: DigitalAssets/ui/currencyView.py:284
+#: DigitalAssets/ui/currencyView.py:177 DigitalAssets/ui/graph.py:184
+msgid "Year"
+msgstr ""
+
+#: DigitalAssets/ui/currencyView.py:295
 msgid "Undefined"
 msgstr ""
 
-#: DigitalAssets/ui/currencyView.py:298
+#: DigitalAssets/ui/currencyView.py:309
 msgid "Unlimited"
 msgstr ""
 
-#: DigitalAssets/ui/graph.py:176
+#: DigitalAssets/ui/graph.py:178
 msgid "Hour"
 msgstr ""
 
-#: DigitalAssets/ui/graph.py:189
+#: DigitalAssets/ui/graph.py:193
 msgid "Price"
 msgstr ""
 
-#: DigitalAssets/ui/headerBar.py:71
+#: DigitalAssets/ui/headerBar.py:74
 msgid ""
 "Prices, statistics and informations about Digital Assets\n"
 "Thanks to Nomics (https://nomics.com) for their free API\n"
 "Donations"
 msgstr ""
 
-#: DigitalAssets/ui/headerBar.py:77
+#: DigitalAssets/ui/headerBar.py:82
 msgid "About"
 msgstr ""
 
-#: DigitalAssets/ui/headerBar.py:79
+#: DigitalAssets/ui/headerBar.py:84
 msgid "Quit"
 msgstr ""
 
-#: DigitalAssets/ui/headerBar.py:191
+#: DigitalAssets/ui/headerBar.py:196
 msgid "Name"
 msgstr ""
 
-#: DigitalAssets/ui/window.py:108
+#: DigitalAssets/ui/window.py:113
 msgid "There is a network problem, please verify your connection and try again"
 msgstr ""
-
