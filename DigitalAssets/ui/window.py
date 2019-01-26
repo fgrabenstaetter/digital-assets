@@ -60,18 +60,21 @@ class Window (Gtk.Window):
 
         # data
         self.currencies = {}
-        for cur in currencies.getCurrencies():
-            currency = Currency(cur[0], cur[1], cur[2])
-            self.currencies[currency.symbol] = currency
-
-        self.loadFavoriteCurrencies()
-        self.loadLastCurrenciesRank()
 
         # USD
         self.currencies['USD'] = Currency('Dollars', 'USD', None)
         self.currencies['USD'].price = 1
         self.currencies['USD'].lastDayPrice = 1
         self.currencies['USD'].ath = 1
+        self.currencies['USD'].rank = 0
+
+        # assets
+        for cur in currencies.getCurrencies():
+            currency = Currency(cur[0], cur[1], cur[2])
+            self.currencies[currency.symbol] = currency
+
+        self.loadFavoriteCurrencies()
+        self.loadLastCurrenciesRank()
 
         # load CSS
         with open(self.sharePath + 'css/style.css', 'r') as file:
@@ -235,6 +238,8 @@ class Window (Gtk.Window):
         except OSError:
             # not created now, skip
             pass
+    def getCurrencies (self):
+        return self.currencies;
 
     def getCurrencyBySymbol (self, symbol):
         return self.currencies[symbol]

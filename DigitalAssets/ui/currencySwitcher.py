@@ -83,13 +83,12 @@ class CurrencySwitcher (Gtk.ListBox):
     def rowActivatedEvent (self, obj, row):
         # a currency button has been activated
 
-        if (self.actualRow is not None):
-            if (self.actualRow is not row):
-                # load stack
-                if (self.mainWindow.currencies[row.curSymbol].price is not None):
-                    self.mainWindow.currencyView.reload(self.mainWindow.currencies[row.curSymbol], True)
-
+        lastRow = self.actualRow
         self.actualRow = row
+
+        if (lastRow is not row):
+            # load stack
+            self.mainWindow.currencyView.reload(True)
 
         # if search entry showed, hide it
         if (self.mainWindow.headerBar.searchButton.get_active() is True):

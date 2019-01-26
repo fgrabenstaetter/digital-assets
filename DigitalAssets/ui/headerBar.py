@@ -20,7 +20,6 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from DigitalAssets.data import currencies
 import gettext
 
 # app version
@@ -33,8 +32,8 @@ class HeaderBar (Gtk.HeaderBar):
         self.set_show_close_button(True)
         self.set_title('Digital Assets')
 
-        self.baseCurrencies = currencies.getBaseCurrencies()
-        self.actualBaseCurrencySymbol = self.baseCurrencies[0][1]
+        self.baseCurrencies =  self.mainWindow.getCurrencies()
+        self.actualBaseCurrencySymbol = self.baseCurrencies[list(self.baseCurrencies.keys())[0]].symbol
         self.actualSortMethodName = 'rank' # default sort method
         self.createMenu()
         self.createBaseCurrencySwitch()
@@ -90,22 +89,35 @@ class HeaderBar (Gtk.HeaderBar):
 
     def createBaseCurrencySwitch (self):
         # create and add base currency switch widgets to the header bar
+        actualBaseCurrency = self.baseCurrencies[self.actualBaseCurrencySymbol]
 
-        buttonBox = Gtk.Box()
-        buttonBox.set_spacing(6)
-        self.switchButtonText = Gtk.Label(self.baseCurrencies[0][0] + ' (' + self.baseCurrencies[0][1] + ')')
-        buttonBox.add(self.switchButtonText)
-        buttonBox.add(Gtk.Image().new_from_icon_name('pan-down-symbolic', 1))
+        buttonBox = Gtk.Box(spacing = 10)
+        self.switchButtonLabelName = Gtk.Label()
+        self.switchButtonLabelName.set_markup('<b>' + actualBaseCurrency.name + '</b>')
+        self.switchButtonLabelSymbol = Gtk.Label(actualBaseCurrency.symbol)
+        panDownImg = Gtk.Image().new_from_icon_name('pan-down-symbolic', 1)
+
+        buttonBox.add(self.switchButtonLabelName)
+        buttonBox.add(self.switchButtonLabelSymbol)
+        buttonBox.add(panDownImg)
 
         switchButton = Gtk.ToggleButton()
-        switchButton.curSymbol = self.baseCurrencies[0][1]
+        switchButton.curSymbol = actualBaseCurrency.symbol
         switchButton.add(buttonBox)
         self.pack_start(switchButton)
 
         # pop-over
         popover = Gtk.Popover(relative_to = switchButton, border_width = 6)
         popoverBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-        popover.add(popoverBox)
+
+        popoverScrolledWindow = Gtk.ScrolledWindow()
+        popoverScrolledWindow.set_min_content_height(200)
+        popoverScrolledWindow.set_max_content_height(200)
+        popoverScrolledWindow.set_min_content_width(180)
+        popoverScrolledWindow.set_max_content_width(180)
+
+        popoverScrolledWindow.add(popoverBox)
+        popover.add(popoverScrolledWindow)
 
         def popoverClosedEvent (obj = None, data = None):
             switchButton.set_active(False)
@@ -118,39 +130,52 @@ class HeaderBar (Gtk.HeaderBar):
         switchButton.connect('toggled', buttonToggledEvent)
 
         def changeBaseCurrency (obj, data = None):
-            newType = obj.get_label()
+            self.actualBaseCurrencySymbol = obj.curSymbol
             popover.popdown()
             otherCurrencies = []
-            for cur in self.baseCurrencies:
-                if (cur[1] != obj.curSymbol):
-                    otherCurrencies.append(cur)
 
-            self.switchButtonText.set_text(newType)
-            self.actualBaseCurrencySymbol = obj.curSymbol
+            for curSymbol in self.baseCurrencies.keys():
+                if (self.actualBaseCurrencySymbol != curSymbol):
+                    otherCurrencies.append(self.baseCurrencies[curSymbol])
+
+            self.switchButtonLabelName.set_markup('<b>' + obj.curName + '</b>')
+            self.switchButtonLabelSymbol.set_text(obj.curSymbol)
 
             def assignStr (button):
                 assert len(otherCurrencies) > 0
-                button.set_label(otherCurrencies[0][0] + ' (' + otherCurrencies[0][1] + ')')
-                button.curSymbol = otherCurrencies[0][1]
+                button.labelName.set_markup('<b>' + otherCurrencies[0].name + '</b>')
+                button.labelSymbol.set_label(otherCurrencies[0].symbol)
+                button.curName = otherCurrencies[0].name
+                button.curSymbol = otherCurrencies[0].symbol
                 del otherCurrencies[0]
             popoverBox.foreach(assignStr)
 
             # sort again currencies
             self.mainWindow.currencySwitcher.invalidate_sort()
 
-            if (self.mainWindow.currencyView.actualCurrencySymbol is not None):
-                # reload currencyView
-                actualCurrency = self.mainWindow.currencies[self.mainWindow.currencyView.actualCurrencySymbol]
-                self.mainWindow.currencyView.reload(actualCurrency)
+            # reload currencyView
+            self.mainWindow.currencyView.reload()
 
         popoverButtons = []
-        for str in self.baseCurrencies[1:]:
-            button = Gtk.ModelButton(str[0] + ' (' + str[1] + ')', xalign = 0)
-            button.curSymbol = str[1]
-            button.connect('clicked', changeBaseCurrency)
-            popoverBox.add(button)
+        for curSymbol in self.baseCurrencies.keys():
+            if (curSymbol != self.actualBaseCurrencySymbol):
+                cur = self.baseCurrencies[curSymbol]
+                button = Gtk.ModelButton(xalign = 0)
 
-        popoverBox.show_all()
+                button.curName = cur.name
+                button.curSymbol = cur.symbol
+                button.connect('clicked', changeBaseCurrency)
+
+                buttonBox = button.get_children()[0]
+                button.labelName = Gtk.Label(wrap = True, xalign = 0)
+                button.labelName.set_markup('<b>' + cur.name + '</b>')
+                button.labelSymbol = Gtk.Label(cur.symbol, name = 'baseCurrencyPopoverSymbol')
+
+                buttonBox.pack_start(button.labelName, False, False, 0)
+                buttonBox.pack_end(button.labelSymbol, False, False, 0)
+                popoverBox.add(button)
+
+        popoverScrolledWindow.show_all()
 
     def createSearchEntry (self):
         # create and add search widgets to the headerbar

@@ -19,6 +19,7 @@
 
 def getCurrencies ():
     # (name, symbol, website)
+
     return [
         ('Bitcoin', 'BTC', 'https://bitcoin.org/'),
         ('Ethereum', 'ETH', 'https://www.ethereum.org/'),
@@ -75,13 +76,4 @@ def getCurrencies ():
         ('Storj', 'STORJ', 'https://storj.io/'),
         ('IOST', 'IOST', 'https://iost.io/'),
         ('Aeternity', 'AE', 'https://www.aeternity.com/')
-    ]
-
-def getBaseCurrencies ():
-    return [
-        ('Dollars', 'USD'),
-        ('Bitcoin', 'BTC'),
-        ('Ethereum', 'ETH'),
-        ('TrueUSD', 'TUSD'),
-        ('Tether', 'USDT')
     ]

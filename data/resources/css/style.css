@@ -61,3 +61,8 @@ LICENSE: GPL 3.0
 {
 	padding: 10px;
 }
+
+#baseCurrencyPopoverSymbol
+{
+	padding: 0 4px;
+}

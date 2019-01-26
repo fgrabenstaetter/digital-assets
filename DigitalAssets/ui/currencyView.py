@@ -222,9 +222,10 @@ class CurrencyView (Gtk.Box):
         self.add(self.revealer)
         self.show_all()
 
-    def reload (self, currency, animate = False):
+    def reload (self, animate = False):
         # set widgets value
 
+        currency = self.mainWindow.getActualCurrency()
         baseCurrency = self.mainWindow.getActualBaseCurrency()
 
         if (isinstance(self.spinner1, Gtk.Widget)):
