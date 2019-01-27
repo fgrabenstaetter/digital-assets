@@ -23,7 +23,7 @@ def getCurrencies ():
     return [
         ('Bitcoin', 'BTC', 'https://bitcoin.org/'),
         ('Ethereum', 'ETH', 'https://www.ethereum.org/'),
-        ('Ripple', 'XRP', 'https://ripple.com/xrp/'),
+        ('XRP', 'XRP', 'https://ripple.com/xrp/'),
         ('Bitcoin Cash', 'BCH', 'https://www.bitcoincash.org/'),
         ('EOS', 'EOS', 'https://eos.io/'),
         ('Stellar', 'XLM', 'https://www.stellar.org/'),
