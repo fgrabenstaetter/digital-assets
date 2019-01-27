@@ -134,9 +134,9 @@ class HeaderBar (Gtk.HeaderBar):
             popover.popdown()
             otherCurrencies = []
 
-            for curSymbol in self.baseCurrencies.keys():
-                if (self.actualBaseCurrencySymbol != curSymbol):
-                    otherCurrencies.append(self.baseCurrencies[curSymbol])
+            for cur in self.getBaseCurrenciesSorted():
+                if (cur.symbol != self.actualBaseCurrencySymbol):
+                    otherCurrencies.append(cur)
 
             self.switchButtonLabelName.set_markup('<b>' + obj.curName + '</b>')
             self.switchButtonLabelSymbol.set_text(obj.curSymbol)
@@ -157,11 +157,9 @@ class HeaderBar (Gtk.HeaderBar):
             self.mainWindow.currencyView.reload()
 
         popoverButtons = []
-        for curSymbol in self.baseCurrencies.keys():
-            if (curSymbol != self.actualBaseCurrencySymbol):
-                cur = self.baseCurrencies[curSymbol]
+        for cur in self.getBaseCurrenciesSorted():
+            if (cur.symbol != self.actualBaseCurrencySymbol):
                 button = Gtk.ModelButton(xalign = 0)
-
                 button.curName = cur.name
                 button.curSymbol = cur.symbol
                 button.connect('clicked', changeBaseCurrency)
@@ -176,6 +174,14 @@ class HeaderBar (Gtk.HeaderBar):
                 popoverBox.add(button)
 
         popoverScrolledWindow.show_all()
+
+    def getBaseCurrenciesSorted (self):
+        if (self.baseCurrencies['BTC'].rank is not None):
+            # sort by rank
+            return sorted(list(self.baseCurrencies.values()), key = lambda cur: cur.rank)
+        else:
+            # sort by name
+            return sorted(list(self.baseCurrencies.values()), key = lambda cur: cur.name)
 
     def createSearchEntry (self):
         # create and add search widgets to the headerbar
@@ -208,13 +214,13 @@ class HeaderBar (Gtk.HeaderBar):
 
         # popover
         popover = Gtk.Popover(relative_to = button, border_width = 6)
-        popOverBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+        popoverBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
 
-        def popOverClosedEvent (obj = None, data = None):
+        def popoverClosedEvent (obj = None, data = None):
             button.set_active(False)
 
         button.connect('toggled', buttonToggledEvent)
-        popover.connect('closed', popOverClosedEvent)
+        popover.connect('closed', popoverClosedEvent)
 
         sortMethodNames = (
             ('rank', _('Rank')),
@@ -237,9 +243,9 @@ class HeaderBar (Gtk.HeaderBar):
             rowBox = row.get_children()[0]
             label = Gtk.Label(str)
 
-            popOverBoxChildren = popOverBox.get_children()
-            if (len(popOverBoxChildren) > 0):
-                radioButton = Gtk.RadioButton(group = popOverBoxChildren[0].radioButton)
+            popoverBoxChildren = popoverBox.get_children()
+            if (len(popoverBoxChildren) > 0):
+                radioButton = Gtk.RadioButton(group = popoverBoxChildren[0].radioButton)
             else:
                 radioButton = Gtk.RadioButton()
 
@@ -247,8 +253,8 @@ class HeaderBar (Gtk.HeaderBar):
             rowBox.pack_end(radioButton, False, False, 0)
 
             row.radioButton = radioButton
-            popOverBox.add(row)
+            popoverBox.add(row)
 
-        popover.add(popOverBox)
-        popOverBox.show_all()
+        popover.add(popoverBox)
+        popoverBox.show_all()
         self.add(button)
