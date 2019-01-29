@@ -40,10 +40,13 @@ class APIData ():
         dataPrices = self.reloadPrices()
         if (dataPrices is not False):
             self.reloadCurrentView()
+            self.mainWindow.currencySwitcher.invalidate_sort()
 
         if (((self.nbReloaded % self.bigDataReloadModulo) == 0) or (self.mainWindow.currencies['BTC'].dayVolume is None) or (self.mainWindow.currencies['BTC'].dayGraphData is None)):
             # reload currencies general data (dashboard)
             dataInfos = self.reloadInfos(dataPrices)
+            self.mainWindow.currencySwitcher.invalidate_sort()
+
             if (dataInfos is not False):
                 self.reloadCurrentView()
 
@@ -51,8 +54,6 @@ class APIData ():
             dataGraph = self.reloadGraphData()
             if (dataGraph is not False):
                 self.reloadCurrentView()
-
-        self.mainWindow.currencySwitcher.invalidate_sort()
 
     def loop (self):
         # start the api call loop
