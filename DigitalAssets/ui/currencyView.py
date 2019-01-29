@@ -228,6 +228,9 @@ class CurrencyView (Gtk.Box):
         currency = self.mainWindow.getActualCurrency()
         baseCurrency = self.mainWindow.getActualBaseCurrency()
 
+        if ((currency.price is None) or (baseCurrency.price is None)):
+            return
+
         if (isinstance(self.spinner1, Gtk.Widget)):
             self.create()
         elif (animate is True):
