@@ -246,7 +246,8 @@ class HeaderBar (Gtk.HeaderBar):
             ('rank', _('Rank')),
             ('name', _('Name')),
             ('dayPriceChange', _('Change')),
-            ('volume', _('Volume'))
+            ('volume', _('Volume')),
+            ('ath', 'ATH')
         )
 
         def rowClickedEvent (obj, data = None):

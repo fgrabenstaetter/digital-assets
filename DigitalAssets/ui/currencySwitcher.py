@@ -101,7 +101,7 @@ class CurrencySwitcher (Gtk.ListBox):
         row1Cur = self.mainWindow.currencies[row1.curSymbol]
         row2Cur = self.mainWindow.currencies[row2.curSymbol]
 
-        if (((sortMethodName == 'rank') and ((row1Cur.rank is None) or (row2Cur.rank is None))) or ((sortMethodName == 'dayPriceChange') and ((row1Cur.lastDayPrice is None) or (row2Cur.lastDayPrice is None)))):
+        if (((sortMethodName == 'rank') and ((row1Cur.rank is None) or (row2Cur.rank is None))) or ((sortMethodName == 'ath') and (row1Cur.ath is None) and (row2Cur.ath is None)) or ((sortMethodName == 'dayPriceChange') and ((row1Cur.lastDayPrice is None) or (row2Cur.lastDayPrice is None)))):
             sortMethodName = 'name'
 
         if (not row1Cur.favorite and row2Cur.favorite):
@@ -134,6 +134,23 @@ class CurrencySwitcher (Gtk.ListBox):
                     return 1
             elif (sortMethodName == 'volume'):
                 if (row1Cur.dayVolume > row2Cur.dayVolume):
+                    return -1
+                else:
+                    return 1
+            elif (sortMethodName == 'ath'):
+                if (row1Cur.ath is not None):
+                    row1AthRelativePercentage = row1Cur.price / row1Cur.ath
+                else:
+                    # ATH undefined, put at the end of list
+                    row1AthRelativePercentage = 0
+
+                if (row2Cur.ath is not None):
+                    row2AthRelativePercentage = row2Cur.price / row2Cur.ath
+                else:
+                    # ATH undefined, put at the end of list
+                    row2AthRelativePercentage = 0
+
+                if (row1AthRelativePercentage > row2AthRelativePercentage):
                     return -1
                 else:
                     return 1
