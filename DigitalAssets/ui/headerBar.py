@@ -129,6 +129,19 @@ class HeaderBar (Gtk.HeaderBar):
         popover.connect('closed', popoverClosedEvent)
         switchButton.connect('toggled', buttonToggledEvent)
 
+        def searchEntrySearchEvent (obj, data = None):
+            text = obj.get_text().lower()
+            for child in popoverBox.get_children():
+                if ((child is not obj) and (text not in child.curName.lower()) and (text not in child.curSymbol.lower())):
+                    child.hide()
+                else:
+                    child.show()
+
+        # add search entry
+        searchEntry = Gtk.SearchEntry(margin_bottom = 10)
+        searchEntry.connect('search-changed', searchEntrySearchEvent)
+        popoverBox.add(searchEntry)
+
         def changeBaseCurrency (obj, data = None):
             self.actualBaseCurrencySymbol = obj.curSymbol
             popover.popdown()
@@ -142,6 +155,9 @@ class HeaderBar (Gtk.HeaderBar):
             self.switchButtonLabelSymbol.set_text(obj.curSymbol)
 
             def assignStr (button):
+                if (isinstance(button, Gtk.SearchEntry)):
+                    return
+
                 assert len(otherCurrencies) > 0
                 button.labelName.set_markup('<b>' + otherCurrencies[0].name + '</b>')
                 button.labelSymbol.set_label(otherCurrencies[0].symbol)
@@ -150,12 +166,16 @@ class HeaderBar (Gtk.HeaderBar):
                 del otherCurrencies[0]
             popoverBox.foreach(assignStr)
 
+            # reset search entry
+            searchEntry.set_text('')
+
             # sort again currencies
             self.mainWindow.currencySwitcher.invalidate_sort()
 
             # reload currencyView
             self.mainWindow.currencyView.reload()
 
+        # add currencies
         popoverButtons = []
         for cur in self.getBaseCurrenciesSorted():
             if (cur.symbol != self.actualBaseCurrencySymbol):
