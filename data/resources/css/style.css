@@ -4,7 +4,7 @@ AUTHOR: François Grabenstaetter
 LICENSE: GPL 3.0
 */
 
-#bottomBox
+#mainBox
 {
 	background-color: @theme_base_color;
 	border-radius: 10px;
@@ -14,11 +14,6 @@ LICENSE: GPL 3.0
 #infosBox > box
 {
 	padding: 20px;
-}
-
-#currencySwitcher
-{
-	background-color: lighter(@theme_base_color);
 }
 
 #priceGreen

@@ -95,11 +95,9 @@ class HeaderBar (Gtk.HeaderBar):
         self.switchButtonLabelName = Gtk.Label()
         self.switchButtonLabelName.set_markup('<b>' + actualBaseCurrency.name + '</b>')
         self.switchButtonLabelSymbol = Gtk.Label(actualBaseCurrency.symbol)
-        panDownImg = Gtk.Image().new_from_icon_name('pan-down-symbolic', 1)
 
         buttonBox.add(self.switchButtonLabelName)
         buttonBox.add(self.switchButtonLabelSymbol)
-        buttonBox.add(panDownImg)
 
         switchButton = Gtk.ToggleButton()
         switchButton.curSymbol = actualBaseCurrency.symbol

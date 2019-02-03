@@ -108,12 +108,9 @@ class CurrencyView (Gtk.Box):
         priceBox.add(self.priceLabel)
         priceBox.add(self.baseCurrencySymbolLabel)
 
-        topBox2 = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 100, border_width = 20)
-        topBox2.add(titleBox);
-        topBox2.add(priceBox)
-
-        topBox = Gtk.Button(halign = Gtk.Align.CENTER)
-        topBox.add(topBox2)
+        topBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 100, border_width = 20)
+        topBox.add(titleBox);
+        topBox.add(priceBox)
 
         # general informations box
         dayPriceChangeBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, valign = Gtk.Align.CENTER, spacing = 10)
@@ -207,12 +204,12 @@ class CurrencyView (Gtk.Box):
         self.graphBoxRevealer = Gtk.Revealer()
         self.graphBoxRevealer.add(graphBox)
 
-        bottomBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, halign = Gtk.Align.CENTER, spacing = 30, name = 'bottomBox')
+        bottomBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, halign = Gtk.Align.CENTER, spacing = 30)
         bottomBox.add(self.infosBoxRevealer)
         bottomBox.add(self.spinner2)
         bottomBox.add(self.graphBoxRevealer)
 
-        mainBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 60)
+        mainBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, halign = Gtk.Align.CENTER, spacing = 40, border_width = 10, name = 'mainBox')
         mainBox.add(topBox)
         mainBox.add(bottomBox)
 
@@ -243,7 +240,7 @@ class CurrencyView (Gtk.Box):
 
         # top (header)
         self.actualCurrencySymbol = currency.symbol
-        pixbuf = GdkPixbuf.Pixbuf().new_from_file_at_scale(self.mainWindow.sharePath + 'img/' + currency.symbol + '.svg', 96, 96, True)
+        pixbuf = GdkPixbuf.Pixbuf().new_from_file_at_scale(self.mainWindow.sharePath + 'img/' + currency.symbol + '.svg', 100, 100, True)
         self.image.set_from_pixbuf(pixbuf)
 
         # name and symbol
