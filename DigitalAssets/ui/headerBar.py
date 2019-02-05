@@ -198,7 +198,7 @@ class HeaderBar (Gtk.HeaderBar):
         popoverBox.show_all()
 
     def getBaseCurrenciesSorted (self):
-        if (self.baseCurrencies['BTC'].rank is not None):
+        if (self.baseCurrencies['BTC'].dayVolume is not None):
             # sort by rank
             return sorted(list(self.baseCurrencies.values()), key = lambda cur: cur.rank)
         else:
