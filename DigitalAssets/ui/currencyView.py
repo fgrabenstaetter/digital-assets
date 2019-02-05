@@ -108,9 +108,12 @@ class CurrencyView (Gtk.Box):
         priceBox.add(self.priceLabel)
         priceBox.add(self.baseCurrencySymbolLabel)
 
-        topBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 100, border_width = 20)
-        topBox.add(titleBox);
-        topBox.add(priceBox)
+        topBoxMain = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 100, border_width = 20)
+        topBoxMain.add(titleBox);
+        topBoxMain.add(priceBox)
+
+        topBox = Gtk.Button()
+        topBox.add(topBoxMain)
 
         # general informations box
         dayPriceChangeBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, valign = Gtk.Align.CENTER, spacing = 10)
