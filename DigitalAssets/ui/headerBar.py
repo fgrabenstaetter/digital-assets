@@ -121,6 +121,8 @@ class HeaderBar (Gtk.HeaderBar):
         def buttonToggledEvent (obj = None, data = None):
             if (switchButton.get_active() is True):
                 popover.popup()
+                # clear search entry
+                searchEntry.set_text('')
 
         popover.connect('closed', popoverClosedEvent)
         switchButton.connect('toggled', buttonToggledEvent)
@@ -167,9 +169,6 @@ class HeaderBar (Gtk.HeaderBar):
                 button.curSymbol = otherCurrencies[0].symbol
                 del otherCurrencies[0]
             popoverCurrenciesBox.foreach(assignStr)
-
-            # reset search entry
-            searchEntry.set_text('')
 
             # sort again currencies
             self.mainWindow.currencySwitcher.invalidate_sort()
