@@ -124,6 +124,25 @@ class HeaderBar (Gtk.HeaderBar):
                 # clear search entry
                 searchEntry.set_text('')
 
+                # reload buttons
+                otherCurrencies = []
+                for cur in self.getBaseCurrenciesSorted():
+                    if (cur.symbol != self.actualBaseCurrencySymbol):
+                        otherCurrencies.append(cur)
+
+                def assignStr (button):
+                    if (isinstance(button, Gtk.SearchEntry)):
+                        return
+
+                    assert len(otherCurrencies) > 0
+                    button.labelName.set_markup('<b>' + otherCurrencies[0].name + '</b>')
+                    button.labelSymbol.set_label(otherCurrencies[0].symbol)
+                    button.curName = otherCurrencies[0].name
+                    button.curSymbol = otherCurrencies[0].symbol
+                    del otherCurrencies[0]
+
+                popoverCurrenciesBox.foreach(assignStr)
+
         popover.connect('closed', popoverClosedEvent)
         switchButton.connect('toggled', buttonToggledEvent)
 
@@ -149,26 +168,9 @@ class HeaderBar (Gtk.HeaderBar):
         def changeBaseCurrency (obj, data = None):
             self.actualBaseCurrencySymbol = obj.curSymbol
             popover.popdown()
-            otherCurrencies = []
-
-            for cur in self.getBaseCurrenciesSorted():
-                if (cur.symbol != self.actualBaseCurrencySymbol):
-                    otherCurrencies.append(cur)
 
             self.switchButtonLabelName.set_markup('<b>' + obj.curName + '</b>')
             self.switchButtonLabelSymbol.set_text(obj.curSymbol)
-
-            def assignStr (button):
-                if (isinstance(button, Gtk.SearchEntry)):
-                    return
-
-                assert len(otherCurrencies) > 0
-                button.labelName.set_markup('<b>' + otherCurrencies[0].name + '</b>')
-                button.labelSymbol.set_label(otherCurrencies[0].symbol)
-                button.curName = otherCurrencies[0].name
-                button.curSymbol = otherCurrencies[0].symbol
-                del otherCurrencies[0]
-            popoverCurrenciesBox.foreach(assignStr)
 
             # sort again currencies
             self.mainWindow.currencySwitcher.invalidate_sort()
@@ -176,19 +178,16 @@ class HeaderBar (Gtk.HeaderBar):
             # reload currencyView
             self.mainWindow.currencyView.reload()
 
-        # add currencies
+        # create currencies buttons
         popoverButtons = []
         for cur in self.getBaseCurrenciesSorted():
             if (cur.symbol != self.actualBaseCurrencySymbol):
                 button = Gtk.ModelButton(xalign = 0)
-                button.curName = cur.name
-                button.curSymbol = cur.symbol
                 button.connect('clicked', changeBaseCurrency)
 
                 buttonBox = button.get_children()[0]
                 button.labelName = Gtk.Label(wrap = True, xalign = 0)
-                button.labelName.set_markup('<b>' + cur.name + '</b>')
-                button.labelSymbol = Gtk.Label(cur.symbol, name = 'baseCurrencyPopoverSymbol')
+                button.labelSymbol = Gtk.Label(name = 'baseCurrencyPopoverSymbol')
 
                 buttonBox.pack_start(button.labelName, False, False, 0)
                 buttonBox.pack_end(button.labelSymbol, False, False, 0)
