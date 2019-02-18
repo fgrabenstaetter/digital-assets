@@ -76,16 +76,16 @@ class CurrencyView (Gtk.Box):
         self.maxSupplyLabel = Gtk.Label(xalign = 0)
         self.maxSupplyBaseCurrencySymbolLabel = Gtk.Label()
 
+        # graph
+        self.graph = Graph()
+
+        # website link and favorite button
         self.websiteButton = Gtk.LinkButton(label = _('Website'), name = 'linkButton')
-        actionsBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 40)
 
         self.favoriteButtonImage = Gtk.Image().new_from_icon_name('non-starred-symbolic', 1)
         self.favoriteButton = Gtk.ToggleButton(valign = Gtk.Align.CENTER)
         self.favoriteButton.add(self.favoriteButtonImage)
         self.favoriteButton.handlerID = self.favoriteButton.connect('toggled', self.favoriteButtonToggledEvent)
-
-        # graph
-        self.graph = Graph()
 
         # spinners
         self.spinner2 = Gtk.Spinner()
@@ -168,6 +168,7 @@ class CurrencyView (Gtk.Box):
         supplyInfosBox.add(maxSupplyBox)
 
         # actions box
+        actionsBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 40)
         actionsBox.add(self.websiteButton)
         actionsBox.add(self.favoriteButton)
 
@@ -198,7 +199,6 @@ class CurrencyView (Gtk.Box):
         infosBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, halign = Gtk.Align.CENTER, name = 'infosBox')
         infosBox.add(generalInfosBox)
         infosBox.add(supplyInfosBox)
-        infosBox.add(actionsBox)
 
         self.infosBoxRevealer = Gtk.Revealer()
         self.infosBoxRevealer.add(infosBox)
@@ -214,6 +214,7 @@ class CurrencyView (Gtk.Box):
         mainBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, halign = Gtk.Align.CENTER, spacing = 40, border_width = 10, name = 'mainBox')
         mainBox.add(topBox)
         mainBox.add(bottomBox)
+        mainBox.add(actionsBox)
 
         self.revealer = Gtk.Revealer(transition_type = Gtk.RevealerTransitionType.CROSSFADE)
         self.revealer.add(mainBox)
