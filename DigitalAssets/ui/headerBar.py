@@ -22,7 +22,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # app version
-appVersion = '3.2'
+appVersion = '3.3'
 
 class HeaderBar (Gtk.HeaderBar):
     def __init__ (self, mainWindow):
