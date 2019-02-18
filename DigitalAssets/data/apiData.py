@@ -39,21 +39,21 @@ class APIData ():
         # reload prices
         dataPrices = self.reloadPrices()
         if (dataPrices is not False):
-            self.reloadCurrentView()
-            self.mainWindow.currencySwitcher.invalidate_sort()
+            self.setRequest('reloadCurrencyView')
+            self.setRequest('resortCurrencySwitcher')
 
         if (((self.nbReloaded % self.bigDataReloadModulo) == 0) or (self.mainWindow.currencies['BTC'].dayVolume is None) or (self.mainWindow.currencies['BTC'].dayGraphData is None)):
             # reload currencies general data (dashboard)
             dataInfos = self.reloadInfos(dataPrices)
-            self.mainWindow.currencySwitcher.invalidate_sort()
+            self.setRequest('resortCurrencySwitcher')
 
             if (dataInfos is not False):
-                self.reloadCurrentView()
+                self.setRequest('reloadCurrencyView')
 
             # graph prices reload
             dataGraph = self.reloadGraphData()
             if (dataGraph is not False):
-                self.reloadCurrentView()
+                self.setRequest('reloadCurrencyView')
 
     def loop (self):
         # start the api call loop
@@ -72,10 +72,10 @@ class APIData ():
         self.thread.daemon = True
         self.thread.start()
 
-    def reloadCurrentView (self):
+    def setRequest (self, str):
         # reload actual currency view values
-
-        self.mainWindow.currencyView.reload()
+        if (str in self.mainWindow.apiDataRequests.keys()):
+            self.mainWindow.apiDataRequests[str] = True
 
     def datetimeToStr (self, dt):
         # datetime to str (YYYY-MM-DDTHH-MM-SSZ)

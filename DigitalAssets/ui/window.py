@@ -19,7 +19,7 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk, GdkPixbuf, Gio
+from gi.repository import Gtk, Gdk, GdkPixbuf, Gio, GObject
 from DigitalAssets.ui.headerBar import HeaderBar
 from DigitalAssets.ui.currencySwitcher import CurrencySwitcher
 from DigitalAssets.ui.currencyView import CurrencyView
@@ -140,8 +140,29 @@ class Window (Gtk.Window):
         self.searchEntryRevealer.set_reveal_child(False)
         self.networkErrorBarRevealer.set_reveal_child(False)
 
+        # APIData requests (to avoid crash due to thread colision)
+        self.apiDataRequests = {
+            'reloadCurrencyView': False,
+            'resortCurrencySwitcher': False
+        }
+
+        self.nextRequestsTimer()
+
         # load API Data
         self.apiData = APIData(self)
+
+    def nextRequestsTimer (self):
+        # add next timeout and execute APIData requests
+
+        if (self.apiDataRequests['reloadCurrencyView'] is True):
+            self.apiDataRequests['reloadCurrencyView'] = False
+            self.currencyView.reload()
+
+        if (self.apiDataRequests['resortCurrencySwitcher'] is True):
+            self.apiDataRequests['resortCurrencySwitcher'] = False
+            self.currencySwitcher.invalidate_sort()
+
+        GObject.timeout_add(1000, self.nextRequestsTimer)
 
     def quit (self, obj = None, data = None):
         # quit the app and save some data
