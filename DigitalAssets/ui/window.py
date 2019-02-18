@@ -33,12 +33,7 @@ sharePath = '/usr/share/digital-assets/'
 configPath = str(pathlib.Path.home()) + '/.config/digital-assets/'
 
 # init translations
-try:
-    tr = gettext.translation('locale', localedir = sharePath + 'locale/', languages = ['fr'])
-    tr.install()
-except OSError:
-    # translation not found for this language
-    gettext.install('test')
+gettext.install('locale', sharePath + 'locale/')
 
 # create config path if not exists
 os.makedirs(os.path.dirname(configPath), exist_ok = True)

@@ -22,7 +22,6 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GdkPixbuf
 from DigitalAssets.data import tools
 from DigitalAssets.ui.graph import Graph
-import gettext
 
 class CurrencyView (Gtk.Box):
     def __init__ (self, mainWindow):

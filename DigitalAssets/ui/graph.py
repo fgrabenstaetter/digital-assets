@@ -21,7 +21,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, cairo
 from DigitalAssets.data import tools
-import gettext, math
+import math
 
 class Graph (Gtk.DrawingArea):
     def __init__ (self):
