@@ -39,4 +39,4 @@ install: $(DATA_DIR) $(PACKAGE_DIR) $(EXEC_FILE)
 	cp -R $(PACKAGE_DIR) -t $(USER_PACKAGE_DIR)
 
 	# update gtk icon cache
-	gtk-update-icon-cache
+	gtk-update-icon-cache $(USER_ICONS_DIR)
