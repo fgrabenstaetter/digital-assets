@@ -8,5 +8,6 @@ You can ask to list a coin if it follow this requirements:
 - Active developement
 - Not a scam / inutile fork
 - Serious team
+- Coin available on https://nomics.com
 
 Thanks for contributing !
