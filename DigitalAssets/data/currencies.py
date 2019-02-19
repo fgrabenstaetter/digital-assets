@@ -75,5 +75,7 @@ def getCurrencies ():
         ('Status', 'SNT', 'https://status.im/'),
         ('Storj', 'STORJ', 'https://storj.io/'),
         ('IOST', 'IOST', 'https://iost.io/'),
-        ('Aeternity', 'AE', 'https://www.aeternity.com/')
+        ('Aeternity', 'AE', 'https://www.aeternity.com/'),
+        ('Ravencoin', 'RVN', 'https://ravencoin.org/'),
+        ('TomoChain', 'TOMO', 'https://tomochain.com/')
     ]
