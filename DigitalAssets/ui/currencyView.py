@@ -257,6 +257,14 @@ class CurrencyView (Gtk.Box):
         self.priceLabel.set_label(tools.beautifyNumber(priceRounded))
         self.baseCurrencySymbolLabel.set_label(baseCurrency.symbol)
 
+        # actions box
+        self.websiteButton.set_uri(currency.websiteURL)
+
+        if (currency.favorite is True):
+            with self.favoriteButton.handler_block(self.favoriteButton.handlerID):
+                self.favoriteButton.set_active(True)
+                self.favoriteButtonImage.set_from_icon_name('starred-symbolic', 1)
+
         if (currency.dayVolume is not None): # only when all data has been loaded into currency
             if (self.infosBoxRevealer.get_child_revealed() is False):
                 self.infosBoxRevealer.set_reveal_child(True)
@@ -318,14 +326,6 @@ class CurrencyView (Gtk.Box):
 
             self.maxSupplyLabel.set_label(maxSupplyStr)
             self.maxSupplyBaseCurrencySymbolLabel.set_label(maxSupplyBaseCurrencyStr)
-
-            # actions box
-            self.websiteButton.set_uri(currency.websiteURL)
-
-            if (currency.favorite is True):
-                with self.favoriteButton.handler_block(self.favoriteButton.handlerID):
-                    self.favoriteButton.set_active(True)
-                    self.favoriteButtonImage.set_from_icon_name('starred-symbolic', 1)
 
             if (currency.dayGraphData is not None): # day graph prices is the first loaded
                 if (isinstance(self.spinner2, Gtk.Spinner)):
