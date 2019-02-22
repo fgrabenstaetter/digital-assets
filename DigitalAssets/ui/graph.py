@@ -20,11 +20,15 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, cairo
-from DigitalAssets.data import tools
+
+from DigitalAssets.sys import tools
+
 import math
 
 class Graph (Gtk.DrawingArea):
+
     def __init__ (self):
+
         Gtk.DrawingArea.__init__(self)
         self.set_size_request(600, 250)
         self.connect('draw', self.drawGraph)
@@ -77,6 +81,7 @@ class Graph (Gtk.DrawingArea):
         self.graphInfos['time'] = graphTime
 
     def redraw (self):
+        
         self.queue_draw()
 
     def drawGraph (self, obj, ctx):

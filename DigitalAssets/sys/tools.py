@@ -42,4 +42,5 @@ def beautifyNumber (number):
     return newNumberStr
 
 def bestDigitsNumberAfterDecimalPoint (currencyPrice, baseCurrencyPrice):
+    
     return len(str(round((baseCurrencyPrice * 1000) / currencyPrice)))

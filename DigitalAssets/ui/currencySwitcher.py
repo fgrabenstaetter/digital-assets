@@ -20,10 +20,14 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from DigitalAssets.data import currencies
+
+from DigitalAssets.sys import currencies
+from DigitalAssets.ui.env import *
 
 class CurrencySwitcher (Gtk.ListBox):
+
     def __init__ (self, mainWindow):
+
         Gtk.ListBox.__init__(self, name = 'currencySwitcher')
         self.mainWindow = mainWindow
         self.actualRow = None
@@ -44,7 +48,7 @@ class CurrencySwitcher (Gtk.ListBox):
         row.curName = currency.name
         row.curSymbol = currency.symbol
 
-        icon = Gtk.Image().new_from_file(self.mainWindow.sharePath + 'img/' + currency.symbol + '.svg')
+        icon = Gtk.Image().new_from_file(SHARE_PATH + 'img/' + currency.symbol + '.svg')
 
         nameBox = Gtk.Box(
             orientation = Gtk.Orientation.VERTICAL,
@@ -59,6 +63,7 @@ class CurrencySwitcher (Gtk.ListBox):
         favoriteImage.set_from_icon_name('starred-symbolic', 1)
         row.favoriteImageRevealer = Gtk.Revealer(transition_type = Gtk.RevealerTransitionType.CROSSFADE, transition_duration = 1000)
         row.favoriteImageRevealer.add(favoriteImage)
+        
         if (currency.favorite):
             row.favoriteImageRevealer.set_reveal_child(True)
 
