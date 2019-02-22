@@ -20,7 +20,7 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GLib
 
 import platform, sys, gettext
 
@@ -32,6 +32,9 @@ sys.path.append(moduleParentDirPath)
 
 from DigitalAssets.ui.window import Window
 from DigitalAssets.ui.env import *
+
+# set program name
+GLib.set_prgname(PROGRAM_NAME)
 
 # init translations
 gettext.install('locale', SHARE_PATH + 'locale/')
