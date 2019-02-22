@@ -22,6 +22,8 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 
+import platform, sys, gettext
+
 # be sure the package is found
 fullVersion = platform.python_version().split('.')
 pythonLibDirName = 'python' + str(fullVersion[0] + '.' + fullVersion[1])
@@ -30,8 +32,6 @@ sys.path.append(moduleParentDirPath)
 
 from DigitalAssets.ui.window import Window
 from DigitalAssets.ui.env import *
-
-import platform, sys, gettext
 
 # init translations
 gettext.install('locale', SHARE_PATH + 'locale/')
