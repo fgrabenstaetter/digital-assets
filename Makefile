@@ -1,5 +1,5 @@
 PYTHON_DIR_NAME = python$(shell python3 --version | cut -f 2 -d " " | cut -f 1,2 -d ".")
-DATA_DIR = data/
+DATA_DIR = share/
 PACKAGE_NAME = DigitalAssets
 EXEC_FILE = digital-assets
 

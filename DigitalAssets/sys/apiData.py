@@ -17,17 +17,21 @@
  along with Digital Assets. If not, see <http://www.gnu.org/licenses/>.
 """
 
+from DigitalAssets.sys import currencies
+
 import urllib.request, urllib.error, threading, json, datetime, random, datetime
-from DigitalAssets.data import currencies
 
 class APIData ():
+
     def __init__ (self, mainWindow):
+
         self.mainWindow = mainWindow
         self.APIKey = '540cc835b097c5802c1d8ff21bc5731b'
         self.nbReloaded = 0
         self.askInterval = 10
         self.bigDataReloadModulo = 12
         self.currenciesSymbol = []
+
         for cur in currencies.getCurrencies():
             self.currenciesSymbol.append(cur[1])
 
@@ -44,6 +48,7 @@ class APIData ():
 
         if (((self.nbReloaded % self.bigDataReloadModulo) == 0) or (self.mainWindow.currencies['BTC'].dayVolume is None) or (self.mainWindow.currencies['BTC'].dayGraphData is None)):
             # reload currencies general data (dashboard)
+
             dataInfos = self.reloadInfos(dataPrices)
             self.setRequest('resortCurrencySwitcher')
 
@@ -74,6 +79,7 @@ class APIData ():
 
     def setRequest (self, str):
         # reload actual currency view values
+
         if (str in self.mainWindow.apiDataRequests.keys()):
             self.mainWindow.apiDataRequests[str] = True
 
@@ -107,6 +113,7 @@ class APIData ():
                 if (dataCur['currency'] == symbol):
                     self.mainWindow.currencies[symbol].price = float(dataCur['price'])
                     break
+
         return dataPrices # it is necessary for reloadInfos to calculate the correct rank
 
     def reloadInfos (self, dataPrices):
@@ -155,6 +162,7 @@ class APIData ():
 
         marketcapsSorted.sort(reverse = True)
         i = 1
+
         for marketCap, symbol in marketcapsSorted:
             if (symbol in self.mainWindow.currencies.keys()):
                 self.mainWindow.currencies[symbol].marketCap = marketCap

@@ -20,11 +20,15 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GdkPixbuf
-from DigitalAssets.data import tools
+
+from DigitalAssets.sys import tools
 from DigitalAssets.ui.graph import Graph
+from DigitalAssets.ui.env import *
 
 class CurrencyView (Gtk.Box):
+
     def __init__ (self, mainWindow):
+
         Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, expand = True, border_width = 40)
         self.mainWindow = mainWindow
         self.actualCurrencySymbol = None
@@ -174,6 +178,7 @@ class CurrencyView (Gtk.Box):
 
         # graph box
         self.graphSwitcher = Gtk.StackSwitcher(halign = Gtk.Align.CENTER)
+
         for name, str in (('day', _('Day')), ('month', _('Month')), ('year', _('Year')), ('all', _('All'))):
             button = Gtk.ToggleButton(sensitive = False)
             button.name = name
@@ -243,7 +248,7 @@ class CurrencyView (Gtk.Box):
 
         # top (header)
         self.actualCurrencySymbol = currency.symbol
-        pixbuf = GdkPixbuf.Pixbuf().new_from_file_at_scale(self.mainWindow.sharePath + 'img/' + currency.symbol + '.svg', 100, 100, True)
+        pixbuf = GdkPixbuf.Pixbuf().new_from_file_at_scale(SHARE_PATH + 'img/' + currency.symbol + '.svg', 100, 100, True)
         self.image.set_from_pixbuf(pixbuf)
 
         # name and symbol
@@ -317,6 +322,7 @@ class CurrencyView (Gtk.Box):
             # max supply
             maxSupplyStr = ''
             maxSupplyBaseCurrencyStr = ''
+
             if (currency.maxSupply is None):
                 maxSupplyStr = _('Unlimited')
             else:
@@ -368,6 +374,7 @@ class CurrencyView (Gtk.Box):
 
         currency = self.mainWindow.currencies[self.actualCurrencySymbol]
         currency.favorite = not currency.favorite
+
         if (currency.favorite is True):
             self.favoriteButtonImage.set_from_icon_name('starred-symbolic', 1)
             self.mainWindow.currencySwitcher.actualRow.favoriteImageRevealer.set_reveal_child(True)
@@ -378,6 +385,7 @@ class CurrencyView (Gtk.Box):
         self.mainWindow.currencySwitcher.invalidate_sort()
 
     def graphSwitcherButtonToggledEvent (self, obj, data = None):
+        
         if ((obj.get_active() is False) and (self.actualGraphTime == obj.name)):
             with obj.handler_block(obj.handlerID):
                 obj.set_active(True)

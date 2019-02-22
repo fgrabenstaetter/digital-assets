@@ -18,7 +18,7 @@
  along with Digital Assets. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import gi, platform, sys
+import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 
@@ -29,6 +29,15 @@ moduleParentDirPath = '/usr/lib/' + pythonLibDirName + '/site-packages/'
 sys.path.append(moduleParentDirPath)
 
 from DigitalAssets.ui.window import Window
+from DigitalAssets.ui.env import *
+
+import platform, sys, gettext
+
+# init translations
+gettext.install('locale', SHARE_PATH + 'locale/')
+
+# create config path if not exists
+os.makedirs(os.path.dirname(CONFIG_PATH), exist_ok = True)
 
 Window()
 Gtk.main()

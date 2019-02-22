@@ -21,11 +21,12 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
-# app version
-appVersion = '3.4'
+from DigitalAssets.ui.env import *
 
 class HeaderBar (Gtk.HeaderBar):
+
     def __init__ (self, mainWindow):
+
         Gtk.HeaderBar.__init__(self)
         self.mainWindow = mainWindow
         self.set_show_close_button(True)
@@ -67,8 +68,7 @@ class HeaderBar (Gtk.HeaderBar):
             aboutDialog = Gtk.AboutDialog(
                 authors = ['François Grabenstaetter'],
                 license_type = Gtk.License.GPL_3_0_ONLY,
-                program_name = 'Digital Assets',
-                version = appVersion,
+                version = VERSION,
                 comments = _('Prices, statistics and informations about Digital Assets\nThanks to Nomics (https://nomics.com) for their free API\nDonations') + ' BTC:   bc1qejj6y2gvya5rrun4sfsl08qdeyv36ndhm0ml85',
                 website = 'https://gitlab.gnome.org/fgrabenstaetter/digital-assets',
                 website_label = 'GitLab'
@@ -88,6 +88,7 @@ class HeaderBar (Gtk.HeaderBar):
 
     def createBaseCurrencySwitch (self):
         # create and add base currency switch widgets to the header bar
+
         actualBaseCurrency = self.baseCurrencies[self.actualBaseCurrencySymbol]
 
         buttonBox = Gtk.Box(spacing = 10)
@@ -179,6 +180,7 @@ class HeaderBar (Gtk.HeaderBar):
 
         # create currencies buttons
         popoverButtons = []
+
         for cur in self.getBaseCurrenciesSorted():
             if (cur.symbol != self.actualBaseCurrencySymbol):
                 button = Gtk.ModelButton(xalign = 0)
@@ -195,6 +197,7 @@ class HeaderBar (Gtk.HeaderBar):
         popoverBox.show_all()
 
     def getBaseCurrenciesSorted (self):
+
         if (self.baseCurrencies['BTC'].dayVolume is not None):
             # sort by rank
             return sorted(list(self.baseCurrencies.values()), key = lambda cur: cur.rank)
@@ -264,6 +267,7 @@ class HeaderBar (Gtk.HeaderBar):
             label = Gtk.Label(str)
 
             popoverCurrenciesBoxChildren = popoverCurrenciesBox.get_children()
+            
             if (len(popoverCurrenciesBoxChildren) > 0):
                 radioButton = Gtk.RadioButton(group = popoverCurrenciesBoxChildren[0].radioButton)
             else:

@@ -20,40 +20,28 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf, Gio, GObject
+
 from DigitalAssets.ui.headerBar import HeaderBar
 from DigitalAssets.ui.currencySwitcher import CurrencySwitcher
 from DigitalAssets.ui.currencyView import CurrencyView
-from DigitalAssets.data.apiData import APIData
-from DigitalAssets.data import currencies
-from DigitalAssets.data.currency import Currency
-import pickle, pathlib, os, gettext
+from DigitalAssets.sys.apiData import APIData
+from DigitalAssets.sys import currencies
+from DigitalAssets.sys.currency import Currency
+from DigitalAssets.ui.env import *
 
-# general paths
-sharePath = '/usr/share/digital-assets/'
-configPath = str(pathlib.Path.home()) + '/.config/digital-assets/'
-
-# init translations
-gettext.install('locale', sharePath + 'locale/')
-
-# create config path if not exists
-os.makedirs(os.path.dirname(configPath), exist_ok = True)
+import pickle
 
 class Window (Gtk.Window):
+
     def __init__ (self):
+
         Gtk.Window.__init__(self)
         self.set_default_size(1000, 600)
 
-        # dirs path
-        self.sharePath = sharePath
-        self.configPath = configPath
-
-        icon = GdkPixbuf.Pixbuf().new_from_file_at_scale(self.sharePath + 'img/BTC.svg', 128, 128, True)
+        icon = GdkPixbuf.Pixbuf().new_from_file_at_scale(SHARE_PATH + 'img/BTC.svg', 128, 128, True)
         self.set_default_icon(icon)
 
-        # keys
         self.keysPressed = {'Ctrl': False, 'f': False}
-
-        # data
         self.currencies = {}
 
         # USD
@@ -72,7 +60,7 @@ class Window (Gtk.Window):
         self.loadLastCurrenciesRank()
 
         # load CSS
-        with open(self.sharePath + 'css/style.css', 'r') as file:
+        with open(SHARE_PATH + 'css/style.css', 'r') as file:
             css = file.read()
 
         cssProvider = Gtk.CssProvider()
@@ -80,8 +68,7 @@ class Window (Gtk.Window):
         Gtk.StyleContext().add_provider_for_screen(
             Gdk.Screen.get_default(),
             cssProvider,
-            Gtk.STYLE_PROVIDER_PRIORITY_USER
-        )
+            Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
         # load widgets
         self.headerBar = HeaderBar(self)
@@ -192,6 +179,8 @@ class Window (Gtk.Window):
             self.headerBar.searchButton.clicked()
 
     def searchEntrySearchEvent (self, obj, data = None):
+        # called on search entry input
+
         text = obj.get_text().lower()
         for button in self.currencySwitcher.get_children():
             if ((text not in button.curName.lower()) and (text not in button.curSymbol.lower())):
@@ -207,7 +196,7 @@ class Window (Gtk.Window):
             if (key != 'USD'):
                 dic[key] = self.currencies[key].favorite
 
-        with open(self.configPath + 'favorites', 'wb') as file:
+        with open(CONFIG_PATH + 'favorites', 'wb') as file:
             pickler = pickle.Pickler(file)
             pickler.dump(dic)
 
@@ -215,7 +204,7 @@ class Window (Gtk.Window):
         # load favorites currencies name in a file
 
         try:
-            with open(self.configPath + 'favorites', 'rb') as file:
+            with open(CONFIG_PATH + 'favorites', 'rb') as file:
                 unpickler = pickle.Unpickler(file)
                 dic = unpickler.load()
 
@@ -231,12 +220,14 @@ class Window (Gtk.Window):
 
         if (self.currencies['BTC'].rank is None):
             return
+
         dic = dict()
+
         for key in self.currencies.keys():
             if (key != 'USD'):
                 dic[key] = self.currencies[key].rank
 
-        with open(self.configPath + 'lastRanks', 'wb') as file:
+        with open(CONFIG_PATH + 'lastRanks', 'wb') as file:
             pickler = pickle.Pickler(file)
             pickler.dump(dic)
 
@@ -244,7 +235,7 @@ class Window (Gtk.Window):
         # load last currencies rank (sorted by marketcap) to avoid the delay before currencies are sorted by rank (default sort setting)
 
         try:
-            with open(self.configPath + 'lastRanks', 'rb') as file:
+            with open(CONFIG_PATH + 'lastRanks', 'rb') as file:
                 unpickler = pickle.Unpickler(file)
                 dic = unpickler.load()
 
@@ -254,19 +245,25 @@ class Window (Gtk.Window):
         except OSError:
             # not created now, skip
             pass
+
     def getCurrencies (self):
+
         return self.currencies;
 
     def getCurrencyBySymbol (self, symbol):
+
         return self.currencies[symbol]
 
     def getActualCurrency (self):
+
         symbol = self.currencySwitcher.actualRow.curSymbol
         return self.currencies[symbol]
 
     def getActualBaseCurrency (self):
+
         symbol = self.headerBar.actualBaseCurrencySymbol
         return self.currencies[symbol]
 
     def getActualSortMethodName (self):
+
         return self.headerBar.actualSortMethodName
