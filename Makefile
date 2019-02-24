@@ -16,12 +16,12 @@ ifeq ($(PIP3_OK), )
 $(error package 'pip3' not found)
 endif
 
-PYGOBJECT_OK = $(shell pip3 list | grep -F PyGObject 2> /dev/null)
+PYGOBJECT_OK = $(shell pip3 list | grep -Fi pygobject 2> /dev/null)
 ifeq ($(PYGOBJECT_OK), )
-$(error python package 'PyGObject' not found. You can install it with 'pip3 install PyGObject')
+$(error python package 'pygobject' not found. You can install it with 'pip3 install pygobject')
 endif
 
-PYCAIRO_OK = $(shell pip3 list | grep -F pycairo 2> /dev/null)
+PYCAIRO_OK = $(shell pip3 list | grep -Fi pycairo 2> /dev/null)
 ifeq ($(PYCAIRO_OK), )
 $(error python package 'pycairo' not found. You can install it with 'pip3 install pycairo')
 endif
