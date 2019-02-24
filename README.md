@@ -16,12 +16,13 @@ This program is distributed under the GNU GPL 3.0 License.
 
 For more informations: https://www.gnu.org/licenses/gpl-3.0.en.html
 
-## REQUIRED PACKAGES 
+## REQUIRED PACKAGES
 
-- gtk (3.X)
-- python (3.X)
-- python-gobject (3.X)
-- python-cairo
+- gtk3
+- python3
+- pip3
+- pygobject (Python package)
+- pycairo (Python package)
 
 ## INSTALL AND RUN
 
