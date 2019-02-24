@@ -3,27 +3,27 @@ $(info [1 / 2] Checking if required packages are installed)
 # check if packages are installed
 GTK3_OK = $(shell ldconfig -p | grep -F libgtk-3.so 2> /dev/null)
 ifeq ($(GTK3_OK), )
-	$(error package 'gtk3' not found)
+$(error package 'gtk3' not found)
 endif
 
 PYTHON3_OK = $(shell python3 --version 2> /dev/null)
 ifeq ($(PYTHON3_OK), )
-	$(error package 'python3' not found)
+$(error package 'python3' not found)
 endif
 
 PIP3_OK = $(shell pip3 --version 2> /dev/null 2> /dev/null)
 ifeq ($(PIP3_OK), )
-	$(error package 'pip3' not found)
+$(error package 'pip3' not found)
 endif
 
 PYGOBJECT_OK = $(shell pip3 list | grep -F PyGObject 2> /dev/null)
 ifeq ($(PYGOBJECT_OK), )
-	$(error python package 'PyGObject' not found. You can install it with 'pip3 install PyGObject')
+$(error python package 'PyGObject' not found. You can install it with 'pip3 install PyGObject')
 endif
 
 PYCAIRO_OK = $(shell pip3 list | grep -F pycairo 2> /dev/null)
 ifeq ($(PYCAIRO_OK), )
-	$(error python package 'pycairo' not found. You can install it with 'pip3 install pycairo')
+$(error python package 'pycairo' not found. You can install it with 'pip3 install pycairo')
 endif
 
 PYTHON_DIR_NAME = python$(shell python3 --version | cut -f 2 -d " " | cut -f 1,2 -d ".")
