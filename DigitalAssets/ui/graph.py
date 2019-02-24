@@ -81,7 +81,7 @@ class Graph (Gtk.DrawingArea):
         self.graphInfos['time'] = graphTime
 
     def redraw (self):
-        
+
         self.queue_draw()
 
     def drawGraph (self, obj, ctx):

@@ -267,7 +267,7 @@ class HeaderBar (Gtk.HeaderBar):
             label = Gtk.Label(str)
 
             popoverCurrenciesBoxChildren = popoverCurrenciesBox.get_children()
-            
+
             if (len(popoverCurrenciesBoxChildren) > 0):
                 radioButton = Gtk.RadioButton(group = popoverCurrenciesBoxChildren[0].radioButton)
             else:

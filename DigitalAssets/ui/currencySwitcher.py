@@ -63,7 +63,7 @@ class CurrencySwitcher (Gtk.ListBox):
         favoriteImage.set_from_icon_name('starred-symbolic', 1)
         row.favoriteImageRevealer = Gtk.Revealer(transition_type = Gtk.RevealerTransitionType.CROSSFADE, transition_duration = 1000)
         row.favoriteImageRevealer.add(favoriteImage)
-        
+
         if (currency.favorite):
             row.favoriteImageRevealer.set_reveal_child(True)
 
