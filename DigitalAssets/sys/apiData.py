@@ -138,13 +138,14 @@ class APIData ():
         for symbol in self.mainWindow.currencies.keys():
             for dataCur in dataInfos:
                 if (dataCur['currency'] == symbol):
-                    self.mainWindow.currencies[symbol].lastDayPrice = float(dataCur['dayOpen'])
-                    self.mainWindow.currencies[symbol].dayVolume = float(dataCur['dayVolume'])
-                    self.mainWindow.currencies[symbol].circulatingSupply = float(dataCur['availableSupply'])
-
+                    if (dataCur['dayOpen'] is not None):
+                        self.mainWindow.currencies[symbol].lastDayPrice = float(dataCur['dayOpen'])
+                    if (dataCur['dayVolume'] is not None):
+                        self.mainWindow.currencies[symbol].dayVolume = float(dataCur['dayVolume'])
+                    if (dataCur['availableSupply'] is not None):
+                        self.mainWindow.currencies[symbol].circulatingSupply = float(dataCur['availableSupply'])
                     if (dataCur['maxSupply'] is not None):
                         self.mainWindow.currencies[symbol].maxSupply = float(dataCur['maxSupply'])
-
                     if (dataCur['high'] is not None):
                         self.mainWindow.currencies[symbol].ath = float(dataCur['high'])
 
