@@ -55,29 +55,29 @@ class CurrencyView (Gtk.Box):
         self.priceLabel = Gtk.Label(name = 'currencyPrice')
         self.baseCurrencySymbolLabel = Gtk.Label(name = 'currencyPrice')
 
-        self.dayPriceChangeNameLabel = Gtk.Label(_('Change'), name = 'infoTitle', xalign = 0)
-        self.dayPriceChangeLabel = Gtk.Label(xalign = 0)
+        self.dayPriceChangeNameLabel = Gtk.Label(_('Change'), name = 'infoTitle')
+        self.dayPriceChangeLabel = Gtk.Label()
 
-        self.marketCapNameLabel = Gtk.Label(_('Markep Cap'), name = 'infoTitle', xalign = 0)
-        self.marketCapLabel = Gtk.Label(xalign = 0)
+        self.marketCapNameLabel = Gtk.Label(_('Markep Cap'), name = 'infoTitle')
+        self.marketCapLabel = Gtk.Label()
         self.marketCapBaseCurrencySymbolLabel = Gtk.Label()
 
-        self.volumeNameLabel = Gtk.Label(_('Volume'), name = 'infoTitle', xalign = 0)
-        self.volumeLabel = Gtk.Label(xalign = 0)
+        self.volumeNameLabel = Gtk.Label(_('Volume'), name = 'infoTitle')
+        self.volumeLabel = Gtk.Label()
         self.volumeBaseCurrencySymbolLabel = Gtk.Label()
 
-        self.athNameLabel = Gtk.Label('ATH', name = 'infoTitle', xalign = 0)
-        self.athLabel = Gtk.Label(xalign = 0)
+        self.athNameLabel = Gtk.Label('ATH', name = 'infoTitle')
+        self.athLabel = Gtk.Label()
 
-        self.rankNameLabel = Gtk.Label(_('Rank'), name = 'infoTitle', xalign = 0)
-        self.rankLabel = Gtk.Label(xalign = 0)
+        self.rankNameLabel = Gtk.Label(_('Rank'), name = 'infoTitle')
+        self.rankLabel = Gtk.Label()
 
-        self.circulatingSupplyNameLabel = Gtk.Label(_('Circulating Supply'), name = 'infoTitle', xalign = 0)
-        self.circulatingSupplyLabel = Gtk.Label(xalign = 0)
+        self.circulatingSupplyNameLabel = Gtk.Label(_('Circulating Supply'), name = 'infoTitle')
+        self.circulatingSupplyLabel = Gtk.Label()
         self.circulatingSupplyBaseCurrencySymbolLabel = Gtk.Label()
 
-        self.maxSupplyNameLabel = Gtk.Label(_('Max Supply'), name = 'infoTitle', xalign = 0)
-        self.maxSupplyLabel = Gtk.Label(xalign = 0)
+        self.maxSupplyNameLabel = Gtk.Label(_('Max Supply'), name = 'infoTitle')
+        self.maxSupplyLabel = Gtk.Label()
         self.maxSupplyBaseCurrencySymbolLabel = Gtk.Label()
 
         # graph
@@ -119,25 +119,25 @@ class CurrencyView (Gtk.Box):
         topBox.add(topBoxMain)
 
         # general informations box
-        dayPriceChangeBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, valign = Gtk.Align.CENTER, spacing = 10)
+        dayPriceChangeBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10, halign = Gtk.Align.CENTER)
         dayPriceChangeBox.add(self.dayPriceChangeNameLabel)
         dayPriceChangeBox.add(self.dayPriceChangeLabel)
 
-        marketCapValueBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 10)
+        marketCapValueBox = Gtk.Box(spacing = 10, halign = Gtk.Align.CENTER)
         marketCapValueBox.add(self.marketCapLabel)
         marketCapValueBox.add(self.marketCapBaseCurrencySymbolLabel)
-        marketCapBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, valign = Gtk.Align.CENTER, spacing = 10)
+        marketCapBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10)
         marketCapBox.add(self.marketCapNameLabel)
         marketCapBox.add(marketCapValueBox)
 
-        volumeValueBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 10)
+        volumeValueBox = Gtk.Box(spacing = 10, halign = Gtk.Align.CENTER)
         volumeValueBox.add(self.volumeLabel)
         volumeValueBox.add(self.volumeBaseCurrencySymbolLabel)
-        volumeBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, valign = Gtk.Align.CENTER, spacing = 10)
+        volumeBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10)
         volumeBox.add(self.volumeNameLabel)
         volumeBox.add(volumeValueBox)
 
-        athBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, valign = Gtk.Align.CENTER, spacing = 10)
+        athBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10, halign = Gtk.Align.CENTER)
         athBox.add(self.athNameLabel)
         athBox.add(self.athLabel)
 
@@ -148,21 +148,21 @@ class CurrencyView (Gtk.Box):
         generalInfosBox.add(athBox)
 
         # supply infos box (and rank)
-        rankBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, valign = Gtk.Align.CENTER, spacing = 10)
+        rankBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10, halign = Gtk.Align.CENTER)
         rankBox.add(self.rankNameLabel)
         rankBox.add(self.rankLabel)
 
-        circulatingSupplyValueBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 10)
+        circulatingSupplyValueBox = Gtk.Box(spacing = 10, halign = Gtk.Align.CENTER)
         circulatingSupplyValueBox.add(self.circulatingSupplyLabel)
         circulatingSupplyValueBox.add(self.circulatingSupplyBaseCurrencySymbolLabel)
-        circulatingSupplyBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, valign = Gtk.Align.CENTER, spacing = 10)
+        circulatingSupplyBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10)
         circulatingSupplyBox.add(self.circulatingSupplyNameLabel)
         circulatingSupplyBox.add(circulatingSupplyValueBox)
 
-        maxSupplyValueBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 10)
+        maxSupplyValueBox = Gtk.Box(spacing = 10, halign = Gtk.Align.CENTER)
         maxSupplyValueBox.add(self.maxSupplyLabel)
         maxSupplyValueBox.add(self.maxSupplyBaseCurrencySymbolLabel)
-        maxSupplyBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, valign = Gtk.Align.CENTER, spacing = 10)
+        maxSupplyBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10)
         maxSupplyBox.add(self.maxSupplyNameLabel)
         maxSupplyBox.add(maxSupplyValueBox)
 
@@ -280,58 +280,66 @@ class CurrencyView (Gtk.Box):
             # general informations (day variation, day volume)
 
             # last day price
-            dayPriceChange = currency.lastDayPrice / baseCurrency.lastDayPrice
-            dayPriceChange = round(((currency.price / baseCurrency.price) / dayPriceChange) * 100 - 100, 1)
-            dayPriceChangeStr = ''
-
-            if (dayPriceChange >= 0):
-                self.dayPriceChangeLabel.set_name('priceGreen')
-                dayPriceChangeStr = '+ ' + str(abs(dayPriceChange)) + ' %'
+            if ((currency.lastDayPrice is None) or (baseCurrency.lastDayPrice is None)):
+                self.dayPriceChangeLabel.set_label(_('Undefined'))
             else:
-                self.dayPriceChangeLabel.set_name('priceRed')
-                dayPriceChangeStr = '- ' + str(abs(dayPriceChange)) + ' %'
-
-            self.dayPriceChangeLabel.set_label(dayPriceChangeStr)
+                dayPriceChange = currency.lastDayPrice / baseCurrency.lastDayPrice
+                dayPriceChange = round(((currency.price / baseCurrency.price) / dayPriceChange) * 100 - 100, 1)
+                dayPriceChangeStr = ''
+                if (dayPriceChange >= 0):
+                    self.dayPriceChangeLabel.set_name('priceGreen')
+                    dayPriceChangeStr = '+ ' + str(abs(dayPriceChange)) + ' %'
+                else:
+                    self.dayPriceChangeLabel.set_name('priceRed')
+                    dayPriceChangeStr = '- ' + str(abs(dayPriceChange)) + ' %'
+                self.dayPriceChangeLabel.set_label(dayPriceChangeStr)
 
             # marketcap
-            marketCapRounded = round(currency.marketCap / baseCurrency.price)
-            self.marketCapLabel.set_label(tools.beautifyNumber(marketCapRounded))
-            self.marketCapBaseCurrencySymbolLabel.set_label(baseCurrency.symbol)
+            if (currency.marketCap is None):
+                self.marketCapLabel.set_label(_('Undefined'))
+            else:
+                marketCapRounded = round(currency.marketCap / baseCurrency.price)
+                self.marketCapLabel.set_label(tools.beautifyNumber(marketCapRounded))
+                self.marketCapBaseCurrencySymbolLabel.set_label(baseCurrency.symbol)
 
             # day volume
-            volumeRounded = round(currency.dayVolume / baseCurrency.price)
-            self.volumeLabel.set_label(tools.beautifyNumber(volumeRounded))
-            self.volumeBaseCurrencySymbolLabel.set_label(baseCurrency.symbol)
+            if (currency.dayVolume is None):
+                self.volumeLabel.set_label(_('Undefined'))
+            else:
+                volumeRounded = round(currency.dayVolume / baseCurrency.price)
+                self.volumeLabel.set_label(tools.beautifyNumber(volumeRounded))
+                self.volumeBaseCurrencySymbolLabel.set_label(baseCurrency.symbol)
 
             # ATH (actual % relative to ATH)
-            if (currency.ath is not None):
+            if (currency.ath is None):
+                self.athLabel.set_label(_('Undefined'))
+            else:
                 # percentage in USD only: can't get the price of base currency at currency ATH for now
                 athRelativePercentage = round((currency.price / currency.ath) * 100, 1)
                 self.athLabel.set_label(str(athRelativePercentage) + ' %')
-            else:
-                self.athLabel.set_label(_('Undefined'))
 
             # rank
-            self.rankLabel.set_text(str(currency.rank))
+            if (currency.rank is None):
+                self.rankLabel.set_text(_('Undefined'))
+            else:
+                self.rankLabel.set_text(str(currency.rank))
 
             # circulating supply
-            circulatingSupplyRounded = round(currency.circulatingSupply)
-            self.circulatingSupplyLabel.set_label(tools.beautifyNumber(circulatingSupplyRounded))
-            self.circulatingSupplyBaseCurrencySymbolLabel.set_label(currency.symbol)
+            if (currency.circulatingSupply is None):
+                self.circulatingSupplyLabel.set_label(_('Undefined'))
+            else:
+                circulatingSupplyRounded = round(currency.circulatingSupply)
+                self.circulatingSupplyLabel.set_label(tools.beautifyNumber(circulatingSupplyRounded))
+                self.circulatingSupplyBaseCurrencySymbolLabel.set_label(currency.symbol)
 
             # max supply
-            maxSupplyStr = ''
-            maxSupplyBaseCurrencyStr = ''
-
             if (currency.maxSupply is None):
-                maxSupplyStr = _('Unlimited')
+                self.maxSupplyLabel.set_label(_('Undefined'))
             else:
                 maxSupplyRounded = tools.beautifyNumber(round(currency.maxSupply))
-                maxSupplyStr = str(maxSupplyRounded)
-                maxSupplyBaseCurrencyStr = currency.symbol
+                self.maxSupplyLabel.set_label(str(maxSupplyRounded))
+                self.maxSupplyBaseCurrencySymbolLabel.set_label(currency.symbol)
 
-            self.maxSupplyLabel.set_label(maxSupplyStr)
-            self.maxSupplyBaseCurrencySymbolLabel.set_label(maxSupplyBaseCurrencyStr)
 
             if (currency.dayGraphData is not None): # day graph prices is the first loaded
                 if (isinstance(self.spinner2, Gtk.Spinner)):
