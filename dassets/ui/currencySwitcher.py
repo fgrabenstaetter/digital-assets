@@ -20,9 +20,8 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-
-from DigitalAssets.sys import currencies
-from DigitalAssets.ui.env import *
+from dassets.sys import currencies
+from dassets.env import *
 
 class CurrencySwitcher (Gtk.ListBox):
 
@@ -48,7 +47,7 @@ class CurrencySwitcher (Gtk.ListBox):
         row.curName = currency.name
         row.curSymbol = currency.symbol
 
-        icon = Gtk.Image().new_from_file(SHARE_PATH + 'img/' + currency.symbol + '.svg')
+        icon = Gtk.Image().new_from_file(DATA_DIR + '/img/' + currency.symbol + '.svg')
 
         nameBox = Gtk.Box(
             orientation = Gtk.Orientation.VERTICAL,

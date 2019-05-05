@@ -18,17 +18,11 @@ This program is distributed under the GNU GPL 3.0 License.
 
 For more informations: https://www.gnu.org/licenses/gpl-3.0.en.html
 
-## REQUIRED PACKAGES
-
-- gtk3
-- python3
-- pip3
-- pygobject (Python package)
-- pycairo (Python package)
-
 ## INSTALL AND RUN
 
 ```bash
-	sudo make
+	mkdir build && cd build
+	meson .. --prefix=/usr
+	sudo ninja install
 	digital-assets
 ```

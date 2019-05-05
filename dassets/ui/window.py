@@ -20,15 +20,13 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf, Gio, GObject
-
-from DigitalAssets.ui.headerBar import HeaderBar
-from DigitalAssets.ui.currencySwitcher import CurrencySwitcher
-from DigitalAssets.ui.currencyView import CurrencyView
-from DigitalAssets.sys.apiData import APIData
-from DigitalAssets.sys import currencies
-from DigitalAssets.sys.currency import Currency
-from DigitalAssets.ui.env import *
-
+from dassets.ui.headerBar import HeaderBar
+from dassets.ui.currencySwitcher import CurrencySwitcher
+from dassets.ui.currencyView import CurrencyView
+from dassets.sys.apiData import APIData
+from dassets.sys import currencies
+from dassets.sys.currency import Currency
+from dassets.env import *
 import pickle
 
 class Window (Gtk.Window):
@@ -38,7 +36,7 @@ class Window (Gtk.Window):
         Gtk.Window.__init__(self)
         self.set_default_size(1000, 600)
 
-        icon = GdkPixbuf.Pixbuf().new_from_file_at_scale(SHARE_PATH + 'img/BTC.svg', 128, 128, True)
+        icon = GdkPixbuf.Pixbuf().new_from_file_at_scale(DATA_DIR + '/img/BTC.svg', 128, 128, True)
         self.set_default_icon(icon)
 
         self.keysPressed = {'Ctrl': False, 'f': False}
@@ -60,7 +58,7 @@ class Window (Gtk.Window):
         self.loadLastCurrenciesRank()
 
         # load CSS
-        with open(SHARE_PATH + 'css/style.css', 'r') as file:
+        with open(DATA_DIR + '/css/style.css', 'r') as file:
             css = file.read()
 
         cssProvider = Gtk.CssProvider()
@@ -196,7 +194,7 @@ class Window (Gtk.Window):
             if (key != 'USD'):
                 dic[key] = self.currencies[key].favorite
 
-        with open(CONFIG_PATH + 'favorites', 'wb') as file:
+        with open(CONFIG_DIR + '/favorites', 'wb') as file:
             pickler = pickle.Pickler(file)
             pickler.dump(dic)
 
@@ -204,7 +202,7 @@ class Window (Gtk.Window):
         # load favorites currencies name in a file
 
         try:
-            with open(CONFIG_PATH + 'favorites', 'rb') as file:
+            with open(CONFIG_DIR + '/favorites', 'rb') as file:
                 unpickler = pickle.Unpickler(file)
                 dic = unpickler.load()
 
@@ -227,7 +225,7 @@ class Window (Gtk.Window):
             if (key != 'USD'):
                 dic[key] = self.currencies[key].rank
 
-        with open(CONFIG_PATH + 'lastRanks', 'wb') as file:
+        with open(CONFIG_DIR + '/lastRanks', 'wb') as file:
             pickler = pickle.Pickler(file)
             pickler.dump(dic)
 
@@ -235,7 +233,7 @@ class Window (Gtk.Window):
         # load last currencies rank (sorted by marketcap) to avoid the delay before currencies are sorted by rank (default sort setting)
 
         try:
-            with open(CONFIG_PATH + 'lastRanks', 'rb') as file:
+            with open(CONFIG_DIR + '/lastRanks', 'rb') as file:
                 unpickler = pickle.Unpickler(file)
                 dic = unpickler.load()
 

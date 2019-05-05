@@ -20,8 +20,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-
-from DigitalAssets.ui.env import *
+from dassets.env import *
 
 class HeaderBar (Gtk.HeaderBar):
 
@@ -68,7 +67,7 @@ class HeaderBar (Gtk.HeaderBar):
             aboutDialog = Gtk.AboutDialog(
                 authors = ['François Grabenstaetter'],
                 license_type = Gtk.License.GPL_3_0_ONLY,
-                version = VERSION,
+                version = PRGM_VERSION,
                 comments = _('Prices, statistics and informations about Digital Assets\nThanks to Nomics (https://nomics.com) for their free API\nDonations') + ' BTC:   bc1qejj6y2gvya5rrun4sfsl08qdeyv36ndhm0ml85',
                 website = 'https://gitlab.gnome.org/fgrabenstaetter/digital-assets',
                 website_label = 'GitLab'
@@ -200,7 +199,7 @@ class HeaderBar (Gtk.HeaderBar):
 
         if (self.baseCurrencies['BTC'].dayVolume is not None):
             # sort by rank
-            return sorted(list(self.baseCurrencies.values()), key = lambda cur: cur.rank)
+            return sorted(list(self.baseCurrencies.values()), key = lambda cur: cur.rank if cur.rank is not None else 9999)
         else:
             # sort by name
             return sorted(list(self.baseCurrencies.values()), key = lambda cur: cur.name)

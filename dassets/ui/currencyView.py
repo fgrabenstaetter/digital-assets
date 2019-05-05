@@ -20,10 +20,9 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GdkPixbuf
-
-from DigitalAssets.sys import tools
-from DigitalAssets.ui.graph import Graph
-from DigitalAssets.ui.env import *
+from dassets.sys import tools
+from dassets.ui.graph import Graph
+from dassets.env import *
 
 class CurrencyView (Gtk.Box):
 
@@ -248,7 +247,7 @@ class CurrencyView (Gtk.Box):
 
         # top (header)
         self.actualCurrencySymbol = currency.symbol
-        pixbuf = GdkPixbuf.Pixbuf().new_from_file_at_scale(SHARE_PATH + 'img/' + currency.symbol + '.svg', 100, 100, True)
+        pixbuf = GdkPixbuf.Pixbuf().new_from_file_at_scale(DATA_DIR + '/img/' + currency.symbol + '.svg', 100, 100, True)
         self.image.set_from_pixbuf(pixbuf)
 
         # name and symbol

@@ -17,8 +17,7 @@
  along with Digital Assets. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from DigitalAssets.sys import currencies
-
+from dassets.sys import currencies
 import urllib.request, urllib.error, threading, json, datetime, random, datetime
 
 class APIData ():

@@ -21,26 +21,20 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GLib
+import sys, gettext, os
 
-import platform, sys, gettext
-
+PYTHON_DIR = '@PYTHON_DIR@'
+LOCALE_DIR = '@LOCALE_DIR@'
 # be sure the package is found
-fullVersion = platform.python_version().split('.')
-pythonLibDirName = 'python' + str(fullVersion[0] + '.' + fullVersion[1])
-moduleParentDirPath = '/usr/lib/' + pythonLibDirName + '/site-packages/'
-sys.path.append(moduleParentDirPath)
+sys.path.append(PYTHON_DIR)
+gettext.install('@LOCALE_DOMAIN@', LOCALE_DIR)
 
-from DigitalAssets.ui.window import Window
-from DigitalAssets.ui.env import *
+from dassets.ui.window import Window
+from dassets.env import *
 
-# set program name
-GLib.set_prgname(PROGRAM_NAME)
-
-# init translations
-gettext.install('locale', SHARE_PATH + 'locale/')
-
-# create config path if not exists
-os.makedirs(os.path.dirname(CONFIG_PATH), exist_ok = True)
+GLib.set_prgname('Digital Assets')
+os.makedirs(CONFIG_DIR, exist_ok = True)
 
 Window()
 Gtk.main()
+

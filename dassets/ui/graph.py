@@ -20,9 +20,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, cairo
-
-from DigitalAssets.sys import tools
-
+from dassets.sys import tools
 import math
 
 class Graph (Gtk.DrawingArea):
