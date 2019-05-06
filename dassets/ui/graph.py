@@ -98,12 +98,11 @@ class Graph (Gtk.DrawingArea):
         areaHeight = self.get_size_request()[1] - self.padding['top'] - self.padding['bottom']
 
         ctx.set_line_width(4)
-        ctx.set_source_rgb(0.2, 0.7, 0.8)
-
+        ctx.set_font_size(11)
         lastX, lastY = None, None
         dateTextModulo = math.ceil(self.graphInfos['nbPrices'] / 8)
-
         i = 0
+        
         for dateTime, price in self.graphData:
             # draw line
             x = (i / self.graphInfos['nbPrices']) * areaWidth + self.padding['left']
