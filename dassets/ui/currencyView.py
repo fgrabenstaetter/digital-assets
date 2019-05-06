@@ -390,6 +390,7 @@ class CurrencyView (Gtk.Box):
             self.mainWindow.currencySwitcher.actualRow.favoriteImageRevealer.set_reveal_child(False)
 
         self.mainWindow.currencySwitcher.invalidate_sort()
+        self.mainWindow.currencySwitcher.scrollToActualChild()
 
     def graphSwitcherButtonToggledEvent (self, obj, data = None):
 
