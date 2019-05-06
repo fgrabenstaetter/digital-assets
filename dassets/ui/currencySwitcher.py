@@ -19,7 +19,7 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
 from dassets.sys import currencies
 from dassets.env import *
 
@@ -97,6 +97,26 @@ class CurrencySwitcher (Gtk.ListBox):
         # if search entry showed, hide it
         if (self.mainWindow.headerBar.searchButton.get_active() is True):
             self.mainWindow.headerBar.searchButton.clicked()
+            self.scrollToActualChild()
+
+    def scrollToActualChild (self):
+        # scroll the Gtk.ScrolledWindow (self.mainWindow.currencySwitcherBox) to the current ListBoxRow
+
+        sumHeightBeforeChild = 0
+        sumChildrenHeight = 0
+        childIndex = self.actualRow.get_index()
+        for key, child in enumerate(self.get_children()):
+            if key < childIndex:
+                sumHeightBeforeChild += child.get_allocated_height()
+            sumChildrenHeight += child.get_allocated_height()
+
+        value = sumHeightBeforeChild
+        upper = sumChildrenHeight
+        boxVadj = self.mainWindow.currencySwitcherBox.get_vadjustment()
+        stepIncrement = boxVadj.get_step_increment()
+        pageIncrement = boxVadj.get_page_increment()
+        pageSize = boxVadj.get_page_size()
+        self.mainWindow.currencySwitcherBox.set_vadjustment(Gtk.Adjustment(value, 0, upper, stepIncrement, pageIncrement, pageSize))
 
     def currenciesSort (self, row1, row2):
         # sort currencies in the currencies switcher
