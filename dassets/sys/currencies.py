@@ -18,8 +18,10 @@
 """
 
 def getCurrencies ():
-    # (name, symbol, website)
-
+    """
+        Return all supported currencies in a list of tuples (name, symbol,
+        website URL)
+    """
     return [
         ('Bitcoin', 'BTC', 'https://bitcoin.org/'),
         ('Ethereum', 'ETH', 'https://www.ethereum.org/'),

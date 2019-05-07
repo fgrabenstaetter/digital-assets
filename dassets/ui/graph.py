@@ -26,7 +26,9 @@ import math
 class Graph (Gtk.DrawingArea):
 
     def __init__ (self):
-
+        """
+            Init Graph
+        """
         Gtk.DrawingArea.__init__(self)
         self.set_size_request(600, 250)
         self.connect('draw', self.drawGraph)
@@ -39,22 +41,25 @@ class Graph (Gtk.DrawingArea):
 
         self.show_all()
 
-    def setGraph (self, graphData, graphTime, baseCurrency, priceNbDigitsAfterDecimalPoint):
-
-        # change prices to consider baseCurrency prices
-        if (baseCurrency.symbol == 'USD'):
+    def setGraph (self, graphData, graphTime, baseCurrency,
+                  priceNbDigitsAfterDecimalPoint):
+        """
+            Load a new graph into the Graph object
+        """
+        # Change prices to consider baseCurrency prices
+        if baseCurrency.symbol == 'USD':
             newGraphData = graphData
         else:
-            baseCurrencyGraphData = getattr(baseCurrency, graphTime + 'GraphData')
-
-            if ((len(graphData) == 0) or (len(baseCurrencyGraphData) == 0)):
+            baseCurrencyGraphData = getattr(baseCurrency,
+                                            graphTime + 'GraphData')
+            if len(graphData) == 0 or len(baseCurrencyGraphData) == 0:
                 newGraphData = None
-
             else:
                 newGraphData = []
                 for index1, (dateTime1, price1) in enumerate(graphData):
-                    for index2, (dateTime2, price2) in enumerate(baseCurrencyGraphData):
-                        if (dateTime1 == dateTime2):
+                    for index2, (dateTime2, price2) in enumerate(
+                                                        baseCurrencyGraphData):
+                        if dateTime1 == dateTime2:
                             newPrice = price1 / price2
                             newGraphData.append((dateTime1, newPrice))
 
@@ -65,11 +70,11 @@ class Graph (Gtk.DrawingArea):
         # loading graph infos
         minPrice, maxPrice, nbPrices = None, None, 0
 
-        if (self.graphData is not None):
+        if self.graphData is not None:
             for gp in self.graphData:
-                if ((minPrice is None) or (gp[1] < minPrice)):
+                if minPrice is None or gp[1] < minPrice:
                     minPrice = gp[1]
-                if ((maxPrice is None) or (gp[1] > maxPrice)):
+                if maxPrice is None or gp[1] > maxPrice:
                     maxPrice = gp[1]
                 nbPrices += 1
 
@@ -79,12 +84,16 @@ class Graph (Gtk.DrawingArea):
         self.graphInfos['time'] = graphTime
 
     def redraw (self):
-
+        """
+            Ask for redraw the actual graph
+        """
         self.queue_draw()
 
     def drawGraph (self, obj, ctx):
-        # graphData is array of (timestamp, price)
-
+        """
+            Draw the current graph
+        """
+        # graphData is an array of (timestamp, price)
         if (self.graphData is None):
             # no data for this period and this currency / base currency
             ctx.set_source_rgba(0, 0, 0, 0)
@@ -94,27 +103,32 @@ class Graph (Gtk.DrawingArea):
         fontColor = self.get_style_context().get_color(Gtk.StateFlags.NORMAL)
         fontColor.parse('rgba')
 
-        areaWidth = self.get_size_request()[0] - self.padding['left'] - self.padding['right']
-        areaHeight = self.get_size_request()[1] - self.padding['top'] - self.padding['bottom']
-
+        areaWidth = self.get_size_request()[0] - self.padding['left'] \
+                                               - self.padding['right']
+        areaHeight = self.get_size_request()[1] - self.padding['top'] \
+                                                - self.padding['bottom']
         ctx.set_line_width(4)
         ctx.set_font_size(11)
         lastX, lastY = None, None
         dateTextModulo = math.ceil(self.graphInfos['nbPrices'] / 8)
         i = 0
-        
+
         for dateTime, price in self.graphData:
             # draw line
-            x = (i / self.graphInfos['nbPrices']) * areaWidth + self.padding['left']
-            if (self.graphInfos['minPrice'] == self.graphInfos['maxPrice']):
+            x = (i / self.graphInfos['nbPrices']) * areaWidth \
+                                                        + self.padding['left']
+            if self.graphInfos['minPrice'] == self.graphInfos['maxPrice']:
                 y = areaHeight - 0.5 * areaHeight + self.padding['top']
             else:
-                y = areaHeight - ((price - self.graphInfos['minPrice']) / (self.graphInfos['maxPrice'] - self.graphInfos['minPrice'])) * areaHeight + self.padding['top']
+                y = areaHeight - ((price - self.graphInfos['minPrice']) \
+                    / (self.graphInfos['maxPrice'] \
+                       - self.graphInfos['minPrice'])) * areaHeight \
+                    + self.padding['top']
 
             # graph color
             ctx.set_source_rgb(0.8, 0.6, 0.4)
 
-            if ((lastX is not None) and (lastY is not None)):
+            if lastX is not None and lastY is not None:
                 ctx.move_to(lastX, lastY)
             else:
                 ctx.move_to(x, y)
@@ -126,22 +140,25 @@ class Graph (Gtk.DrawingArea):
             lastX, lastY = x, y
 
             # draw date text (not for each item)
-            if ((i % dateTextModulo) == 0):
+            if (i % dateTextModulo) == 0:
                 dateTextX = x
-                dateTextY = areaHeight + self.padding['top'] + self.padding['bottom'] - self.textBorderSpace
+                dateTextY = areaHeight + self.padding['top'] \
+                                + self.padding['bottom'] - self.textBorderSpace
 
-                if (self.graphInfos['time'] == 'day'):
+                if self.graphInfos['time'] == 'day':
                     dateStr = str(dateTime.hour).zfill(2)
-                elif (self.graphInfos['time'] == 'month'):
+                elif self.graphInfos['time'] == 'month':
                     dateStr = str(dateTime.day).zfill(2)
-                elif (self.graphInfos['time'] == 'year'):
+                elif self.graphInfos['time'] == 'year':
                     dateStr = str(dateTime.month).zfill(2)
-                elif (self.graphInfos['time'] == 'all'):
+                elif self.graphInfos['time'] == 'all':
                     dateStr = str(dateTime.year).zfill(2)
                 else:
                     return
 
-                ctx.set_source_rgba(fontColor.red, fontColor.green, fontColor.blue, fontColor.alpha)
+                ctx.set_source_rgba(fontColor.red, fontColor.green,
+                                    fontColor.blue,
+                                    fontColor.alpha)
                 ctx.move_to(dateTextX, dateTextY)
                 ctx.show_text(dateStr)
 
@@ -154,20 +171,25 @@ class Graph (Gtk.DrawingArea):
         nbPricesToShow = 5
         priceTextYAdd = areaHeight / (nbPricesToShow - 1)
 
-        if (self.graphInfos['maxPrice'] == self.graphInfos['minPrice']):
-            midPrice = self.graphInfos['maxPrice'] - (self.graphInfos['maxPrice'] - self.graphInfos['minPrice']) / 2
+        if self.graphInfos['maxPrice'] == self.graphInfos['minPrice']:
+            midPrice = self.graphInfos['maxPrice'] \
+                       - (self.graphInfos['maxPrice'] \
+                       - self.graphInfos['minPrice']) / 2
             pricesToDraw.append(midPrice)
             priceTextY += areaHeight / 2
         else:
             for i in range(nbPricesToShow):
-                price = self.graphInfos['minPrice'] + (self.graphInfos['maxPrice'] - self.graphInfos['minPrice']) * (((nbPricesToShow - 1) - i) / (nbPricesToShow - 1))
+                price = self.graphInfos['minPrice'] \
+                        + (self.graphInfos['maxPrice'] \
+                           - self.graphInfos['minPrice']) \
+                        * (((nbPricesToShow - 1) - i) / (nbPricesToShow - 1))
                 pricesToDraw.append(price)
 
-        ctx.set_source_rgba(fontColor.red, fontColor.green, fontColor.blue, fontColor.alpha)
+        ctx.set_source_rgba(fontColor.red, fontColor.green, fontColor.blue,
+                            fontColor.alpha)
 
         for price in pricesToDraw:
             priceRounded = round(price, self.priceNbDigitsAfterDecimalPoint)
-
             ctx.move_to(priceTextX, priceTextY)
             ctx.show_text(tools.beautifyNumber(priceRounded))
             priceTextY += priceTextYAdd
@@ -186,7 +208,9 @@ class Graph (Gtk.DrawingArea):
         else:
             return
 
-        ctx.move_to(self.textBorderSpace, areaHeight + self.padding['top'] + self.padding['bottom'] - self.textBorderSpace)
+        ctx.move_to(self.textBorderSpace,
+                    areaHeight + self.padding['top'] + self.padding['bottom'] \
+                                                     - self.textBorderSpace)
         ctx.show_text(timeDataType)
 
         # show price column name

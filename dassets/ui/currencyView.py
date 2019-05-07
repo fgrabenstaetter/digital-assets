@@ -27,8 +27,11 @@ from dassets.env import *
 class CurrencyView (Gtk.Box):
 
     def __init__ (self, mainWindow):
-
-        Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, expand = True, border_width = 40)
+        """
+            Init CurrencyView
+        """
+        Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL,
+                         expand = True, border_width = 40)
         self.mainWindow = mainWindow
         self.actualCurrencySymbol = None
         self.actualGraphTime = None
@@ -41,9 +44,10 @@ class CurrencyView (Gtk.Box):
         self.show_all()
 
     def create (self):
-        # create widgets
-
-        if (isinstance(self.spinner1, Gtk.Spinner)):
+        """
+            Create widgets
+        """
+        if isinstance(self.spinner1, Gtk.Spinner):
             self.spinner1.destroy()
             self.spinner1 = None
 
@@ -54,7 +58,8 @@ class CurrencyView (Gtk.Box):
         self.priceLabel = Gtk.Label(name = 'currencyPrice')
         self.baseCurrencySymbolLabel = Gtk.Label(name = 'currencyPrice')
 
-        self.dayPriceChangeNameLabel = Gtk.Label(_('Change'), name = 'infoTitle')
+        self.dayPriceChangeNameLabel = Gtk.Label(_('Change'),
+                                                 name = 'infoTitle')
         self.dayPriceChangeLabel = Gtk.Label()
 
         self.marketCapNameLabel = Gtk.Label(_('Markep Cap'), name = 'infoTitle')
@@ -71,7 +76,8 @@ class CurrencyView (Gtk.Box):
         self.rankNameLabel = Gtk.Label(_('Rank'), name = 'infoTitle')
         self.rankLabel = Gtk.Label()
 
-        self.circulatingSupplyNameLabel = Gtk.Label(_('Circulating Supply'), name = 'infoTitle')
+        self.circulatingSupplyNameLabel = Gtk.Label(_('Circulating Supply'),
+                                                    name = 'infoTitle')
         self.circulatingSupplyLabel = Gtk.Label()
         self.circulatingSupplyBaseCurrencySymbolLabel = Gtk.Label()
 
@@ -83,12 +89,16 @@ class CurrencyView (Gtk.Box):
         self.graph = Graph()
 
         # website link and favorite button
-        self.websiteButton = Gtk.LinkButton(label = _('Website'), name = 'linkButton')
+        self.websiteButton = Gtk.LinkButton(label = _('Website'),
+                                            name = 'linkButton')
 
-        self.favoriteButtonImage = Gtk.Image().new_from_icon_name('non-starred-symbolic', 1)
+        self.favoriteButtonImage = Gtk.Image().new_from_icon_name(
+                                                    'non-starred-symbolic', 1)
         self.favoriteButton = Gtk.ToggleButton(valign = Gtk.Align.CENTER)
         self.favoriteButton.add(self.favoriteButtonImage)
-        self.favoriteButton.handlerID = self.favoriteButton.connect('toggled', self.favoriteButtonToggledEvent)
+        self.favoriteButton.handlerID = self.favoriteButton.connect(
+                                                'toggled',
+                                                self.favoriteButtonToggledEvent)
 
         # spinners
         self.spinner2 = Gtk.Spinner()
@@ -98,7 +108,9 @@ class CurrencyView (Gtk.Box):
         # containers
 
         # top box
-        titleRightBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, valign = Gtk.Align.CENTER, spacing = 10)
+        titleRightBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
+                                valign = Gtk.Align.CENTER,
+                                spacing = 10)
         titleRightBox.add(self.nameLabel)
         titleRightBox.add(self.symbolLabel)
 
@@ -110,7 +122,9 @@ class CurrencyView (Gtk.Box):
         priceBox.add(self.priceLabel)
         priceBox.add(self.baseCurrencySymbolLabel)
 
-        topBoxMain = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 100, border_width = 20)
+        topBoxMain = Gtk.Box(halign = Gtk.Align.CENTER,
+                             spacing = 100,
+                             border_width = 20)
         topBoxMain.add(titleBox);
         topBoxMain.add(priceBox)
 
@@ -118,25 +132,31 @@ class CurrencyView (Gtk.Box):
         topBox.add(topBoxMain)
 
         # general informations box
-        dayPriceChangeBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10, halign = Gtk.Align.CENTER)
+        dayPriceChangeBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
+                                    spacing = 10,
+                                    halign = Gtk.Align.CENTER)
         dayPriceChangeBox.add(self.dayPriceChangeNameLabel)
         dayPriceChangeBox.add(self.dayPriceChangeLabel)
 
         marketCapValueBox = Gtk.Box(spacing = 10, halign = Gtk.Align.CENTER)
         marketCapValueBox.add(self.marketCapLabel)
         marketCapValueBox.add(self.marketCapBaseCurrencySymbolLabel)
-        marketCapBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10)
+        marketCapBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
+                               spacing = 10)
         marketCapBox.add(self.marketCapNameLabel)
         marketCapBox.add(marketCapValueBox)
 
         volumeValueBox = Gtk.Box(spacing = 10, halign = Gtk.Align.CENTER)
         volumeValueBox.add(self.volumeLabel)
         volumeValueBox.add(self.volumeBaseCurrencySymbolLabel)
-        volumeBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10)
+        volumeBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
+                            spacing = 10)
         volumeBox.add(self.volumeNameLabel)
         volumeBox.add(volumeValueBox)
 
-        athBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10, halign = Gtk.Align.CENTER)
+        athBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
+                         spacing = 10,
+                         halign = Gtk.Align.CENTER)
         athBox.add(self.athNameLabel)
         athBox.add(self.athLabel)
 
@@ -147,21 +167,26 @@ class CurrencyView (Gtk.Box):
         generalInfosBox.add(athBox)
 
         # supply infos box (and rank)
-        rankBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10, halign = Gtk.Align.CENTER)
+        rankBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
+                          spacing = 10,
+                          halign = Gtk.Align.CENTER)
         rankBox.add(self.rankNameLabel)
         rankBox.add(self.rankLabel)
 
-        circulatingSupplyValueBox = Gtk.Box(spacing = 10, halign = Gtk.Align.CENTER)
+        circulatingSupplyValueBox = Gtk.Box(spacing = 10,
+                                            halign = Gtk.Align.CENTER)
         circulatingSupplyValueBox.add(self.circulatingSupplyLabel)
         circulatingSupplyValueBox.add(self.circulatingSupplyBaseCurrencySymbolLabel)
-        circulatingSupplyBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10)
+        circulatingSupplyBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
+                                       spacing = 10)
         circulatingSupplyBox.add(self.circulatingSupplyNameLabel)
         circulatingSupplyBox.add(circulatingSupplyValueBox)
 
         maxSupplyValueBox = Gtk.Box(spacing = 10, halign = Gtk.Align.CENTER)
         maxSupplyValueBox.add(self.maxSupplyLabel)
         maxSupplyValueBox.add(self.maxSupplyBaseCurrencySymbolLabel)
-        maxSupplyBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10)
+        maxSupplyBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
+                               spacing = 10)
         maxSupplyBox.add(self.maxSupplyNameLabel)
         maxSupplyBox.add(maxSupplyValueBox)
 
@@ -178,12 +203,17 @@ class CurrencyView (Gtk.Box):
         # graph box
         self.graphSwitcher = Gtk.StackSwitcher(halign = Gtk.Align.CENTER)
 
-        for name, str in (('day', _('Day')), ('month', _('Month')), ('year', _('Year')), ('all', _('All'))):
+        for name, str in (('day', _('Day')),
+                          ('month', _('Month')),
+                          ('year', _('Year')),
+                          ('all', _('All'))):
             button = Gtk.ToggleButton(sensitive = False)
             button.name = name
-            button.handlerID = button.connect('toggled', self.graphSwitcherButtonToggledEvent)
+            button.handlerID = button.connect('toggled',
+                                        self.graphSwitcherButtonToggledEvent)
 
-            buttonBox = Gtk.Box(spacing = 8, border_width = 4, halign = Gtk.Align.CENTER)
+            buttonBox = Gtk.Box(spacing = 8, border_width = 4,
+                                halign = Gtk.Align.CENTER)
             buttonLabel = Gtk.Label(str)
             buttonSpinner = Gtk.Spinner(active = True)
             button.spinner = buttonSpinner
@@ -195,59 +225,74 @@ class CurrencyView (Gtk.Box):
             button.set_size_request(100, -1)
             self.graphSwitcher.add(button)
 
-        graphBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, halign = Gtk.Align.CENTER, spacing = 30, name = 'graphBox')
+        graphBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
+                           halign = Gtk.Align.CENTER,
+                           spacing = 30,
+                           name = 'graphBox')
         graphBox.add(self.graphSwitcher)
         graphBox.add(self.graph)
 
         # main containers
-        infosBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, halign = Gtk.Align.CENTER, name = 'infosBox')
+        infosBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
+                           halign = Gtk.Align.CENTER,
+                           name = 'infosBox')
         infosBox.add(generalInfosBox)
         infosBox.add(supplyInfosBox)
 
         self.infosBoxRevealer = Gtk.Revealer()
         self.infosBoxRevealer.add(infosBox)
-
         self.graphBoxRevealer = Gtk.Revealer()
         self.graphBoxRevealer.add(graphBox)
 
-        bottomBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, halign = Gtk.Align.CENTER, spacing = 30)
+        bottomBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
+                            halign = Gtk.Align.CENTER,
+                            spacing = 30)
         bottomBox.add(self.infosBoxRevealer)
         bottomBox.add(self.spinner2)
         bottomBox.add(self.graphBoxRevealer)
 
-        mainBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, halign = Gtk.Align.CENTER, spacing = 40, border_width = 10, name = 'mainBox')
+        mainBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
+                          halign = Gtk.Align.CENTER,
+                          spacing = 40,
+                          border_width = 10,
+                          name = 'mainBox')
         mainBox.add(topBox)
         mainBox.add(bottomBox)
         mainBox.add(actionsBox)
 
-        self.revealer = Gtk.Revealer(transition_type = Gtk.RevealerTransitionType.CROSSFADE)
+        self.revealer = Gtk.Revealer(
+                        transition_type = Gtk.RevealerTransitionType.CROSSFADE)
         self.revealer.add(mainBox)
 
         self.add(self.revealer)
         self.show_all()
 
     def reload (self, animate = False):
-        # set widgets value
-
+        """
+            Reload widgets values according to the actual currency and the
+            actual base currency
+        """
         currency = self.mainWindow.getActualCurrency()
         baseCurrency = self.mainWindow.getActualBaseCurrency()
 
-        if ((currency.price is None) or (baseCurrency.price is None)):
+        if currency.price is None or baseCurrency.price is None:
             return
 
-        if (isinstance(self.spinner1, Gtk.Widget)):
+        if isinstance(self.spinner1, Gtk.Widget):
             self.create()
-        elif (animate is True):
+        elif animate is True:
             self.revealer.destroy()
             self.revealer = None
             self.create()
 
         # update window title
-        self.mainWindow.headerBar.set_title(currency.name + ' (' + currency.symbol + ')')
+        self.mainWindow.headerBar.set_title(currency.name \
+                                            + ' (' + currency.symbol + ')')
 
         # top (header)
         self.actualCurrencySymbol = currency.symbol
-        pixbuf = GdkPixbuf.Pixbuf().new_from_file_at_scale(DATA_DIR + '/img/' + currency.symbol + '.svg', 100, 100, True)
+        pixbuf = GdkPixbuf.Pixbuf().new_from_file_at_scale(
+                DATA_DIR + '/img/' + currency.symbol + '.svg', 100, 100, True)
         self.image.set_from_pixbuf(pixbuf)
 
         # name and symbol
@@ -255,8 +300,10 @@ class CurrencyView (Gtk.Box):
         self.symbolLabel.set_label(currency.symbol)
 
         # price
-        nbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(currency.price, baseCurrency.price)
-        priceRounded = round(currency.price / baseCurrency.price, nbDigitsAfterDecimalPoint)
+        nbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(
+                                            currency.price, baseCurrency.price)
+        priceRounded = round(currency.price / baseCurrency.price,
+                             nbDigitsAfterDecimalPoint)
 
         self.priceLabel.set_label(tools.beautifyNumber(priceRounded))
         self.baseCurrencySymbolLabel.set_label(baseCurrency.symbol)
@@ -264,28 +311,35 @@ class CurrencyView (Gtk.Box):
         # actions box
         self.websiteButton.set_uri(currency.websiteURL)
 
-        if (currency.favorite is True):
-            with self.favoriteButton.handler_block(self.favoriteButton.handlerID):
+        if currency.favorite is True:
+            with self.favoriteButton.handler_block(
+                                                self.favoriteButton.handlerID):
                 self.favoriteButton.set_active(True)
-                self.favoriteButtonImage.set_from_icon_name('starred-symbolic', 1)
+                self.favoriteButtonImage.set_from_icon_name(
+                                                        'starred-symbolic', 1)
 
-        if (currency.dayVolume is not None): # only when all data has been loaded into currency
-            if (self.infosBoxRevealer.get_child_revealed() is False):
+        # only when all data has been loaded into currency
+        if currency.dayVolume is not None:
+            if self.infosBoxRevealer.get_child_revealed() is False:
                 self.infosBoxRevealer.set_reveal_child(True)
 
-            if ((self.spinner2 is not None) and (self.spinner2.get_visible() is True)):
+            if self.spinner2 is not None \
+                    and self.spinner2.get_visible() is True:
                 self.spinner2.set_size_request(60, 60)
 
             # general informations (day variation, day volume)
 
             # last day price
-            if ((currency.lastDayPrice is None) or (baseCurrency.lastDayPrice is None)):
+            if currency.lastDayPrice is None \
+                    or baseCurrency.lastDayPrice is None:
                 self.dayPriceChangeLabel.set_label(_('Undefined'))
             else:
-                dayPriceChange = currency.lastDayPrice / baseCurrency.lastDayPrice
-                dayPriceChange = round(((currency.price / baseCurrency.price) / dayPriceChange) * 100 - 100, 1)
+                dayPriceChange = currency.lastDayPrice \
+                               / baseCurrency.lastDayPrice
+                dayPriceChange = round(((currency.price / baseCurrency.price) \
+                                        / dayPriceChange) * 100 - 100, 1)
                 dayPriceChangeStr = ''
-                if (dayPriceChange >= 0):
+                if dayPriceChange >= 0:
                     self.dayPriceChangeLabel.set_name('priceGreen')
                     dayPriceChangeStr = '+ ' + str(abs(dayPriceChange)) + ' %'
                 else:
@@ -294,77 +348,88 @@ class CurrencyView (Gtk.Box):
                 self.dayPriceChangeLabel.set_label(dayPriceChangeStr)
 
             # marketcap
-            if (currency.marketCap is None):
+            if currency.marketCap is None:
                 self.marketCapLabel.set_label(_('Undefined'))
             else:
-                marketCapRounded = round(currency.marketCap / baseCurrency.price)
-                self.marketCapLabel.set_label(tools.beautifyNumber(marketCapRounded))
-                self.marketCapBaseCurrencySymbolLabel.set_label(baseCurrency.symbol)
+                marketCapRounded = round(currency.marketCap \
+                                       / baseCurrency.price)
+                self.marketCapLabel.set_label(tools.beautifyNumber(
+                                                            marketCapRounded))
+                self.marketCapBaseCurrencySymbolLabel.set_label(
+                                                            baseCurrency.symbol)
 
             # day volume
-            if (currency.dayVolume is None):
+            if currency.dayVolume is None:
                 self.volumeLabel.set_label(_('Undefined'))
             else:
                 volumeRounded = round(currency.dayVolume / baseCurrency.price)
                 self.volumeLabel.set_label(tools.beautifyNumber(volumeRounded))
-                self.volumeBaseCurrencySymbolLabel.set_label(baseCurrency.symbol)
+                self.volumeBaseCurrencySymbolLabel.set_label(
+                                                            baseCurrency.symbol)
 
             # ATH (actual % relative to ATH)
-            if (currency.ath is None):
+            if currency.ath is None:
                 self.athLabel.set_label(_('Undefined'))
             else:
                 # percentage in USD only: can't get the price of base currency at currency ATH for now
-                athRelativePercentage = round((currency.price / currency.ath) * 100, 1)
+                athRelativePercentage = round((currency.price / currency.ath) \
+                                              * 100, 1)
                 self.athLabel.set_label(str(athRelativePercentage) + ' %')
 
             # rank
-            if (currency.rank is None):
+            if currency.rank is None:
                 self.rankLabel.set_text(_('Undefined'))
             else:
                 self.rankLabel.set_text(str(currency.rank))
 
             # circulating supply
-            if (currency.circulatingSupply is None):
+            if currency.circulatingSupply is None:
                 self.circulatingSupplyLabel.set_label(_('Undefined'))
             else:
                 circulatingSupplyRounded = round(currency.circulatingSupply)
-                self.circulatingSupplyLabel.set_label(tools.beautifyNumber(circulatingSupplyRounded))
-                self.circulatingSupplyBaseCurrencySymbolLabel.set_label(currency.symbol)
+                self.circulatingSupplyLabel.set_label(tools.beautifyNumber(
+                                                    circulatingSupplyRounded))
+                self.circulatingSupplyBaseCurrencySymbolLabel.set_label(
+                                                                currency.symbol)
 
             # max supply
-            if (currency.maxSupply is None):
+            if currency.maxSupply is None:
                 self.maxSupplyLabel.set_label(_('Undefined'))
             else:
-                maxSupplyRounded = tools.beautifyNumber(round(currency.maxSupply))
+                maxSupplyRounded = tools.beautifyNumber(round(
+                                                            currency.maxSupply))
                 self.maxSupplyLabel.set_label(str(maxSupplyRounded))
                 self.maxSupplyBaseCurrencySymbolLabel.set_label(currency.symbol)
 
-
-            if (currency.dayGraphData is not None): # day graph prices is the first loaded
-                if (isinstance(self.spinner2, Gtk.Spinner)):
+            # day graph prices is the first loaded
+            if currency.dayGraphData is not None:
+                if isinstance(self.spinner2, Gtk.Spinner):
                     self.spinner2.destroy()
                     self.spinner2 = None
 
-                if (self.graphBoxRevealer.get_child_revealed() is False):
+                if self.graphBoxRevealer.get_child_revealed() is False:
                     self.graphBoxRevealer.set_reveal_child(True)
 
                 # change graphSwitcher buttons sensitivity if needed
                 for child in self.graphSwitcher.get_children():
                     childGraphData = getattr(currency, child.name + 'GraphData')
 
-                    if ((child.get_sensitive() is False) and (childGraphData is not None)):
+                    if child.get_sensitive() is False \
+                            and childGraphData is not None:
                         child.set_sensitive(True)
                         child.spinner.destroy()
-                    elif ((child.get_sensitive() is True) and (childGraphData is None)):
+                    elif child.get_sensitive() is True \
+                            and childGraphData is None:
                         child.set_sensitive(False)
 
                 # graph set value
-                if ((self.actualGraphTime is None) and (len(self.graphSwitcher.get_children()) > 0)):
+                if self.actualGraphTime is None \
+                        and len(self.graphSwitcher.get_children()) > 0:
                     self.graphSwitcher.get_children()[0].set_active(True)
                 else:
                     for child in self.graphSwitcher.get_children():
-                        if (child.name == self.actualGraphTime):
-                            if (child.get_active() is True):
+                        if child.name == self.actualGraphTime:
+                            if child.get_active() is True:
                                 # re-activate
                                 child.set_active(False)
                             child.set_active(True)
@@ -373,40 +438,52 @@ class CurrencyView (Gtk.Box):
         # redraw CurrencyView widget
         self.queue_draw()
 
-        if (self.revealer is not None):
+        if self.revealer is not None:
             self.revealer.set_reveal_child(True)
 
     def favoriteButtonToggledEvent (self, obj = None, data = None):
-        # when click on favorite button, make currency favorite or remove it from favorites
-
+        """
+            When click on favorite button, make currency favorite or remove it
+            from favorites
+        """
         currency = self.mainWindow.currencies[self.actualCurrencySymbol]
         currency.favorite = not currency.favorite
 
-        if (currency.favorite is True):
+        if currency.favorite is True:
             self.favoriteButtonImage.set_from_icon_name('starred-symbolic', 1)
-            self.mainWindow.currencySwitcher.actualRow.favoriteImageRevealer.set_reveal_child(True)
+            self.mainWindow.currencySwitcher.actualRow.favoriteImageRevealer \
+                                                        .set_reveal_child(True)
         else:
-            self.favoriteButtonImage.set_from_icon_name('non-starred-symbolic', 1)
-            self.mainWindow.currencySwitcher.actualRow.favoriteImageRevealer.set_reveal_child(False)
+            self.favoriteButtonImage.set_from_icon_name(
+                                                    'non-starred-symbolic', 1)
+            self.mainWindow.currencySwitcher.actualRow.favoriteImageRevealer \
+                                                        .set_reveal_child(False)
 
         self.mainWindow.currencySwitcher.invalidate_sort()
         self.mainWindow.currencySwitcher.scrollToActualChild()
 
     def graphSwitcherButtonToggledEvent (self, obj, data = None):
-
-        if ((obj.get_active() is False) and (self.actualGraphTime == obj.name)):
+        """
+            Change the graph period (day / month / year / all time) when click
+            on button
+        """
+        if obj.get_active() is False and self.actualGraphTime == obj.name:
             with obj.handler_block(obj.handlerID):
                 obj.set_active(True)
         else:
             for child in self.graphSwitcher.get_children():
-                if ((child is not obj) and (child.get_active() is True)):
+                if child is not obj and child.get_active() is True:
                     with child.handler_block(child.handlerID):
                         child.set_active(False)
 
         self.actualGraphTime = obj.name
         currency = self.mainWindow.currencies[self.actualCurrencySymbol]
         baseCurrency = self.mainWindow.getActualBaseCurrency()
-        nbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(currency.price, baseCurrency.price)
+        nbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(
+                                            currency.price, baseCurrency.price)
 
-        self.graph.setGraph(getattr(currency, obj.name + 'GraphData'), obj.name, baseCurrency, nbDigitsAfterDecimalPoint)
+        self.graph.setGraph(getattr(currency, obj.name + 'GraphData'),
+                            obj.name,
+                            baseCurrency,
+                            nbDigitsAfterDecimalPoint)
         self.graph.redraw()

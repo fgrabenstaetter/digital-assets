@@ -19,14 +19,16 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk
 from dassets.sys import currencies
 from dassets.env import *
 
 class CurrencySwitcher (Gtk.ListBox):
 
     def __init__ (self, mainWindow):
-
+        """
+            Init CurrencySwitcher
+        """
         Gtk.ListBox.__init__(self, name = 'currencySwitcher')
         self.mainWindow = mainWindow
         self.actualRow = None
@@ -34,7 +36,7 @@ class CurrencySwitcher (Gtk.ListBox):
         self.connect('row-activated', self.rowActivatedEvent)
 
         for symbol in self.mainWindow.currencies.keys():
-            if (symbol != 'USD'):
+            if symbol != 'USD':
                 self.addCurrency(self.mainWindow.currencies[symbol])
 
         self.actualRow = self.get_children()[0]
@@ -42,31 +44,33 @@ class CurrencySwitcher (Gtk.ListBox):
 
     def addCurrency (self, currency):
         # add a currency to the currency switcher
-
+        """
+            Add a currency to the currency switcher
+        """
         row = Gtk.ListBoxRow()
         row.curName = currency.name
         row.curSymbol = currency.symbol
 
-        icon = Gtk.Image().new_from_file(DATA_DIR + '/img/' + currency.symbol + '.svg')
-
-        nameBox = Gtk.Box(
-            orientation = Gtk.Orientation.VERTICAL,
-            spacing = 2
-        )
-
+        icon = Gtk.Image().new_from_file(DATA_DIR + '/img/' + currency.symbol \
+                                         + '.svg')
+        nameBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
+                          spacing = 2)
         nameLabel = Gtk.Label(xalign = 0)
         nameLabel.set_line_wrap(True)
         nameLabel.set_markup('<b>' + currency.name + '</b>')
 
         favoriteImage = Gtk.Image(xalign = 1)
         favoriteImage.set_from_icon_name('starred-symbolic', 1)
-        row.favoriteImageRevealer = Gtk.Revealer(transition_type = Gtk.RevealerTransitionType.CROSSFADE, transition_duration = 1000)
+        row.favoriteImageRevealer = Gtk.Revealer(
+            transition_type = Gtk.RevealerTransitionType.CROSSFADE,
+            transition_duration = 1000)
         row.favoriteImageRevealer.add(favoriteImage)
 
-        if (currency.favorite):
+        if currency.favorite:
             row.favoriteImageRevealer.set_reveal_child(True)
 
-        nameTopBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, hexpand = True)
+        nameTopBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL,
+                             hexpand = True)
         nameTopBox.pack_start(nameLabel, False, False, 0)
         nameTopBox.pack_end(row.favoriteImageRevealer, True, True, 0)
 
@@ -85,23 +89,26 @@ class CurrencySwitcher (Gtk.ListBox):
         self.add(row)
 
     def rowActivatedEvent (self, obj, row):
-        # a currency button has been activated
-
+        """
+            A currency row has been activated
+        """
         lastRow = self.actualRow
         self.actualRow = row
 
-        if (lastRow is not row):
+        if lastRow is not row:
             # load stack
             self.mainWindow.currencyView.reload(True)
 
         # if search entry showed, hide it
-        if (self.mainWindow.headerBar.searchButton.get_active() is True):
+        if self.mainWindow.headerBar.searchButton.get_active() is True:
             self.mainWindow.headerBar.searchButton.clicked()
             self.scrollToActualChild()
 
     def scrollToActualChild (self):
-        # scroll the Gtk.ScrolledWindow (self.mainWindow.currencySwitcherBox) to the current ListBoxRow
-
+        """
+            Scroll the Gtk.ScrolledWindow (self.mainWindow.currencySwitcherBox)
+            to the current ListBoxRow
+        """
         sumHeightBeforeChild = 0
         sumChildrenHeight = 0
         childIndex = self.actualRow.get_index()
@@ -116,76 +123,91 @@ class CurrencySwitcher (Gtk.ListBox):
         stepIncrement = boxVadj.get_step_increment()
         pageIncrement = boxVadj.get_page_increment()
         pageSize = boxVadj.get_page_size()
-        self.mainWindow.currencySwitcherBox.set_vadjustment(Gtk.Adjustment(value, 0, upper, stepIncrement, pageIncrement, pageSize))
+        self.mainWindow.currencySwitcherBox.set_vadjustment(Gtk.Adjustment(
+            value, 0, upper, stepIncrement, pageIncrement, pageSize))
 
     def currenciesSort (self, row1, row2):
-        # sort currencies in the currencies switcher
-
+        """
+            Sort between currencies row1 and row2
+        """
         sortMethodName = self.mainWindow.getActualSortMethodName()
         row1Cur = self.mainWindow.currencies[row1.curSymbol]
         row2Cur = self.mainWindow.currencies[row2.curSymbol]
 
-        if (not row1Cur.favorite and row2Cur.favorite):
+        if not row1Cur.favorite and row2Cur.favorite:
             return 1
-        elif (row1Cur.favorite and not row2Cur.favorite):
+        elif row1Cur.favorite and not row2Cur.favorite:
             return -1
         else:
             # avoid two rows with None value to be randomly ordered
-            if (((sortMethodName == 'rank') and (row1Cur.rank is None) and (row2Cur.rank is None))
-                    or (((sortMethodName == 'dayPriceChange') and (row1Cur.lastDayPrice is None or row1Cur.price is None) and (row2Cur.lastDayPrice is None or row2Cur.price is None)))
-                    or ((sortMethodName == 'volume') and (row1Cur.dayVolume is None) and (row2Cur.dayVolume is None))
-                    or ((sortMethodName == 'ath') and (row1Cur.ath is None) and (row2Cur.ath is None))):
+            rankAndNone = sortMethodName == 'rank' \
+                and row1Cur.rank is None and row2Cur.rank is None
+            dayPriceChangeAndNone = sortMethodName == 'dayPriceChange' \
+                and (row1Cur.lastDayPrice is None or row1Cur.price is None) \
+                and (row2Cur.lastDayPrice is None or row2Cur.price is None)
+            volumeAndNone = sortMethodName == 'volume' \
+                and row1Cur.dayVolume is None and row2Cur.dayVolume is None
+            athAndNone = sortMethodName == 'ath' \
+                and row1Cur.ath is None and row2Cur.ath is None
+
+            if rankAndNone or dayPriceChangeAndNone or volumeAndNone \
+                    or athAndNone:
                 sortMethodName = 'name'
 
-            if (sortMethodName == 'name'):
-                if (row1Cur.name < row2Cur.name):
+            if sortMethodName == 'name':
+                if row1Cur.name < row2Cur.name:
                     return -1
                 else:
                     return 1
-            elif (sortMethodName == 'rank'):
-                if (row1Cur.rank is None):
+            elif sortMethodName == 'rank':
+                if row1Cur.rank is None:
                     return 1
-                elif (row2Cur.rank is None):
+                elif row2Cur.rank is None:
                     return -1
-                elif (row1Cur.rank < row2Cur.rank):
+                elif row1Cur.rank < row2Cur.rank:
                     return -1
                 else:
                     return 1
-            elif (sortMethodName == 'dayPriceChange'):
+            elif sortMethodName == 'dayPriceChange':
                 baseCurrency = self.mainWindow.getActualBaseCurrency()
-                if ((baseCurrency.lastDayPrice is None) or (baseCurrency.price is None)):
+                if baseCurrency.lastDayPrice is None \
+                        or baseCurrency.price is None:
                     return 0
-                elif ((row1Cur.lastDayPrice is None) or (row1Cur.price is None)):
+                elif row1Cur.lastDayPrice is None or row1Cur.price is None:
                     return 1
-                elif ((row2Cur.lastDayPrice is None) or (row2Cur.price is None)):
+                elif row2Cur.lastDayPrice is None or row2Cur.price is None:
                     return -1
                 else:
-                    row1DayPriceChange = float(row1Cur.lastDayPrice) / float(baseCurrency.lastDayPrice)
-                    row1DayPriceChange = (float(row1Cur.price) / float(baseCurrency.price)) / row1DayPriceChange
-                    row2DayPriceChange = float(row2Cur.lastDayPrice) / float(baseCurrency.lastDayPrice)
-                    row2DayPriceChange = (float(row2Cur.price) / float(baseCurrency.price)) / row2DayPriceChange
-                    if (row1DayPriceChange > row2DayPriceChange):
+                    row1DayPriceChange = float(row1Cur.lastDayPrice) \
+                                       / float(baseCurrency.lastDayPrice)
+                    row1DayPriceChange = (float(row1Cur.price) \
+                        / float(baseCurrency.price)) / row1DayPriceChange
+                    row2DayPriceChange = float(row2Cur.lastDayPrice) \
+                                       / float(baseCurrency.lastDayPrice)
+                    row2DayPriceChange = (float(row2Cur.price) \
+                        / float(baseCurrency.price)) / row2DayPriceChange
+                    if row1DayPriceChange > row2DayPriceChange:
                         return -1
                     else:
                         return 1
-            elif (sortMethodName == 'volume'):
-                if (row1Cur.dayVolume is None):
+            elif sortMethodName == 'volume':
+                if row1Cur.dayVolume is None:
                     return 1
-                elif (row2Cur.dayVolume is None):
+                elif row2Cur.dayVolume is None:
                     return -1
-                elif (row1Cur.dayVolume > row2Cur.dayVolume):
+                elif row1Cur.dayVolume > row2Cur.dayVolume:
                     return -1
                 else:
                     return 1
-            elif (sortMethodName == 'ath'):
-                if (row1Cur.ath is None):
+            elif sortMethodName == 'ath':
+                if row1Cur.ath is None:
                     return 1
-                elif (row2Cur.ath is None):
+                elif row2Cur.ath is None:
                     return -1
                 else:
                     row1AthRelativePercentage = row1Cur.price / row1Cur.ath
                     row2AthRelativePercentage = row2Cur.price / row2Cur.ath
-                    if (row1AthRelativePercentage > row2AthRelativePercentage):
+                    if row1AthRelativePercentage > row2AthRelativePercentage:
                         return -1
                     else:
                         return 1

@@ -24,7 +24,9 @@ from gi.repository import Gtk
 class Currency ():
 
     def __init__ (self, name, symbol, websiteURL):
-
+        """
+            Init Currency
+        """
         self.name = name
         self.symbol = symbol
         self.price = None # in USD

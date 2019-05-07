@@ -25,35 +25,40 @@ from dassets.env import *
 class HeaderBar (Gtk.HeaderBar):
 
     def __init__ (self, mainWindow):
-
+        """
+            Init HeaderBar
+        """
         Gtk.HeaderBar.__init__(self)
         self.mainWindow = mainWindow
         self.set_show_close_button(True)
         self.set_title('Digital Assets')
 
         self.baseCurrencies =  self.mainWindow.getCurrencies()
-        self.actualBaseCurrencySymbol = self.baseCurrencies[list(self.baseCurrencies.keys())[0]].symbol
-        self.actualSortMethodName = 'rank' # default sort method
+        self.actualBaseCurrencySymbol = \
+            self.baseCurrencies[list(self.baseCurrencies.keys())[0]].symbol
+        # default sort method
+        self.actualSortMethodName = 'rank'
         self.createMenu()
         self.createBaseCurrencySwitch()
         self.createSearchEntry()
         self.createSortMethodSwitch()
 
     def createMenu (self):
-        # create and add menu widgets to the header bar
-
+        """
+            Create and add menu widgets to the HeaderBar
+        """
         menuButton = Gtk.ToggleButton()
         image = Gtk.Image().new_from_icon_name('open-menu-symbolic', 1)
         menuButton.add(image)
         self.pack_end(menuButton)
 
         menuPopover = Gtk.Popover(relative_to = menuButton, border_width = 6)
-        menupopoverCurrenciesBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+        menupopoverCurrenciesBox = Gtk.Box(
+                                        orientation = Gtk.Orientation.VERTICAL)
         menuPopover.add(menupopoverCurrenciesBox)
 
         def menuPopoverClosedEvent (obj = None, data = None):
             menuButton.set_active(False)
-
 
         def menuButtonToggledEvent (obj = None, data = None):
             if (menuButton.get_active() is True):
@@ -68,8 +73,12 @@ class HeaderBar (Gtk.HeaderBar):
                 authors = ['François Grabenstaetter'],
                 license_type = Gtk.License.GPL_3_0_ONLY,
                 version = PRGM_VERSION,
-                comments = _('Prices, statistics and informations about Digital Assets\nThanks to Nomics (https://nomics.com) for their free API\nDonations') + ' BTC:   bc1qejj6y2gvya5rrun4sfsl08qdeyv36ndhm0ml85',
-                website = 'https://gitlab.gnome.org/fgrabenstaetter/digital-assets',
+                comments = _('Prices, statistics and informations about' \
+                    + ' Digital Assets\nThanks to Nomics (https://nomics.com)' \
+                    + ' for their free API\nDonations') \
+                    + ' BTC:   bc1qejj6y2gvya5rrun4sfsl08qdeyv36ndhm0ml85',
+                website =
+                    'https://gitlab.gnome.org/fgrabenstaetter/digital-assets',
                 website_label = 'GitLab'
             )
             aboutDialog.set_modal(True)
@@ -86,13 +95,14 @@ class HeaderBar (Gtk.HeaderBar):
         menupopoverCurrenciesBox.show_all()
 
     def createBaseCurrencySwitch (self):
-        # create and add base currency switch widgets to the header bar
-
+        """
+            Create and add base currency switch widgets to the HeaderBar
+        """
         actualBaseCurrency = self.baseCurrencies[self.actualBaseCurrencySymbol]
-
         buttonBox = Gtk.Box(spacing = 10)
         self.switchButtonLabelName = Gtk.Label()
-        self.switchButtonLabelName.set_markup('<b>' + actualBaseCurrency.name + '</b>')
+        self.switchButtonLabelName.set_markup('<b>' + actualBaseCurrency.name \
+                                                                    + '</b>')
         self.switchButtonLabelSymbol = Gtk.Label(actualBaseCurrency.symbol)
 
         buttonBox.add(self.switchButtonLabelName)
@@ -118,7 +128,7 @@ class HeaderBar (Gtk.HeaderBar):
             switchButton.set_active(False)
 
         def buttonToggledEvent (obj = None, data = None):
-            if (switchButton.get_active() is True):
+            if switchButton.get_active() is True:
                 popover.popup()
                 # clear search entry
                 searchEntry.set_text('')
@@ -126,15 +136,16 @@ class HeaderBar (Gtk.HeaderBar):
                 # reload buttons
                 otherCurrencies = []
                 for cur in self.getBaseCurrenciesSorted():
-                    if (cur.symbol != self.actualBaseCurrencySymbol):
+                    if cur.symbol != self.actualBaseCurrencySymbol:
                         otherCurrencies.append(cur)
 
                 def assignStr (button):
-                    if (isinstance(button, Gtk.SearchEntry)):
+                    if isinstance(button, Gtk.SearchEntry):
                         return
 
                     assert len(otherCurrencies) > 0
-                    button.labelName.set_markup('<b>' + otherCurrencies[0].name + '</b>')
+                    button.labelName.set_markup('<b>' \
+                                            + otherCurrencies[0].name + '</b>')
                     button.labelSymbol.set_label(otherCurrencies[0].symbol)
                     button.curName = otherCurrencies[0].name
                     button.curSymbol = otherCurrencies[0].symbol
@@ -148,7 +159,8 @@ class HeaderBar (Gtk.HeaderBar):
         def searchEntrySearchEvent (obj, data = None):
             text = obj.get_text().lower()
             for child in popoverCurrenciesBox.get_children():
-                if ((child is not obj) and (text not in child.curName.lower()) and (text not in child.curSymbol.lower())):
+                if child is not obj and text not in child.curName.lower() \
+                        and text not in child.curSymbol.lower():
                     child.hide()
                 else:
                     child.show()
@@ -161,35 +173,30 @@ class HeaderBar (Gtk.HeaderBar):
         popoverBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
         popoverBox.add(searchEntry)
         popoverBox.add(popoverScrolledWindow)
-
         popover.add(popoverBox)
 
         def changeBaseCurrency (obj, data = None):
             self.actualBaseCurrencySymbol = obj.curSymbol
             popover.popdown()
-
             self.switchButtonLabelName.set_markup('<b>' + obj.curName + '</b>')
             self.switchButtonLabelSymbol.set_text(obj.curSymbol)
 
             # sort again currencies
             self.mainWindow.currencySwitcher.invalidate_sort()
             self.mainWindow.currencySwitcher.scrollToActualChild()
-
             # reload currencyView
             self.mainWindow.currencyView.reload()
 
         # create currencies buttons
         popoverButtons = []
-
         for cur in self.getBaseCurrenciesSorted():
-            if (cur.symbol != self.actualBaseCurrencySymbol):
+            if cur.symbol != self.actualBaseCurrencySymbol:
                 button = Gtk.ModelButton(xalign = 0)
                 button.connect('clicked', changeBaseCurrency)
-
                 buttonBox = button.get_children()[0]
                 button.labelName = Gtk.Label(wrap = True, xalign = 0)
-                button.labelSymbol = Gtk.Label(name = 'baseCurrencyPopoverSymbol')
-
+                button.labelSymbol = Gtk.Label(
+                                            name = 'baseCurrencyPopoverSymbol')
                 buttonBox.pack_start(button.labelName, False, False, 0)
                 buttonBox.pack_end(button.labelSymbol, False, False, 0)
                 popoverCurrenciesBox.add(button)
@@ -197,24 +204,30 @@ class HeaderBar (Gtk.HeaderBar):
         popoverBox.show_all()
 
     def getBaseCurrenciesSorted (self):
-
-        if (self.baseCurrencies['BTC'].dayVolume is not None):
+        """
+            Return a sorted list of base currencies
+        """
+        if self.baseCurrencies['BTC'].dayVolume is not None:
             # sort by rank
-            return sorted(list(self.baseCurrencies.values()), key = lambda cur: cur.rank if cur.rank is not None else 9999)
+            return sorted(list(self.baseCurrencies.values()),
+                          key = lambda cur: cur.rank if cur.rank is not None \
+                                                     else 9999)
         else:
             # sort by name
-            return sorted(list(self.baseCurrencies.values()), key = lambda cur: cur.name)
+            return sorted(list(self.baseCurrencies.values()),
+                          key = lambda cur: cur.name)
 
     def createSearchEntry (self):
-        # create and add search widgets to the headerbar
-
+        """
+            Create and add search widgets to the HeaderBar
+        """
         self.searchButton = Gtk.ToggleButton()
         icon = Gtk.Image().new_from_icon_name('system-search-symbolic', 1)
         self.searchButton.add(icon)
         self.pack_start(self.searchButton)
 
         def searchButtonClicked (obj = None, data = None):
-            if (self.searchButton.get_active() is False):
+            if self.searchButton.get_active() is False:
                 self.mainWindow.searchEntryRevealer.set_reveal_child(False)
                 self.mainWindow.searchEntry.set_text('')
             else:
@@ -225,14 +238,16 @@ class HeaderBar (Gtk.HeaderBar):
         self.searchButton.connect('clicked', searchButtonClicked)
 
     def createSortMethodSwitch (self):
-        # create and add currencies sort method switch widgets to the header bar
-
+        """
+            Create and add currencies sort method switch widgets to the
+            HeaderBar
+        """
         button = Gtk.ToggleButton()
         buttonImage = Gtk.Image().new_from_icon_name('view-list-symbolic', 1)
         button.add(buttonImage)
 
         def buttonToggledEvent (obj = None, data = None):
-            if (button.get_active() is True):
+            if button.get_active() is True:
                 popover.popup()
 
         # popover
@@ -244,14 +259,12 @@ class HeaderBar (Gtk.HeaderBar):
 
         button.connect('toggled', buttonToggledEvent)
         popover.connect('closed', popoverClosedEvent)
-
         sortMethodNames = (
             ('rank', _('Rank')),
             ('name', _('Name')),
             ('dayPriceChange', _('Change')),
             ('volume', _('Volume')),
-            ('ath', 'ATH')
-        )
+            ('ath', 'ATH'))
 
         def rowClickedEvent (obj, data = None):
             obj.radioButton.clicked()
@@ -267,17 +280,16 @@ class HeaderBar (Gtk.HeaderBar):
 
             rowBox = row.get_children()[0]
             label = Gtk.Label(str)
-
             popoverCurrenciesBoxChildren = popoverCurrenciesBox.get_children()
 
-            if (len(popoverCurrenciesBoxChildren) > 0):
-                radioButton = Gtk.RadioButton(group = popoverCurrenciesBoxChildren[0].radioButton)
+            if len(popoverCurrenciesBoxChildren) > 0:
+                radioButton = Gtk.RadioButton(
+                            group = popoverCurrenciesBoxChildren[0].radioButton)
             else:
                 radioButton = Gtk.RadioButton()
 
             rowBox.pack_start(label, False, False, 0)
             rowBox.pack_end(radioButton, False, False, 0)
-
             row.radioButton = radioButton
             popoverCurrenciesBox.add(row)
 

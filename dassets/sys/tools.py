@@ -18,29 +18,32 @@
 """
 
 def beautifyNumber (number):
-    # if needed, add spaces to a number (int or float) and return the beautified number in a str
-
+    """
+        If needed, add spaces to a number (int or float) and return the
+        beautified number in a string
+    """
     numberStr = list(str(number))
     numberStr.reverse()
     numberStr = ''.join(numberStr)
     newNumberStr = ''
     canPutSpace = False
     isFloat = '.' in numberStr
-    if (isFloat is False):
+    if isFloat is False:
         canPutSpace = True
     i = 0
     for char in numberStr:
         newNumberStr = char + newNumberStr
-        if (canPutSpace is True):
+        if canPutSpace is True:
             i += 1
-            if ((i % 3) == 0):
+            if (i % 3) == 0:
                 newNumberStr = ' ' + newNumberStr
-
-        if (char == '.'):
+        if char == '.':
             canPutSpace = True
-
     return newNumberStr
 
 def bestDigitsNumberAfterDecimalPoint (currencyPrice, baseCurrencyPrice):
-
+    """
+        Return the best digits number (after decimal point) for the currency
+        price and the base currency price given
+    """
     return len(str(round((baseCurrencyPrice * 1000) / currencyPrice)))
