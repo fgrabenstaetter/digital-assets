@@ -79,5 +79,6 @@ def getCurrencies ():
         ('IOST', 'IOST', 'https://iost.io/'),
         ('Aeternity', 'AE', 'https://www.aeternity.com/'),
         ('Ravencoin', 'RVN', 'https://ravencoin.org/'),
-        ('TomoChain', 'TOMO', 'https://tomochain.com/')
+        ('TomoChain', 'TOMO', 'https://tomochain.com/'),
+        ('Cosmos', 'ATOM', 'https://cosmos.network/')
     ]
