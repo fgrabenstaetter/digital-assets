@@ -465,7 +465,6 @@ class CurrencyView (Gtk.Box):
                                                         .set_reveal_child(False)
 
         self.__mainWindow.currencySwitcher.invalidate_sort()
-        self.__mainWindow.currencySwitcher.scrollToActualChild()
 
     def __graphSwitcherButtonToggledEvent (self, obj, data = None):
         """

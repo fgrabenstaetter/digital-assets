@@ -187,7 +187,6 @@ class HeaderBar (Gtk.HeaderBar):
 
             # sort again currencies
             self.__mainWindow.currencySwitcher.invalidate_sort()
-            self.__mainWindow.currencySwitcher.scrollToActualChild()
             # reload currencyView
             self.__mainWindow.currencyView.reload()
 
@@ -275,7 +274,6 @@ class HeaderBar (Gtk.HeaderBar):
             self.actualSortMethodName = obj.name
             popover.popdown()
             self.__mainWindow.currencySwitcher.invalidate_sort()
-            self.__mainWindow.currencySwitcher.scrollToActualChild()
 
         for name, str in sortMethodNames:
             row = Gtk.ModelButton()
