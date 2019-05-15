@@ -47,3 +47,15 @@ def bestDigitsNumberAfterDecimalPoint (currencyPrice, baseCurrencyPrice):
         price and the base currency price given
     """
     return len(str(round((baseCurrencyPrice * 1000) / currencyPrice)))
+
+def datetimeToStr (dt):
+    """
+        Return the string format of a datetime (YYY-MM-DDTHH-MM-SSZ)
+    """
+    dtStr = '{}-{}-{}T{}:{}:{}Z'.format(str(dt.year).zfill(4),
+                                        str(dt.month).zfill(2),
+                                        str(dt.day).zfill(2),
+                                        str(dt.hour).zfill(2),
+                                        str(dt.minute).zfill(2),
+                                        str(dt.second).zfill(2))
+    return dtStr

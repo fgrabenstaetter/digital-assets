@@ -29,6 +29,8 @@ class Currency ():
         """
         self.name = name
         self.symbol = symbol
+        self.websiteURL = websiteURL
+
         self.price = None # in USD
         self.lastDayPrice = None
         self.dayVolume = None
@@ -41,6 +43,4 @@ class Currency ():
         self.monthGraphData = None
         self.yearGraphData = None
         self.allGraphData = None
-
-        self.websiteURL = websiteURL
         self.favorite = False

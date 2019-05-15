@@ -29,21 +29,25 @@ class HeaderBar (Gtk.HeaderBar):
             Init HeaderBar
         """
         Gtk.HeaderBar.__init__(self)
-        self.mainWindow = mainWindow
+        self.__mainWindow = mainWindow
         self.set_show_close_button(True)
         self.set_title('Digital Assets')
 
-        self.baseCurrencies =  self.mainWindow.getCurrencies()
+        self.__baseCurrencies =  self.__mainWindow.currencies
         self.actualBaseCurrencySymbol = \
-            self.baseCurrencies[list(self.baseCurrencies.keys())[0]].symbol
+            self.__baseCurrencies[list(self.__baseCurrencies.keys())[0]].symbol
         # default sort method
         self.actualSortMethodName = 'rank'
-        self.createMenu()
-        self.createBaseCurrencySwitch()
-        self.createSearchEntry()
-        self.createSortMethodSwitch()
+        self.__createMenu()
+        self.__createBaseCurrencySwitch()
+        self.__createSearchEntry()
+        self.__createSortMethodSwitch()
 
-    def createMenu (self):
+    ###########
+    # PRIVATE #
+    ###########
+
+    def __createMenu (self):
         """
             Create and add menu widgets to the HeaderBar
         """
@@ -82,31 +86,31 @@ class HeaderBar (Gtk.HeaderBar):
                 website_label = 'GitLab'
             )
             aboutDialog.set_modal(True)
-            aboutDialog.set_transient_for(self.mainWindow)
+            aboutDialog.set_transient_for(self.__mainWindow)
             aboutDialog.show()
 
         menuPopoverButtonAbout = Gtk.ModelButton(_('About'), xalign = 0)
         menuPopoverButtonAbout.connect('clicked', showAboutDialog)
         menuPopoverButtonQuit = Gtk.ModelButton(_('Quit'), xalign = 0)
-        menuPopoverButtonQuit.connect('clicked', self.mainWindow.quit)
+        menuPopoverButtonQuit.connect('clicked', self.__mainWindow.quit)
 
         menupopoverCurrenciesBox.add(menuPopoverButtonAbout)
         menupopoverCurrenciesBox.add(menuPopoverButtonQuit)
         menupopoverCurrenciesBox.show_all()
 
-    def createBaseCurrencySwitch (self):
+    def __createBaseCurrencySwitch (self):
         """
             Create and add base currency switch widgets to the HeaderBar
         """
-        actualBaseCurrency = self.baseCurrencies[self.actualBaseCurrencySymbol]
+        actualBaseCurrency = self.__baseCurrencies[self.actualBaseCurrencySymbol]
         buttonBox = Gtk.Box(spacing = 10)
-        self.switchButtonLabelName = Gtk.Label()
-        self.switchButtonLabelName.set_markup('<b>' + actualBaseCurrency.name \
+        switchButtonLabelName = Gtk.Label()
+        switchButtonLabelName.set_markup('<b>' + actualBaseCurrency.name \
                                                                     + '</b>')
-        self.switchButtonLabelSymbol = Gtk.Label(actualBaseCurrency.symbol)
+        switchButtonLabelSymbol = Gtk.Label(actualBaseCurrency.symbol)
 
-        buttonBox.add(self.switchButtonLabelName)
-        buttonBox.add(self.switchButtonLabelSymbol)
+        buttonBox.add(switchButtonLabelName)
+        buttonBox.add(switchButtonLabelSymbol)
 
         switchButton = Gtk.ToggleButton()
         switchButton.curSymbol = actualBaseCurrency.symbol
@@ -135,7 +139,7 @@ class HeaderBar (Gtk.HeaderBar):
 
                 # reload buttons
                 otherCurrencies = []
-                for cur in self.getBaseCurrenciesSorted():
+                for cur in self.__getBaseCurrenciesSorted():
                     if cur.symbol != self.actualBaseCurrencySymbol:
                         otherCurrencies.append(cur)
 
@@ -178,18 +182,18 @@ class HeaderBar (Gtk.HeaderBar):
         def changeBaseCurrency (obj, data = None):
             self.actualBaseCurrencySymbol = obj.curSymbol
             popover.popdown()
-            self.switchButtonLabelName.set_markup('<b>' + obj.curName + '</b>')
-            self.switchButtonLabelSymbol.set_text(obj.curSymbol)
+            switchButtonLabelName.set_markup('<b>' + obj.curName + '</b>')
+            switchButtonLabelSymbol.set_text(obj.curSymbol)
 
             # sort again currencies
-            self.mainWindow.currencySwitcher.invalidate_sort()
-            self.mainWindow.currencySwitcher.scrollToActualChild()
+            self.__mainWindow.currencySwitcher.invalidate_sort()
+            self.__mainWindow.currencySwitcher.scrollToActualChild()
             # reload currencyView
-            self.mainWindow.currencyView.reload()
+            self.__mainWindow.currencyView.reload()
 
         # create currencies buttons
         popoverButtons = []
-        for cur in self.getBaseCurrenciesSorted():
+        for cur in self.__getBaseCurrenciesSorted():
             if cur.symbol != self.actualBaseCurrencySymbol:
                 button = Gtk.ModelButton(xalign = 0)
                 button.connect('clicked', changeBaseCurrency)
@@ -203,21 +207,21 @@ class HeaderBar (Gtk.HeaderBar):
 
         popoverBox.show_all()
 
-    def getBaseCurrenciesSorted (self):
+    def __getBaseCurrenciesSorted (self):
         """
             Return a sorted list of base currencies
         """
-        if self.baseCurrencies['BTC'].dayVolume is not None:
+        if self.__baseCurrencies['BTC'].dayVolume is not None:
             # sort by rank
-            return sorted(list(self.baseCurrencies.values()),
+            return sorted(list(self.__baseCurrencies.values()),
                           key = lambda cur: cur.rank if cur.rank is not None \
                                                      else 9999)
         else:
             # sort by name
-            return sorted(list(self.baseCurrencies.values()),
+            return sorted(list(self.__baseCurrencies.values()),
                           key = lambda cur: cur.name)
 
-    def createSearchEntry (self):
+    def __createSearchEntry (self):
         """
             Create and add search widgets to the HeaderBar
         """
@@ -228,16 +232,16 @@ class HeaderBar (Gtk.HeaderBar):
 
         def searchButtonClicked (obj = None, data = None):
             if self.searchButton.get_active() is False:
-                self.mainWindow.searchEntryRevealer.set_reveal_child(False)
-                self.mainWindow.searchEntry.set_text('')
+                self.__mainWindow.searchEntryRevealer.set_reveal_child(False)
+                self.__mainWindow.searchEntry.set_text('')
             else:
-                self.mainWindow.searchEntryRevealer.set_reveal_child(True)
-                self.mainWindow.searchEntry.grab_focus()
-            self.mainWindow.currencySwitcher.scrollToActualChild()
+                self.__mainWindow.searchEntryRevealer.set_reveal_child(True)
+                self.__mainWindow.searchEntry.grab_focus()
+            self.__mainWindow.currencySwitcher.scrollToActualChild()
 
         self.searchButton.connect('clicked', searchButtonClicked)
 
-    def createSortMethodSwitch (self):
+    def __createSortMethodSwitch (self):
         """
             Create and add currencies sort method switch widgets to the
             HeaderBar
@@ -270,8 +274,8 @@ class HeaderBar (Gtk.HeaderBar):
             obj.radioButton.clicked()
             self.actualSortMethodName = obj.name
             popover.popdown()
-            self.mainWindow.currencySwitcher.invalidate_sort()
-            self.mainWindow.currencySwitcher.scrollToActualChild()
+            self.__mainWindow.currencySwitcher.invalidate_sort()
+            self.__mainWindow.currencySwitcher.scrollToActualChild()
 
         for name, str in sortMethodNames:
             row = Gtk.ModelButton()

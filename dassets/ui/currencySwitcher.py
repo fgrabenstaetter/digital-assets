@@ -30,19 +30,45 @@ class CurrencySwitcher (Gtk.ListBox):
             Init CurrencySwitcher
         """
         Gtk.ListBox.__init__(self, name = 'currencySwitcher')
-        self.mainWindow = mainWindow
+        self.__mainWindow = mainWindow
         self.actualRow = None
-        self.set_sort_func(self.currenciesSort)
-        self.connect('row-activated', self.rowActivatedEvent)
+        self.set_sort_func(self.__currenciesSort)
+        self.connect('row-activated', self.__rowActivatedEvent)
 
-        for symbol in self.mainWindow.currencies.keys():
+        for symbol in self.__mainWindow.currencies.keys():
             if symbol != 'USD':
-                self.addCurrency(self.mainWindow.currencies[symbol])
+                self.__addCurrency(self.__mainWindow.currencies[symbol])
 
         self.actualRow = self.get_children()[0]
         self.show_all()
 
-    def addCurrency (self, currency):
+    def scrollToActualChild (self):
+        """
+            Scroll the Gtk.ScrolledWindow (self.__mainWindow.currencySwitcherBox)
+            to the current ListBoxRow
+        """
+        sumHeightBeforeChild = 0
+        sumChildrenHeight = 0
+        childIndex = self.actualRow.get_index()
+        for key, child in enumerate(self.get_children()):
+            if key < childIndex:
+                sumHeightBeforeChild += child.get_allocated_height()
+            sumChildrenHeight += child.get_allocated_height()
+
+        value = sumHeightBeforeChild
+        upper = sumChildrenHeight
+        boxVadj = self.__mainWindow.currencySwitcherBox.get_vadjustment()
+        stepIncrement = boxVadj.get_step_increment()
+        pageIncrement = boxVadj.get_page_increment()
+        pageSize = boxVadj.get_page_size()
+        self.__mainWindow.currencySwitcherBox.set_vadjustment(Gtk.Adjustment(
+            value, 0, upper, stepIncrement, pageIncrement, pageSize))
+
+    ###########
+    # PRIVATE #
+    ###########
+
+    def __addCurrency (self, currency):
         # add a currency to the currency switcher
         """
             Add a currency to the currency switcher
@@ -88,7 +114,7 @@ class CurrencySwitcher (Gtk.ListBox):
         row.add(box)
         self.add(row)
 
-    def rowActivatedEvent (self, obj, row):
+    def __rowActivatedEvent (self, obj, row):
         """
             A currency row has been activated
         """
@@ -97,42 +123,20 @@ class CurrencySwitcher (Gtk.ListBox):
 
         if lastRow is not row:
             # load stack
-            self.mainWindow.currencyView.reload(True)
+            self.__mainWindow.currencyView.reload(True)
 
         # if search entry showed, hide it
-        if self.mainWindow.headerBar.searchButton.get_active() is True:
-            self.mainWindow.headerBar.searchButton.clicked()
+        if self.__mainWindow.headerBar.searchButton.get_active() is True:
+            self.__mainWindow.headerBar.searchButton.clicked()
             self.scrollToActualChild()
 
-    def scrollToActualChild (self):
-        """
-            Scroll the Gtk.ScrolledWindow (self.mainWindow.currencySwitcherBox)
-            to the current ListBoxRow
-        """
-        sumHeightBeforeChild = 0
-        sumChildrenHeight = 0
-        childIndex = self.actualRow.get_index()
-        for key, child in enumerate(self.get_children()):
-            if key < childIndex:
-                sumHeightBeforeChild += child.get_allocated_height()
-            sumChildrenHeight += child.get_allocated_height()
-
-        value = sumHeightBeforeChild
-        upper = sumChildrenHeight
-        boxVadj = self.mainWindow.currencySwitcherBox.get_vadjustment()
-        stepIncrement = boxVadj.get_step_increment()
-        pageIncrement = boxVadj.get_page_increment()
-        pageSize = boxVadj.get_page_size()
-        self.mainWindow.currencySwitcherBox.set_vadjustment(Gtk.Adjustment(
-            value, 0, upper, stepIncrement, pageIncrement, pageSize))
-
-    def currenciesSort (self, row1, row2):
+    def __currenciesSort (self, row1, row2):
         """
             Sort between currencies row1 and row2
         """
-        sortMethodName = self.mainWindow.getActualSortMethodName()
-        row1Cur = self.mainWindow.currencies[row1.curSymbol]
-        row2Cur = self.mainWindow.currencies[row2.curSymbol]
+        sortMethodName = self.__mainWindow.getActualSortMethodName()
+        row1Cur = self.__mainWindow.currencies[row1.curSymbol]
+        row2Cur = self.__mainWindow.currencies[row2.curSymbol]
 
         if not row1Cur.favorite and row2Cur.favorite:
             return 1
@@ -169,7 +173,7 @@ class CurrencySwitcher (Gtk.ListBox):
                 else:
                     return 1
             elif sortMethodName == 'dayPriceChange':
-                baseCurrency = self.mainWindow.getActualBaseCurrency()
+                baseCurrency = self.__mainWindow.getActualBaseCurrency()
                 if baseCurrency.lastDayPrice is None \
                         or baseCurrency.price is None:
                     return 0

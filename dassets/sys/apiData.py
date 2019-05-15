@@ -17,7 +17,7 @@
  along with Digital Assets. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from dassets.sys import currencies
+from dassets.sys import currencies, tools
 import urllib.request, urllib.error, threading, json, datetime, random, datetime
 
 class APIData ():
@@ -26,147 +26,140 @@ class APIData ():
         """
             Init APIData
         """
-        self.mainWindow = mainWindow
+        self.__mainWindow = mainWindow
         # default API key
-        self.APIKey = '540cc835b097c5802c1d8ff21bc5731b'
-        self.nbReloaded = 0
-        self.askInterval = 10
-        self.bigDataReloadModulo = 12
-        self.currenciesSymbol = []
+        self.__APIKey = '540cc835b097c5802c1d8ff21bc5731b'
+        self.__nbReloadedloaded = 0
+        self.__askInterval = 10
+        self.__bigDataReloadModulo = 12
+        self.__thread = None
+        self.__currenciesSymbol = []
         for cur in currencies.getCurrencies():
-            self.currenciesSymbol.append(cur[1])
-        self.loop()
+            self.__currenciesSymbol.append(cur[1])
+        self.__loop()
 
-    def reloadData (self):
+    ###########
+    # PRIVATE #
+    ###########
+
+    def __reloadData (self):
         """
             API calls and currencies data load
         """
         # reload prices
-        dataPrices = self.reloadPrices()
+        dataPrices = self.__reloadPrices()
         if dataPrices is not False:
-            self.setRequest('reloadCurrencyView')
-            self.setRequest('resortCurrencySwitcher')
+            self.__setRequest('reloadCurrencyView')
+            self.__setRequest('resortCurrencySwitcher')
 
-        if (self.nbReloaded % self.bigDataReloadModulo) == 0 \
-                or self.mainWindow.currencies['BTC'].dayVolume is None \
-                or self.mainWindow.currencies['BTC'].dayGraphData is None:
+        if (self.__nbReloadedloaded % self.__bigDataReloadModulo) == 0 \
+                or self.__mainWindow.currencies['BTC'].dayVolume is None \
+                or self.__mainWindow.currencies['BTC'].dayGraphData is None:
             # reload currencies general data (dashboard)
-            dataInfos = self.reloadInfos(dataPrices)
-            self.setRequest('resortCurrencySwitcher')
+            dataInfos = self.__reloadInfos(dataPrices)
+            self.__setRequest('resortCurrencySwitcher')
             if dataInfos is not False:
-                self.setRequest('reloadCurrencyView')
+                self.__setRequest('reloadCurrencyView')
 
             # graph prices reload
-            dataGraph = self.reloadGraphData()
+            dataGraph = self.__reloadGraphData()
             if dataGraph is not False:
-                self.setRequest('reloadCurrencyView')
+                self.__setRequest('reloadCurrencyView')
 
-    def loop (self):
+    def __loop (self):
         """
             Start the API call loop
         """
         def funcWrapper():
-            self.nbReloaded += 1
-            self.loop()
-            self.reloadData()
+            self.__nbReloadedloaded += 1
+            self.__loop()
+            self.__reloadData()
 
-        if self.nbReloaded == 0:
+        if self.__nbReloadedloaded == 0:
             timeout = 0
         else:
-            timeout = self.askInterval
-        self.thread = threading.Timer(timeout, funcWrapper)
-        self.thread.daemon = True
-        self.thread.start()
+            timeout = self.__askInterval
+        self.__thread = threading.Timer(timeout, funcWrapper)
+        self.__thread.daemon = True
+        self.__thread.start()
 
-    def setRequest (self, str):
+    def __setRequest (self, str):
         """
             Reload actual currency view values
         """
-        if str in self.mainWindow.apiDataRequests.keys():
-            self.mainWindow.apiDataRequests[str] = True
+        if str in self.__mainWindow.apiDataRequests.keys():
+            self.__mainWindow.apiDataRequests[str] = True
 
-    def datetimeToStr (self, dt):
-        """
-            Return the string format of a datetime (YYY-MM-DDTHH-MM-SSZ)
-        """
-        dtStr = '{}-{}-{}T{}:{}:{}Z'.format(str(dt.year).zfill(4),
-                                            str(dt.month).zfill(2),
-                                            str(dt.day).zfill(2),
-                                            str(dt.hour).zfill(2),
-                                            str(dt.minute).zfill(2),
-                                            str(dt.second).zfill(2))
-        return dtStr
-
-    def reloadPrices (self):
+    def __reloadPrices (self):
         """
             Reload prices data
         """
         try:
             res = urllib.request.urlopen(
-                'https://api.nomics.com/v1/prices?key=' + self.APIKey).read()
+                'https://api.nomics.com/v1/prices?key=' + self.__APIKey).read()
         except urllib.error.URLError:
             # show network error message
-            if self.mainWindow.networkErrorBarRevealer.get_child_revealed() \
+            if self.__mainWindow.networkErrorBarRevealer.get_child_revealed() \
                                                                     is False:
-                self.mainWindow.networkErrorBarRevealer.set_reveal_child(True)
+                self.__mainWindow.networkErrorBarRevealer.set_reveal_child(True)
 
-            self.thread = threading.Timer(1, self.reloadData)
+            self.__thread = threading.Timer(1, self.__reloadData)
             return False
 
         # hide network error message if its visible
-        if self.mainWindow.networkErrorBarRevealer.get_child_revealed() is True:
-            self.mainWindow.networkErrorBarRevealer.set_reveal_child(False)
+        if self.__mainWindow.networkErrorBarRevealer.get_child_revealed() is True:
+            self.__mainWindow.networkErrorBarRevealer.set_reveal_child(False)
 
         dataPrices = json.loads(res)
-        for symbol in self.mainWindow.currencies.keys():
+        for symbol in self.__mainWindow.currencies.keys():
             for dataCur in dataPrices:
                 if dataCur['currency'] == symbol:
-                    self.mainWindow.currencies[symbol].price = \
+                    self.__mainWindow.currencies[symbol].price = \
                                                         float(dataCur['price'])
                     break
-        # it is necessary for reloadInfos to calculate the correct rank
+        # it is necessary for __reloadInfos to calculate the correct rank
         return dataPrices
 
-    def reloadInfos (self, dataPrices):
+    def __reloadInfos (self, dataPrices):
         """
             Reload general informations data (last day price, day volume,
             supply, etc.)
         """
         try:
             res = urllib.request.urlopen(
-                'https://api.nomics.com/v1/dashboard?key=' + self.APIKey).read()
+                'https://api.nomics.com/v1/dashboard?key=' + self.__APIKey).read()
         except urllib.error.URLError:
             # show network error message
-            if self.mainWindow.networkErrorBarRevealer.get_child_revealed() \
+            if self.__mainWindow.networkErrorBarRevealer.get_child_revealed() \
                                                                     is False:
-                self.mainWindow.networkErrorBarRevealer.set_reveal_child(True)
+                self.__mainWindow.networkErrorBarRevealer.set_reveal_child(True)
 
-            self.thread = threading.Timer(1, self.reloadData)
+            self.__thread = threading.Timer(1, self.__reloadData)
             return False
 
         # hide network error message if its visible
-        if (self.mainWindow.networkErrorBarRevealer.get_child_revealed() \
+        if (self.__mainWindow.networkErrorBarRevealer.get_child_revealed() \
                                                                     is True):
-            self.mainWindow.networkErrorBarRevealer.set_reveal_child(False)
+            self.__mainWindow.networkErrorBarRevealer.set_reveal_child(False)
 
         dataInfos = json.loads(res)
-        for symbol in self.mainWindow.currencies.keys():
+        for symbol in self.__mainWindow.currencies.keys():
             for dataCur in dataInfos:
                 if dataCur['currency'] == symbol:
                     if dataCur['dayOpen'] is not None:
-                        self.mainWindow.currencies[symbol].lastDayPrice = \
+                        self.__mainWindow.currencies[symbol].lastDayPrice = \
                                                     float(dataCur['dayOpen'])
                     if dataCur['dayVolume'] is not None:
-                        self.mainWindow.currencies[symbol].dayVolume = \
+                        self.__mainWindow.currencies[symbol].dayVolume = \
                                                     float(dataCur['dayVolume'])
                     if dataCur['availableSupply'] is not None:
-                        self.mainWindow.currencies[symbol].circulatingSupply = \
+                        self.__mainWindow.currencies[symbol].circulatingSupply = \
                                             float(dataCur['availableSupply'])
                     if dataCur['maxSupply'] is not None:
-                        self.mainWindow.currencies[symbol].maxSupply = \
+                        self.__mainWindow.currencies[symbol].maxSupply = \
                                                     float(dataCur['maxSupply'])
                     if dataCur['high'] is not None:
-                        self.mainWindow.currencies[symbol].ath = \
+                        self.__mainWindow.currencies[symbol].ath = \
                                                         float(dataCur['high'])
         # calcul rank and marketcap
         marketcapsSorted = [] # list of tuples (marketCap, symbol)
@@ -185,60 +178,60 @@ class APIData ():
         marketcapsSorted.sort(reverse = True)
         i = 1
         for marketCap, symbol in marketcapsSorted:
-            if symbol in self.mainWindow.currencies.keys():
-                self.mainWindow.currencies[symbol].marketCap = marketCap
-                self.mainWindow.currencies[symbol].rank = i
+            if symbol in self.__mainWindow.currencies.keys():
+                self.__mainWindow.currencies[symbol].marketCap = marketCap
+                self.__mainWindow.currencies[symbol].rank = i
             i += 1
 
-    def reloadGraphData (self):
+    def __reloadGraphData (self):
         """
             Reload graphs data (timestamps and prices)
         """
         toReload = []
         # always reload day graphs
         lastDayTime = datetime.datetime.today() - datetime.timedelta(days = 1)
-        toReload.append(('day', self.datetimeToStr(lastDayTime)))
+        toReload.append(('day', tools.datetimeToStr(lastDayTime)))
 
         # reload only once month and year graphs (when the app start)
-        if self.mainWindow.currencies['BTC'].monthGraphData is None:
+        if self.__mainWindow.currencies['BTC'].monthGraphData is None:
             lastMonthTime = datetime.datetime.today() \
                             - datetime.timedelta(days = 30)
-            toReload.append(('month', self.datetimeToStr(lastMonthTime)))
+            toReload.append(('month', tools.datetimeToStr(lastMonthTime)))
 
-        if self.mainWindow.currencies['BTC'].yearGraphData is None:
+        if self.__mainWindow.currencies['BTC'].yearGraphData is None:
             lastYearTime = datetime.datetime.today() \
                            - datetime.timedelta(days = 365)
-            toReload.append(('year', self.datetimeToStr(lastYearTime)))
+            toReload.append(('year', tools.datetimeToStr(lastYearTime)))
 
-        if self.mainWindow.currencies['BTC'].allGraphData is None:
+        if self.__mainWindow.currencies['BTC'].allGraphData is None:
             allTime = datetime.datetime(2010, 1, 1)
-            toReload.append(('all', self.datetimeToStr(allTime)))
+            toReload.append(('all', tools.datetimeToStr(allTime)))
 
         for graphTime in toReload:
             try:
                 res = urllib.request.urlopen(
                     'https://api.nomics.com/v1/currencies/sparkline?key=' \
-                    + self.APIKey + '&start=' + graphTime[1]).read()
+                    + self.__APIKey + '&start=' + graphTime[1]).read()
             except urllib.error.URLError:
                 # show network error message
-                if self.mainWindow.networkErrorBarRevealer \
+                if self.__mainWindow.networkErrorBarRevealer \
                                                 .get_child_revealed() is False:
-                    self.mainWindow.networkErrorBarRevealer.set_reveal_child(
+                    self.__mainWindow.networkErrorBarRevealer.set_reveal_child(
                                                                         True)
-                self.thread = threading.Timer(1, self.reloadData)
+                self.__thread = threading.Timer(1, self.__reloadData)
                 return False
 
             # hide network error message if its visible
-            if self.mainWindow.networkErrorBarRevealer.get_child_revealed() \
+            if self.__mainWindow.networkErrorBarRevealer.get_child_revealed() \
                                                                         is True:
-                self.mainWindow.networkErrorBarRevealer.set_reveal_child(False)
+                self.__mainWindow.networkErrorBarRevealer.set_reveal_child(False)
 
             dataGraphData = json.loads(res)
             def utcToLocal (dt):
                 return dt.replace(tzinfo = datetime.timezone.utc) \
                          .astimezone(tz = None)
 
-            for symbol in self.mainWindow.currencies.keys():
+            for symbol in self.__mainWindow.currencies.keys():
                 for dataCur in dataGraphData:
                     if dataCur['currency'] == symbol:
                         GraphData = []
@@ -247,6 +240,6 @@ class APIData ():
                                                 value, '%Y-%m-%dT%H:%M:%SZ'))
                             GraphData.append((dateTime,
                                               float(dataCur['prices'][index])))
-                        setattr(self.mainWindow.currencies[symbol],
+                        setattr(self.__mainWindow.currencies[symbol],
                                 graphTime[0] + 'GraphData',
                                 GraphData)
