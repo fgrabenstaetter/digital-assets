@@ -2,14 +2,13 @@ project('fr.fgrabenstaetter.DigitalAssets',
         version: '3.6',
         meson_version: '>= 0.48.0')
 
-
-python_dep = dependency('python3', version: '>=3.5')
-gtk_dep = dependency('gtk+-3.0')
-pygobject_dep = dependency('pygobject-3.0')
-pycairo_dep = dependency('py3cairo')
-
 pymod = import('python')
 pyins = pymod.find_installation('python3')
+
+dependency('glib-2.0')
+dependency('gtk+-3.0')
+dependency('pygobject-3.0')
+dependency('py3cairo')
 
 PRGM_HNAME = 'Digital Assets'
 PYTHON_PACKAGE_NAME = 'dassets'
