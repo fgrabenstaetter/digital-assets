@@ -24,39 +24,23 @@ from dassets.ui.headerBar import HeaderBar
 from dassets.ui.currencySwitcher import CurrencySwitcher
 from dassets.ui.currencyView import CurrencyView
 from dassets.sys.apiData import APIData
-from dassets.sys import currencies
-from dassets.sys.currency import Currency
 from dassets.env import *
-import pickle
 
-class Window (Gtk.Window):
+class Window (Gtk.ApplicationWindow):
 
-    def __init__ (self):
+    def __init__ (self, application):
         """
             Init Window
         """
-        Gtk.Window.__init__(self)
+        Gtk.ApplicationWindow.__init__(self)
         self.set_default_size(1000, 600)
         icon = GdkPixbuf.Pixbuf().new_from_file_at_scale(
                                     DATA_DIR + '/img/BTC.svg', 128, 128, True)
         self.set_default_icon(icon)
         self.__keysPressed = {'Ctrl': False, 'f': False}
-        self.currencies = {}
 
-        # add USD currency
-        self.currencies['USD'] = Currency('Dollars', 'USD', None)
-        self.currencies['USD'].price = 1
-        self.currencies['USD'].lastDayPrice = 1
-        self.currencies['USD'].ath = 1
-        self.currencies['USD'].rank = 0
-
-        # add digital assets
-        for cur in currencies.getCurrencies():
-            currency = Currency(cur[0], cur[1], cur[2])
-            self.currencies[currency.symbol] = currency
-
-        self.__loadFavoriteCurrencies()
-        self.__loadLastCurrenciesRank()
+        self.__application = application
+        self.currencies = self.__application.currencies
 
         # load CSS
         with open(DATA_DIR + '/css/style.css', 'r') as file:
@@ -75,7 +59,6 @@ class Window (Gtk.Window):
 
         self.currencyView = CurrencyView(self)
         self.currencySwitcher = CurrencySwitcher(self)
-
         self.currencySwitcherBox = Gtk.ScrolledWindow(vexpand = True)
         self.currencySwitcherBox.set_min_content_width(200)
         self.currencySwitcherBox.set_max_content_width(200)
@@ -136,11 +119,9 @@ class Window (Gtk.Window):
 
     def quit (self, obj = None, data = None):
         """
-            Quit the app and save some data
+            Quit event method handler, call quit method of the application
         """
-        Gtk.main_quit()
-        self.__saveFavoriteCurrencies()
-        self.__saveLastCurrenciesRank()
+        self.__application.quit()
 
     def searchEntryKeyPressEvent (self, obj, data):
         """
@@ -228,63 +209,3 @@ class Window (Gtk.Window):
             self.__keysPressed['Ctrl'] = False
         elif data.get_keyval() == (True, Gdk.KEY_f):
             self.__keysPressed['f'] = False
-
-    def __saveFavoriteCurrencies (self):
-        """
-            Save favorites currencies in a file to load them in the next app
-            launch
-        """
-        dic = dict()
-        for key in self.currencies.keys():
-            if key != 'USD':
-                dic[key] = self.currencies[key].favorite
-        with open(CONFIG_DIR + '/favorites', 'wb') as file:
-            pickler = pickle.Pickler(file)
-            pickler.dump(dic)
-
-    def __loadFavoriteCurrencies (self):
-        """
-            Load favorites currencies from a file
-        """
-        try:
-            with open(CONFIG_DIR + '/favorites', 'rb') as file:
-                unpickler = pickle.Unpickler(file)
-                dic = unpickler.load()
-                for key in dic.keys():
-                    if key in self.currencies.keys() and dic[key] == True:
-                        self.currencies[key].favorite = True
-        except OSError:
-            # not created now, skip
-            pass
-
-    def __saveLastCurrenciesRank (self):
-        """
-            Save currencies rank in a file to load them in the next app launch
-        """
-        if self.currencies['BTC'].rank is None:
-            return
-
-        dic = dict()
-        for key in self.currencies.keys():
-            if key != 'USD':
-                dic[key] = self.currencies[key].rank
-
-        with open(CONFIG_DIR + '/lastRanks', 'wb') as file:
-            pickler = pickle.Pickler(file)
-            pickler.dump(dic)
-
-    def __loadLastCurrenciesRank (self):
-        """
-            Load last currencies rank (sorted by marketcap) to avoid the delay
-            before currencies are sorted by rank after their data is downloaded
-        """
-        try:
-            with open(CONFIG_DIR + '/lastRanks', 'rb') as file:
-                unpickler = pickle.Unpickler(file)
-                dic = unpickler.load()
-                for key in dic.keys():
-                    if key in self.currencies.keys():
-                        self.currencies[key].rank = dic[key]
-        except OSError:
-            # not created now, skip
-            pass

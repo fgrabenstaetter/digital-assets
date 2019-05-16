@@ -29,12 +29,9 @@ LOCALE_DIR = '@LOCALE_DIR@'
 sys.path.append(PYTHON_DIR)
 gettext.install('@LOCALE_DOMAIN@', LOCALE_DIR)
 
-from dassets.ui.window import Window
+from dassets.ui.application import Application
 from dassets.env import *
 
-GLib.set_prgname(PRGM_NAME)
-GLib.set_application_name(PRGM_HNAME)
 os.makedirs(CONFIG_DIR, exist_ok = True)
-
-Window()
+Application()
 Gtk.main()
