@@ -59,3 +59,9 @@ def datetimeToStr (dt):
                                         str(dt.minute).zfill(2),
                                         str(dt.second).zfill(2))
     return dtStr
+
+def print_warning (str):
+    """
+        Print warning message followed by the str string and continue the app
+    """
+    print(' >>> WARNING: ' + str)

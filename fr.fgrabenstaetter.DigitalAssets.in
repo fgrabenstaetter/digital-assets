@@ -32,6 +32,5 @@ gettext.install('@LOCALE_DOMAIN@', LOCALE_DIR)
 from dassets.ui.application import Application
 from dassets.env import *
 
-os.makedirs(CONFIG_DIR, exist_ok = True)
 Application()
 Gtk.main()

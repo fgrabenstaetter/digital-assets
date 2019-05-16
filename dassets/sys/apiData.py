@@ -18,6 +18,7 @@
 """
 
 from dassets.sys import currencies, tools
+from dassets.sys.settings import Settings
 import urllib.request, urllib.error, threading, json, datetime, random, datetime
 
 class APIData ():
@@ -28,7 +29,7 @@ class APIData ():
         """
         self.__mainWindow = mainWindow
         # default API key
-        self.__APIKey = '540cc835b097c5802c1d8ff21bc5731b'
+        self.__APIKey = Settings().loadNomicsAPIKey()
         self.__nbReloadedloaded = 0
         self.__askInterval = 10
         self.__bigDataReloadModulo = 12

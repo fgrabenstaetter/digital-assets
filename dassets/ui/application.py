@@ -19,12 +19,12 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gio, GLib
+from gi.repository import Gtk, Gio, GLib, Gdk
 from dassets.ui.window import Window
 from dassets.env import *
 from dassets.sys import currencies
 from dassets.sys.currency import Currency
-import pickle
+from dassets.sys.settings import Settings
 
 class Application (Gtk.Application):
 
@@ -34,9 +34,19 @@ class Application (Gtk.Application):
         """
         Gtk.Application.__init__(self)
         self.new(PRGM_NAME, Gio.ApplicationFlags.FLAGS_NONE)
-        self.register_session = True
         GLib.set_prgname(PRGM_NAME)
         GLib.set_application_name(PRGM_HNAME)
+
+        # load CSS
+        with open(DATA_DIR + '/css/style.css', 'r') as file:
+            css = file.read()
+
+        cssProvider = Gtk.CssProvider()
+        cssProvider.load_from_data(css.encode())
+        Gtk.StyleContext().add_provider_for_screen(
+            Gdk.Screen.get_default(),
+            cssProvider,
+            Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
         self.currencies = {}
         # add USD currency
@@ -51,81 +61,15 @@ class Application (Gtk.Application):
             currency = Currency(cur[0], cur[1], cur[2])
             self.currencies[currency.symbol] = currency
 
-        # gsettings
-        self.__gsettings = Gio.Settings(PRGM_NAME)
-
-        self.__loadFavoriteCurrencies()
-        self.__loadLastCurrenciesRank()
+        self.__settings = Settings()
+        self.__settings.loadLastCurrenciesRank(self.currencies)
+        self.__settings.loadFavoriteCurrencies(self.currencies)
         self.__mainWindow = Window(self)
 
     def quit (self):
         """
             Quit the app and save some data
         """
+        self.__settings.saveLastCurrenciesRank(self.currencies)
+        self.__settings.saveFavoriteCurrencies(self.currencies)
         Gtk.main_quit()
-        self.__saveFavoriteCurrencies()
-        self.__saveLastCurrenciesRank()
-
-    ###########
-    # PRIVATE #
-    ###########
-
-    def __saveFavoriteCurrencies (self):
-        """
-            Save favorites currencies in a file to load them in the next app
-            launch
-        """
-        dic = dict()
-        for key in self.currencies.keys():
-            if key != 'USD':
-                dic[key] = self.currencies[key].favorite
-        with open(CONFIG_DIR + '/favorites', 'wb') as file:
-            pickler = pickle.Pickler(file)
-            pickler.dump(dic)
-
-    def __loadFavoriteCurrencies (self):
-        """
-            Load favorites currencies from a file
-        """
-        try:
-            with open(CONFIG_DIR + '/favorites', 'rb') as file:
-                unpickler = pickle.Unpickler(file)
-                dic = unpickler.load()
-                for key in dic.keys():
-                    if key in self.currencies.keys() and dic[key] == True:
-                        self.currencies[key].favorite = True
-        except OSError:
-            # not created now, skip
-            pass
-
-    def __saveLastCurrenciesRank (self):
-        """
-            Save currencies rank in a file to load them in the next app launch
-        """
-        if self.currencies['BTC'].rank is None:
-            return
-
-        dic = dict()
-        for key in self.currencies.keys():
-            if key != 'USD':
-                dic[key] = self.currencies[key].rank
-
-        with open(CONFIG_DIR + '/lastRanks', 'wb') as file:
-            pickler = pickle.Pickler(file)
-            pickler.dump(dic)
-
-    def __loadLastCurrenciesRank (self):
-        """
-            Load last currencies rank (sorted by marketcap) to avoid the delay
-            before currencies are sorted by rank after their data is downloaded
-        """
-        try:
-            with open(CONFIG_DIR + '/lastRanks', 'rb') as file:
-                unpickler = pickle.Unpickler(file)
-                dic = unpickler.load()
-                for key in dic.keys():
-                    if key in self.currencies.keys():
-                        self.currencies[key].rank = dic[key]
-        except OSError:
-            # not created now, skip
-            pass

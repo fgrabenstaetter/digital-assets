@@ -38,20 +38,8 @@ class Window (Gtk.ApplicationWindow):
                                     DATA_DIR + '/img/BTC.svg', 128, 128, True)
         self.set_default_icon(icon)
         self.__keysPressed = {'Ctrl': False, 'f': False}
-
         self.__application = application
         self.currencies = self.__application.currencies
-
-        # load CSS
-        with open(DATA_DIR + '/css/style.css', 'r') as file:
-            css = file.read()
-
-        cssProvider = Gtk.CssProvider()
-        cssProvider.load_from_data(css.encode())
-        Gtk.StyleContext().add_provider_for_screen(
-            Gdk.Screen.get_default(),
-            cssProvider,
-            Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
         # load widgets
         self.headerBar = HeaderBar(self)

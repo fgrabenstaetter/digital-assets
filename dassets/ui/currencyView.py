@@ -210,10 +210,7 @@ class CurrencyView (Gtk.Box):
                                 child.set_active(False)
                             child.set_active(True)
                             break
-
-        # redraw CurrencyView widget
         self.queue_draw()
-
         if self.__revealer is not None:
             self.__revealer.set_reveal_child(True)
 
