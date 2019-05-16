@@ -22,7 +22,7 @@ For more informations: https://www.gnu.org/licenses/gpl-3.0.en.html
 
 ```bash
 	mkdir build && cd build
-	meson .. --prefix=/usr
+	sudo meson .. --prefix=/usr
 	sudo ninja install
-	digital-assets
+	fr.fgrabenstaetter.DigitalAssets
 ```
