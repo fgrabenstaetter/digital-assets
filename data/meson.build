@@ -12,5 +12,8 @@ if desktop_file_install.found()
   run_command('desktop-file-install', meson.project_name() + '.desktop')
 endif
 
-install_subdir('hicolor', install_dir: join_paths(DATA_DIR, 'icons'))
-run_command('gtk-update-icon-cache', join_paths(DATA_DIR, 'icons/hicolor'))
+install_data(meson.project_name() + '.gschema.xml',
+             install_dir: join_paths(DATA_DIR, 'glib-2.0/schemas'))
+run_command('glib-compile-schemas', join_paths(DATA_DIR, 'glib-2.0/schemas'))
+install_subdir('icons', install_dir: DATA_DIR)
+run_command('gtk-update-icon-cache', join_paths(DATA_DIR, 'icons/hicolor'), '-qtf')

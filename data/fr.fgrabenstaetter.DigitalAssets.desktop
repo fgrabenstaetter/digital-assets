@@ -2,6 +2,6 @@
 Name=Digital Assets
 Comment=Digital Assets prices, statistics and informations
 Type=Application
-Exec=digital-assets
+Exec=fr.fgrabenstaetter.DigitalAssets
 Terminal=false
-Icon=digital-assets
+Icon=fr.fgrabenstaetter.DigitalAssets

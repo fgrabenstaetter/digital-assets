@@ -188,7 +188,7 @@ class Window (Gtk.Window):
             variation, ath)
         """
         return self.headerBar.actualSortMethodName
-        
+
     ###########
     # PRIVATE #
     ###########

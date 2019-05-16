@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="fr.fgrabenstaetter.DigitalAssets">
+    <schema id="fr.fgrabenstaetter.DigitalAssets" path="/fr/fgrabenstaetter/digital-assets/">
+        <key name="nomics-api-key" type="s">
+            <default>'540cc835b097c5802c1d8ff21bc5731b'</default>
+            <summary>Nomics API Key</summary>
+            <description>Nomics API Key to use (https://nomics.com)</description>
+        </key>
+        <key name="favorites" type="s">
+            <default>'[]'</default>
+            <summary>Favorite assets</summary>
+            <description>List of favorite digital assets</description>
+        </key>
+        <key name="precision-digits" type="u">
+            <default>0</default>
+            <summary>Additional price precision digits</summary>
+            <summary>Set the additional digits number for assets's price</summary>
+        </key>
+    </schema>
+</schemalist>
