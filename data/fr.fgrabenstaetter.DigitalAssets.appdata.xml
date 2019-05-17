@@ -1,0 +1,51 @@
+​<?xml version="1.0"?>
+<components version="0.10">
+    ​<component type="desktop">
+        <id>fr.fgrabenstaetter.DigitalAssets</id>
+        <name>Digital Assetsz</name>
+        <summary>Digital Assets prices, statistics and informations</summary>
+        <url type="homepage">https://gitlab.gnome.org/fgrabenstaetter/digital-assets</url>
+        <metadata_license>CC0-1.0</metadata_license>
+        <project_license>GPL-3.0+</project_license>
+        <icon>fr.fgrabenstaetter.DigitalAssets</icon>
+        <launchable type="desktop-id">fr.fgrabenstaetter.DigitalAssets.desktop</launchable>
+        <developer_name>François Grabenstaetter</developer_name>
+        <update_contact>francoisgrabenstaetter@gmail.com</update_contact>
+        <description>
+            <p>Digital Assets is a utility to follow cryptocurrencies prices, statistics and informations.</p>
+            <p>Features:
+                <ul>
+                    <li>Price, volume, marketcap, rank</li>
+                    <li>Circulating and max supply, ATH</li>
+                    <li>Graphic of the day/month/year/all-time prices</li>
+                    <li>Support of the most popular assets</li>
+                    <li>Choose the base currency</li>
+                    <li>Choose the assets list order method, make an asset favorite</li>
+                </ul>
+            </p>
+        </description>
+        <categories>
+            <category>Utility</category>
+        </categories>
+        <provides>
+            <library>libfoobar.so.2</library>
+            <font>foo.ttf</font>
+            <binary>foobar</binary>
+        </provides>
+        <releases>
+            <release version="3.6" date="2019-04-08">
+                <description>
+                    <ul>
+                        <li>Fix bugs</li>
+                    </ul>
+                </description>
+            </release>
+        </releases>
+        <content_rating type="oars-1.0"></content_rating>
+        <screenshots>
+            <screenshot type="default">
+                <image type="source" width="1032" height="718">https://gitlab.gnome.org/fgrabenstaetter/digital-assets/raw/master/screenshot.png</image>
+            </screenshot>
+        </screenshots>
+    ​</component>
+</components>
