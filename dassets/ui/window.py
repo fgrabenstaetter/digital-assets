@@ -34,8 +34,8 @@ class Window (Gtk.ApplicationWindow):
         """
         Gtk.ApplicationWindow.__init__(self)
         self.set_default_size(1000, 600)
-        icon = GdkPixbuf.Pixbuf().new_from_file_at_scale(
-                                    DATA_DIR + '/img/BTC.svg', 128, 128, True)
+        icon = GdkPixbuf.Pixbuf().new_from_resource_at_scale(
+                            PRGM_PATH + 'img/BTC.svg', 128, 128, True)
         self.set_default_icon(icon)
         self.__keysPressed = {'Ctrl': False, 'f': False}
         self.__application = application
@@ -186,7 +186,8 @@ class Window (Gtk.ApplicationWindow):
         elif data.get_keyval() == (True, Gdk.KEY_f):
             self.__keysPressed['f'] = True
 
-        if self.__keysPressed['Ctrl'] is True and self.__keysPressed['f'] is True:
+        if self.__keysPressed['Ctrl'] is True \
+                and self.__keysPressed['f'] is True:
             self.headerBar.searchButton.clicked()
 
     def __windowKeyReleaseEvent (self, obj, data):

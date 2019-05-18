@@ -9,6 +9,7 @@ dependency('gtk+-3.0')
 dependency('pygobject-3.0')
 dependency('py3cairo')
 
+PRGM_PATH = '/fr/fgrabenstaetter/digital-assets/'
 PRGM_HNAME = 'Digital Assets'
 PYTHON_PACKAGE_NAME = 'dassets'
 BIN_DIR = join_paths(get_option('prefix'), get_option('bindir'))
@@ -24,6 +25,7 @@ conf.set('DATA_DIR', join_paths(DATA_DIR, meson.project_name()))
 conf.set('PRGM_VERSION', meson.project_version())
 conf.set('PRGM_NAME', meson.project_name())
 conf.set('PRGM_HNAME', PRGM_HNAME)
+conf.set('PRGM_PATH', PRGM_PATH)
 
 # Configure and install env file
 configure_file(input: meson.project_name() + '.in',
@@ -43,5 +45,5 @@ install_data(join_paths(meson.current_build_dir(), 'env.py'),
 install_subdir(PYTHON_PACKAGE_NAME,
                install_dir: PYTHON_DIR,
                exclude_files: ['env.in'])
-               
+
 subdir('data')

@@ -38,11 +38,8 @@ class Application (Gtk.Application):
         GLib.set_application_name(PRGM_HNAME)
 
         # load CSS
-        with open(DATA_DIR + '/css/style.css', 'r') as file:
-            css = file.read()
-
         cssProvider = Gtk.CssProvider()
-        cssProvider.load_from_data(css.encode())
+        cssProvider.load_from_resource(PRGM_PATH + 'css/style.css')
         Gtk.StyleContext().add_provider_for_screen(
             Gdk.Screen.get_default(),
             cssProvider,

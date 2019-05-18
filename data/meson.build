@@ -1,7 +1,4 @@
-# Install resources and locale
-install_subdir('resources',
-               install_dir: join_paths(DATA_DIR, meson.project_name()),
-               strip_directory: true)
+# Install locale files
 install_subdir('locale',
                install_dir: LOCALE_DIR,
                strip_directory: true,
@@ -30,6 +27,17 @@ test('Validating the gschema file',
 install_data(meson.project_name() + '.gschema.xml',
              install_dir: join_paths(DATA_DIR, 'glib-2.0/schemas'))
 run_command(glib_compile_schemas, join_paths(DATA_DIR, 'glib-2.0/schemas'))
+
+# Install the gresource file
+gnome = import('gnome')
+gnome.compile_resources (
+  meson.project_name(),
+  meson.project_name() + '.gresource.xml',
+  gresource_bundle: true,
+  source_dir: '.',
+  install_dir: join_paths(DATA_DIR, meson.project_name()),
+  install: true
+)
 
 # Validate the appdata file
 appstream_util = find_program('appstream-util', required: false)

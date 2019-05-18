@@ -19,7 +19,7 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, GdkPixbuf
 from dassets.sys import currencies
 from dassets.env import *
 
@@ -77,8 +77,9 @@ class CurrencySwitcher (Gtk.ListBox):
         row.curName = currency.name
         row.curSymbol = currency.symbol
 
-        icon = Gtk.Image().new_from_file(DATA_DIR + '/img/' + currency.symbol \
-                                         + '.svg')
+        pixbuf = GdkPixbuf.Pixbuf.new_from_resource_at_scale(
+                PRGM_PATH + 'img/' + currency.symbol + '.svg', 32, 32, True)
+        icon = Gtk.Image.new_from_pixbuf(pixbuf)
         nameBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
                           spacing = 2)
         nameLabel = Gtk.Label(xalign = 0)

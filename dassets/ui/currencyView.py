@@ -67,8 +67,8 @@ class CurrencyView (Gtk.Box):
 
         # top (header)
         self.__actualCurrencySymbol = currency.symbol
-        pixbuf = GdkPixbuf.Pixbuf().new_from_file_at_scale(
-                DATA_DIR + '/img/' + currency.symbol + '.svg', 100, 100, True)
+        pixbuf = GdkPixbuf.Pixbuf().new_from_resource_at_scale(
+                PRGM_PATH + 'img/' + currency.symbol + '.svg', 100, 100, True)
         self.__image.set_from_pixbuf(pixbuf)
 
         # name and symbol
