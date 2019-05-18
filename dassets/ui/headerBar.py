@@ -233,6 +233,7 @@ class HeaderBar (Gtk.HeaderBar):
             if self.searchButton.get_active() is False:
                 self.__mainWindow.searchEntryRevealer.set_reveal_child(False)
                 self.__mainWindow.searchEntry.set_text('')
+                self.__mainWindow.currencySwitcher.scrollToActualChild()
             else:
                 self.__mainWindow.searchEntryRevealer.set_reveal_child(True)
                 self.__mainWindow.searchEntry.grab_focus()

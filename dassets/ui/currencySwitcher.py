@@ -129,7 +129,6 @@ class CurrencySwitcher (Gtk.ListBox):
         # if search entry showed, hide it
         if self.__mainWindow.headerBar.searchButton.get_active() is True:
             self.__mainWindow.headerBar.searchButton.clicked()
-            self.scrollToActualChild()
 
     def __currenciesSort (self, row1, row2):
         """
