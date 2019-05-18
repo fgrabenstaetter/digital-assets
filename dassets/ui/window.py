@@ -66,8 +66,8 @@ class Window (Gtk.ApplicationWindow):
         currencyViewBox = Gtk.ScrolledWindow()
         currencyViewBox.add(self.currencyView)
 
-        networkErrorLabel = Gtk.Label(_('There is a network problem, please' \
-            + ' verify your connection and try again'),
+        networkErrorLabel = Gtk.Label(_('There is a network problem, please'
+                                      ' verify your connection and try again'),
                                       xalign = 0,
                                       name = 'infoBarText')
         networkErrorBar = Gtk.InfoBar(message_type = Gtk.MessageType.ERROR)

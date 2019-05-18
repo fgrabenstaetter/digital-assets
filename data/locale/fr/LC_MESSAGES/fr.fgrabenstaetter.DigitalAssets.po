@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2019-01-26 12:39+0100\n"
-"PO-Revision-Date: 2019-01-26 12:46+0100\n"
+"POT-Creation-Date: 2019-05-18 18:04+0200\n"
+"PO-Revision-Date: 2019-05-18 18:18+0200\n"
 "Last-Translator: François Grabenstaetter <francoisgrabenstaetter@gmail.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -14,70 +14,69 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 2.2.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: DigitalAssets/ui/currencyView.py:55 DigitalAssets/ui/headerBar.py:197
-msgid "Change"
-msgstr "Variation"
-
-#: DigitalAssets/ui/currencyView.py:58
-msgid "Markep Cap"
-msgstr "Cap. Marché"
-
-#: DigitalAssets/ui/currencyView.py:62 DigitalAssets/ui/headerBar.py:198
-msgid "Volume"
-msgstr "Volume"
-
-#: DigitalAssets/ui/currencyView.py:69 DigitalAssets/ui/headerBar.py:195
-msgid "Rank"
-msgstr "Rang"
-
-#: DigitalAssets/ui/currencyView.py:72
-msgid "Circulating Supply"
-msgstr "Offre en circulation"
-
-#: DigitalAssets/ui/currencyView.py:76
-msgid "Max Supply"
-msgstr "Offre Max"
-
-#: DigitalAssets/ui/currencyView.py:80
-msgid "Website"
-msgstr "Site internet"
-
-#: DigitalAssets/ui/currencyView.py:177
-msgid "All"
-msgstr "Tout"
-
-#: DigitalAssets/ui/currencyView.py:177 DigitalAssets/ui/graph.py:180
-msgid "Day"
-msgstr "Jour"
-
-#: DigitalAssets/ui/currencyView.py:177 DigitalAssets/ui/graph.py:182
-msgid "Month"
-msgstr "Mois"
-
-#: DigitalAssets/ui/currencyView.py:177 DigitalAssets/ui/graph.py:184
-msgid "Year"
-msgstr "Année"
-
-#: DigitalAssets/ui/currencyView.py:295
+#: dassets/ui/currencyView.py:111 dassets/ui/currencyView.py:128
+#: dassets/ui/currencyView.py:139 dassets/ui/currencyView.py:148
+#: dassets/ui/currencyView.py:157 dassets/ui/currencyView.py:163
+#: dassets/ui/currencyView.py:173
 msgid "Undefined"
 msgstr "Indéfini"
 
-#: DigitalAssets/ui/currencyView.py:309
-msgid "Unlimited"
-msgstr "Illimité"
+#: dassets/ui/currencyView.py:236 dassets/ui/headerBar.py:268
+msgid "Change"
+msgstr "Variation"
 
-#: DigitalAssets/ui/graph.py:178
+#: dassets/ui/currencyView.py:240
+msgid "Markep Cap"
+msgstr "Cap. Marché"
+
+#: dassets/ui/currencyView.py:244 dassets/ui/headerBar.py:269
+msgid "Volume"
+msgstr "Volume"
+
+#: dassets/ui/currencyView.py:251 dassets/ui/headerBar.py:266
+msgid "Rank"
+msgstr "Rang"
+
+#: dassets/ui/currencyView.py:254
+msgid "Circulating Supply"
+msgstr "Offre en circulation"
+
+#: dassets/ui/currencyView.py:259
+msgid "Max Supply"
+msgstr "Offre Max"
+
+#: dassets/ui/currencyView.py:267
+msgid "Website"
+msgstr "Site internet"
+
+#: dassets/ui/currencyView.py:382 dassets/ui/graph.py:207
+msgid "Day"
+msgstr "Jour"
+
+#: dassets/ui/currencyView.py:383 dassets/ui/graph.py:209
+msgid "Month"
+msgstr "Mois"
+
+#: dassets/ui/currencyView.py:384 dassets/ui/graph.py:211
+msgid "Year"
+msgstr "Année"
+
+#: dassets/ui/currencyView.py:385
+msgid "All"
+msgstr "Tout"
+
+#: dassets/ui/graph.py:205
 msgid "Hour"
 msgstr "Heure"
 
-#: DigitalAssets/ui/graph.py:193
+#: dassets/ui/graph.py:222
 msgid "Price"
 msgstr "Prix"
 
-#: DigitalAssets/ui/headerBar.py:74
+#: dassets/ui/headerBar.py:80
 msgid ""
 "Prices, statistics and informations about Digital Assets\n"
 "Thanks to Nomics (https://nomics.com) for their free API\n"
@@ -87,26 +86,20 @@ msgstr ""
 "Merci à Nomics (https://nomics.com) pour leur API gratuite\n"
 "Dons"
 
-#: DigitalAssets/ui/headerBar.py:82
+#: dassets/ui/headerBar.py:92
 msgid "About"
 msgstr "À propos"
 
-#: DigitalAssets/ui/headerBar.py:84
+#: dassets/ui/headerBar.py:94
 msgid "Quit"
 msgstr "Quitter"
 
-#: DigitalAssets/ui/headerBar.py:196
+#: dassets/ui/headerBar.py:267
 msgid "Name"
 msgstr "Nom"
 
-#: DigitalAssets/ui/window.py:113
+#: dassets/ui/window.py:69
 msgid "There is a network problem, please verify your connection and try again"
 msgstr ""
 "Un problème de réseau est survenu, veuillez vérifier votre connexion et "
 "réessayer"
-
-#~ msgid "Week"
-#~ msgstr "Semaine"
-
-#~ msgid "Day change"
-#~ msgstr "Variation (24h)"
