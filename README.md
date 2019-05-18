@@ -1,6 +1,6 @@
 # Digital Assets
 
-Prices, statistics and informations about Digital Assets.
+Cryptocurrencies prices, statistics and informations.
 
 Thanks to Nomics (https://nomics.com) for their free API.
 
@@ -22,7 +22,7 @@ For more informations: https://www.gnu.org/licenses/gpl-3.0.en.html
 
 ```bash
 	mkdir build && cd build
-	sudo meson .. --prefix=/usr
+	meson .. 
 	sudo ninja install
 	fr.fgrabenstaetter.DigitalAssets
 ```
