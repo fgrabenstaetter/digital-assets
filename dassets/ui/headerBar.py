@@ -21,6 +21,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from dassets.env import *
+from dassets.ui.settingsWindow import SettingsWindow
 
 class HeaderBar (Gtk.HeaderBar):
 
@@ -71,6 +72,9 @@ class HeaderBar (Gtk.HeaderBar):
         menuPopover.connect('closed', menuPopoverClosedEvent)
         menuButton.connect('toggled', menuButtonToggledEvent)
 
+        def showSettingsDialog (obj = None, data = None):
+            settingsDialog = SettingsWindow(self.__mainWindow)
+
         def showAboutDialog (obj = None, data = None):
             menuPopover.popdown()
             aboutDialog = Gtk.AboutDialog(
@@ -89,11 +93,14 @@ class HeaderBar (Gtk.HeaderBar):
             aboutDialog.set_transient_for(self.__mainWindow)
             aboutDialog.show()
 
+        menuPopoverButtonSettings = Gtk.ModelButton(_('Settings'), xalign = 0)
+        menuPopoverButtonSettings.connect('clicked', showSettingsDialog)
         menuPopoverButtonAbout = Gtk.ModelButton(_('About'), xalign = 0)
         menuPopoverButtonAbout.connect('clicked', showAboutDialog)
         menuPopoverButtonQuit = Gtk.ModelButton(_('Quit'), xalign = 0)
         menuPopoverButtonQuit.connect('clicked', self.__mainWindow.quit)
 
+        menupopoverCurrenciesBox.add(menuPopoverButtonSettings)
         menupopoverCurrenciesBox.add(menuPopoverButtonAbout)
         menupopoverCurrenciesBox.add(menuPopoverButtonQuit)
         menupopoverCurrenciesBox.show_all()

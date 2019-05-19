@@ -1,63 +1,56 @@
 /*
-FILE: style.css
-AUTHOR: François Grabenstaetter
-LICENSE: GPL 3.0
+	AUTHOR: François Grabenstaetter
+	LICENSE: GPL 3.0
 */
 
-#mainBox
-{
+#mainBox {
 	background-color: @theme_base_color;
 	border-radius: 10px;
 	padding: 20px;
 }
 
-#infosBox > box
-{
+#infosBox > box {
 	padding: 20px;
 }
 
-#priceGreen
-{
+#priceGreen {
 	color: #66BB6A;
 }
 
-#priceRed
-{
+#priceRed {
 	color: #EF5350;
 }
 
-#currencyName
-{
+#currencyName {
 	font-size: 20px;
 	font-weight: bold;
 }
 
-#currencySymbol
-{
+#currencySymbol {
 	font-size: 16px;
 }
 
-#currencyPrice
-{
+#currencyPrice {
 	font-size: 18px;
 }
 
-#infoTitle
-{
+#infoTitle {
 	font-weight: bold;
 }
 
-#infoBarText
-{
+#infoBarText {
 	font-weight: bold;
 }
 
-#linkButton
-{
+#linkButton {
 	padding: 10px;
 }
 
-#baseCurrencyPopoverSymbol
-{
+#baseCurrencyPopoverSymbol {
 	padding: 0 4px;
+}
+
+#settingsAPIKeyInfos {
+	color: alpha(currentColor, 0.8);
+	font-size: 0.9em;
 }

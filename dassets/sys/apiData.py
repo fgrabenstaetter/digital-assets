@@ -28,8 +28,9 @@ class APIData ():
             Init APIData
         """
         self.__mainWindow = mainWindow
+        self.__settings = Settings()
         # default API key
-        self.__APIKey = Settings().loadNomicsAPIKey()
+        self.__APIKey = self.__settings.loadNomicsAPIKey()
         self.__nbReloadedloaded = 0
         self.__askInterval = 10
         self.__bigDataReloadModulo = 12
@@ -80,6 +81,10 @@ class APIData ():
             timeout = 0
         else:
             timeout = self.__askInterval
+
+        # Reload the Nomics API Key
+        self.__APIKey = self.__settings.loadNomicsAPIKey()
+        # Set a new timeout
         self.__thread = threading.Timer(timeout, funcWrapper)
         self.__thread.daemon = True
         self.__thread.start()
