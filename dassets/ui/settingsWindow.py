@@ -43,14 +43,12 @@ class SettingsWindow (Gtk.Window):
         listBox = Gtk.ListBox(selection_mode = Gtk.SelectionMode.NONE,
                               activate_on_single_click = False,
                               can_focus = False)
-        listBox.set_size_request(400, -1)
 
         # Nomics API Key
-        apiKeyHBox = Gtk.Box(spacing = 12, border_width = 12)
+        apiKeyHBox = Gtk.Box(spacing = 18, border_width = 6)
         apiKeyLabel = Gtk.Label(_('Nomics API Key'), expand = True, xalign = 0)
-        self.__apiKeyEntry = Gtk.Entry(width_chars = 32,
-                                    text = self.__settings.loadNomicsAPIKey(),
-                                    expand = True)
+        self.__apiKeyEntry = Gtk.Entry(width_chars = 32, expand = True,
+                                    text = self.__settings.loadNomicsAPIKey())
         apiKeyHBox.add(apiKeyLabel)
         apiKeyHBox.add(self.__apiKeyEntry)
 
@@ -64,10 +62,12 @@ class SettingsWindow (Gtk.Window):
                                                     'https://www.nomics.com',
                                                     'Nomics')
 
-        apiKeyInfosBox = Gtk.Box(spacing = 12, border_width = 12)
+        apiKeyInfosBox = Gtk.Box(spacing = 18, border_width = 6)
         apiKeyInfosBox.add(apiKeyInfosLabel)
         apiKeyInfosBox.add(apiKeyInfosWebsite)
-        apiKeyVBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 6)
+        apiKeyVBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
+                             border_width = 12,
+                             spacing = 6)
         apiKeyVBox.add(apiKeyHBox)
         apiKeyVBox.add(apiKeyInfosBox)
         listBox.add(apiKeyVBox)
