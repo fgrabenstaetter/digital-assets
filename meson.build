@@ -5,8 +5,8 @@ project('fr.fgrabenstaetter.DigitalAssets',
 pymod = import('python')
 pyins = pymod.find_installation('python3')
 dependency('glib-2.0')
-dependency('gtk+-3.0')
-dependency('pygobject-3.0')
+dependency('gtk+-3.0', version: '>=3.20')
+dependency('gobject-introspection-1.0', version: '>=1.56')
 dependency('py3cairo')
 
 PRGM_PATH = '/fr/fgrabenstaetter/digital-assets/'
