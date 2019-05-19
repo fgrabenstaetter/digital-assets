@@ -32,15 +32,32 @@ class Currency ():
         self.websiteURL = websiteURL
 
         self.price = None # in USD
-        self.lastDayPrice = None
-        self.dayVolume = None
+        self.lastDayPrice = None # in USD
+        self.dayVolume = None # in USD
         self.circulatingSupply = None
         self.maxSupply = None
-        self.marketCap = None
+        self.marketCap = None # in USD
         self.rank = None
-        self.ath = None
+        self.ath = None # in USD
         self.dayGraphData = None
         self.monthGraphData = None
         self.yearGraphData = None
         self.allGraphData = None
         self.favorite = False
+
+    def calculateAth (self, baseCurrency):
+        """
+            Calcululate the ATH ratio (between 0 and 1) for the self currency
+            against the baseCurrency
+        """
+        if self.allGraphData is None or baseCurrency.allGraphData is None:
+            return 0
+        actualPrice = self.price / baseCurrency.price
+        athPrice = None
+        for index1, (dateTime1, price1) in enumerate(self.allGraphData):
+            for index2, (dateTime2, price2) in enumerate(baseCurrency.allGraphData):
+                if dateTime1 == dateTime2:
+                    price = price1 / price2
+                    if athPrice is None or price > athPrice:
+                        athPrice = price
+        return actualPrice / athPrice

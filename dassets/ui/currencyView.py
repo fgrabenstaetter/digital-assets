@@ -54,7 +54,7 @@ class CurrencyView (Gtk.Box):
         if currency.price is None or baseCurrency.price is None:
             return
 
-        if isinstance(self.__spinner1, Gtk.Widget):
+        if self.__spinner1 is not None:
             self.__create()
         elif animate is True:
             self.__revealer.destroy()
@@ -144,13 +144,27 @@ class CurrencyView (Gtk.Box):
                                                             baseCurrency.symbol)
 
             # ATH (actual % relative to ATH)
-            if currency.ath is None:
-                self.__athLabel.set_label(_('Undefined'))
+            if baseCurrency.symbol == 'USD':
+                if self.__athSpinner.get_visible() is True:
+                    self.__athSpinner.set_visible(False)
+                    self.__athLabel.set_visible(True)
+                if currency.ath is None:
+                    self.__athLabel.set_label(_('Undefined'))
+                else:
+                    athPercentage = round((currency.price / currency.ath) \
+                                          * 100, 1)
+                    self.__athLabel.set_label(str(athPercentage) + ' %')
+            elif currency.allGraphData is not None \
+                    and baseCurrency.allGraphData is not None:
+                if self.__athSpinner.get_visible() is True:
+                    self.__athSpinner.set_visible(False)
+                    self.__athLabel.set_visible(True)
+                athPercentage = round(currency.calculateAth(baseCurrency) \
+                                * 100, 1)
+                self.__athLabel.set_label(str(athPercentage) + ' %')
             else:
-                # percentage in USD only for the moment
-                athRelativePercentage = round((currency.price / currency.ath) \
-                                              * 100, 1)
-                self.__athLabel.set_label(str(athRelativePercentage) + ' %')
+                self.__athSpinner.set_visible(True)
+                self.__athLabel.set_visible(False)
 
             # rank
             if currency.rank is None:
@@ -179,7 +193,7 @@ class CurrencyView (Gtk.Box):
 
             # day graph prices is the first loaded
             if currency.dayGraphData is not None:
-                if isinstance(self.__spinner2, Gtk.Spinner):
+                if self.__spinner2 is not None:
                     self.__spinner2.destroy()
                     self.__spinner2 = None
 
@@ -222,7 +236,7 @@ class CurrencyView (Gtk.Box):
         """
             Create widgets
         """
-        if isinstance(self.__spinner1, Gtk.Spinner):
+        if self.__spinner1 is not None:
             self.__spinner1.destroy()
             self.__spinner1 = None
 
@@ -246,7 +260,7 @@ class CurrencyView (Gtk.Box):
         self.__volumeBaseCurrencySymbolLabel = Gtk.Label()
 
         self.__athNameLabel = Gtk.Label('ATH', name = 'infoTitle')
-        self.__athLabel = Gtk.Label()
+        self.__athLabel = Gtk.Label(visible = None)
 
         self.__rankNameLabel = Gtk.Label(_('Rank'), name = 'infoTitle')
         self.__rankLabel = Gtk.Label()
@@ -279,6 +293,9 @@ class CurrencyView (Gtk.Box):
         self.__spinner2 = Gtk.Spinner()
         self.__spinner2.set_size_request(100, 100)
         self.__spinner2.start()
+
+        self.__athSpinner = Gtk.Spinner()
+        self.__athSpinner.start()
 
         # containers
 
@@ -334,6 +351,7 @@ class CurrencyView (Gtk.Box):
                          halign = Gtk.Align.CENTER)
         athBox.add(self.__athNameLabel)
         athBox.add(self.__athLabel)
+        athBox.add(self.__athSpinner)
 
         generalInfosBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 60)
         generalInfosBox.add(dayPriceChangeBox)
