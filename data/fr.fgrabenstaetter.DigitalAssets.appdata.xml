@@ -26,9 +26,16 @@
         <category>Utility</category>
     </categories>
     <releases>
-        <release version="3.6" date="2019-04-08">
+        <release version="1.0.0" date="2019-05-19">
             <description>
                 <ul>
+                    <li>Flatpak support</li>
+                    <li>Use GSettings and GResource</li>
+                    <li>Update to the Meson build system</li>
+                    <li>Add a settings window and the possiblity to change the Nomics API key</li>
+                    <li>Make the ATH percentage also work with the base currency</li>
+                    <li>Currencies sort function improvements</li>
+                    <li>Add the appdata file</li>
                     <li>Fix bugs</li>
                 </ul>
             </description>

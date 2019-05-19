@@ -1,5 +1,5 @@
 project('fr.fgrabenstaetter.DigitalAssets',
-        version: '3.6',
+        version: '1.0.0',
         meson_version: '>= 0.50.0')
 
 pymod = import('python')
