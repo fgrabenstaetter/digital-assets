@@ -10,7 +10,7 @@ desktop_file_validate = find_program('desktop-file-validate', required: false)
 if desktop_file_validate.found()
   test('Validating the desktop file',
        desktop_file_validate,
-       args: [meson.project_name() + '.desktop'])
+       args: join_paths(meson.current_source_dir(), meson.project_name() + '.desktop'))
 endif
 
 # Install the desktop file
@@ -21,7 +21,7 @@ run_command(desktop_file_install, meson.project_name() + '.desktop')
 glib_compile_schemas = find_program('glib-compile-schemas')
 test('Validating the gschema file',
      glib_compile_schemas,
-     args: ['--strict', '--dry-run', meson.project_name() + 'gschema.xml'])
+     args: ['--strict', '--dry-run', meson.current_source_dir()])
 
 # Install the gschema file
 install_data(meson.project_name() + '.gschema.xml',
@@ -44,7 +44,7 @@ appstream_util = find_program('appstream-util', required: false)
 if appstream_util.found()
   test('Validating the appdata file',
        appstream_util,
-       args: ['validate-relax', meson.project_name() + '.appdata.xml'])
+       args: ['validate', join_paths(meson.current_source_dir(), meson.project_name() + '.appdata.xml')])
 endif
 
 # Install the appdata file

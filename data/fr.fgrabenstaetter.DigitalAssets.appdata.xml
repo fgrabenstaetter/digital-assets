@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
     <id>fr.fgrabenstaetter.DigitalAssets</id>
-    <name>Digital Assetsz</name>
+    <name>Digital Assets</name>
     <summary>Cryptocurrencies prices, statistics and informations</summary>
     <url type="homepage">https://gitlab.gnome.org/fgrabenstaetter/digital-assets</url>
     <metadata_license>CC0-1.0</metadata_license>
@@ -9,38 +9,13 @@
     <launchable type="desktop-id">fr.fgrabenstaetter.DigitalAssets.desktop</launchable>
     <developer_name>François Grabenstaetter</developer_name>
     <update_contact>francoisgrabenstaetter@gmail.com</update_contact>
+	<translation type="gettext">fr.fgrabenstaetter.DigitalAssets</translation>
     <description>
-        <p>Digital Assets is a utility to follow cryptocurrencies prices, statistics and informations.</p>
-        <p>Features:
-            <ul>
-                <li>Price, volume, marketcap, rank</li>
-                <li>Circulating and max supply, ATH</li>
-                <li>Graphic of the day/month/year/all-time prices</li>
-                <li>Support of the most popular assets</li>
-                <li>Choose the base currency</li>
-                <li>Choose the assets list order method, make an asset favorite</li>
-            </ul>
-        </p>
+        <p>Digital Assets is a utility to follow cryptocurrencies prices, statistics and informations, and integrates well with the GNOME desktop.</p>
     </description>
     <categories>
         <category>Utility</category>
     </categories>
-    <releases>
-        <release version="1.0.0" date="2019-05-19">
-            <description>
-                <ul>
-                    <li>Flatpak support</li>
-                    <li>Use GSettings and GResource</li>
-                    <li>Update to the Meson build system</li>
-                    <li>Add a settings window and the possiblity to change the Nomics API key</li>
-                    <li>Make the ATH percentage also work with the base currency</li>
-                    <li>Currencies sort function improvements</li>
-                    <li>Add the appdata file</li>
-                    <li>Fix bugs</li>
-                </ul>
-            </description>
-        </release>
-    </releases>
     <content_rating type="oars-1.0"></content_rating>
     <screenshots>
         <screenshot type="default">
