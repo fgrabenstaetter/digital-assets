@@ -22,4 +22,19 @@
             <image type="source" width="1032" height="718">https://gitlab.gnome.org/fgrabenstaetter/digital-assets/raw/master/screenshot.png</image>
         </screenshot>
     </screenshots>
+    <releases>
+        <release version="1.0.0" date="2019-05-19">
+            <description>
+                <p>Digital Assets 1.0.0 brings the basic features to track your favorite cryptocurrencies market informations.</p>
+                <ul>
+                    <li>Price, variation, volume, rank, market cap</li>
+                    <li>Circulating and max supply, ATH</li>
+                    <li>Price graphics (day, month, year, all-time)</li>
+                    <li>Sort cryptocurrencies and make them favorites</li>
+                    <li>Choose a base currency</li>
+                    <li>Support of the most popular cryptocurrencies</li>
+                </ul>
+            </description>
+        </release>
+    </releases>
 ​</component>
