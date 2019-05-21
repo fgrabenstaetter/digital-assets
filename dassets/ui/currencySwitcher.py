@@ -135,6 +135,7 @@ class CurrencySwitcher (Gtk.ListBox):
             Sort between currencies row1 and row2
         """
         sortMethodName = self.__mainWindow.getActualSortMethodName()
+        baseCurrency = self.__mainWindow.getActualBaseCurrency()
         row1Cur = self.__mainWindow.currencies[row1.curSymbol]
         row2Cur = self.__mainWindow.currencies[row2.curSymbol]
 
@@ -152,7 +153,10 @@ class CurrencySwitcher (Gtk.ListBox):
             volumeAndNone = sortMethodName == 'volume' \
                 and row1Cur.dayVolumeUSD is None and row2Cur.dayVolumeUSD is None
             athAndNone = sortMethodName == 'ath' \
-                and row1Cur.athUSD is None and row2Cur.athUSD is None
+                and ((baseCurrency.symbol == 'USD' and row1Cur.athUSD is None \
+                and row2Cur.athUSD is None) or (baseCurrency.symbol != 'USD') \
+                and row1Cur.alltimeGraphDataUSD is None \
+                and row2Cur.alltimeGraphDataUSD is None)
 
             if rankAndNone or dayPriceChangeAndNone or volumeAndNone \
                     or athAndNone:
@@ -173,7 +177,6 @@ class CurrencySwitcher (Gtk.ListBox):
                 else:
                     return 1
             elif sortMethodName == 'dayPriceChange':
-                baseCurrency = self.__mainWindow.getActualBaseCurrency()
                 if baseCurrency.lastDayPriceUSD is None \
                         or baseCurrency.priceUSD is None:
                     return 0
@@ -204,14 +207,27 @@ class CurrencySwitcher (Gtk.ListBox):
                 else:
                     return 1
             elif sortMethodName == 'ath':
-                if row1Cur.athUSD is None:
-                    return 1
-                elif row2Cur.athUSD is None:
-                    return -1
-                else:
-                    row1AthRelativePercentage = row1Cur.priceUSD / row1Cur.athUSD
-                    row2AthRelativePercentage = row2Cur.priceUSD / row2Cur.athUSD
-                    if row1AthRelativePercentage > row2AthRelativePercentage:
+                if baseCurrency.symbol == 'USD':
+                    if row1Cur.athUSD is None:
+                        return 1
+                    elif row2Cur.athUSD is None:
                         return -1
                     else:
+                        row1AthRatio = row1Cur.priceUSD / row1Cur.athUSD
+                        row2AthRatio = row2Cur.priceUSD / row2Cur.athUSD
+                        if row1AthRatio > row2AthRatio:
+                            return -1
+                        else:
+                            return 1
+                else: # base currency != USD
+                    if row1Cur.alltimeGraphDataUSD is None:
                         return 1
+                    elif row2Cur.alltimeGraphDataUSD is None:
+                        return -1
+                    else:
+                        row1AthRatio = row1Cur.calculateAth(baseCurrency)
+                        row2AthRatio = row2Cur.calculateAth(baseCurrency)
+                        if row1AthRatio > row2AthRatio:
+                            return -1
+                        else:
+                            return 1
