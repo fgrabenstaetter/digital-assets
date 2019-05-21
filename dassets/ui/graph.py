@@ -56,12 +56,23 @@ class Graph (Gtk.DrawingArea):
                 newGraphData = None
             else:
                 newGraphData = []
-                for index1, (dateTime1, price1) in enumerate(graphData):
-                    for index2, (dateTime2, price2) in enumerate(
-                                                        baseCurrencyGraphData):
-                        if dateTime1 == dateTime2:
-                            newPrice = price1 / price2
-                            newGraphData.append((dateTime1, newPrice))
+                i1, i2 = 0, 0
+                l1, l2 = len(graphData), len(baseCurrencyGraphData)
+                while i1 < l1 and i2 < l2:
+                    d1 = graphData[i1][0]
+                    d2 = baseCurrencyGraphData[i2][0]
+                    tdelta = d1 - d2
+                    if tdelta.days == 0:
+                        p1 = graphData[i1][1]
+                        p2 = baseCurrencyGraphData[i2][1]
+                        price = p1 / p2
+                        newGraphData.append((d1, price))
+                        i1 += 1
+                        i2 += 1
+                    elif tdelta.days < 0:
+                        i1 += 1
+                    else:
+                        i2 += 1
 
         self.__graphData = newGraphData
         self.__baseCurrency = baseCurrency

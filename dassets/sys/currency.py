@@ -39,11 +39,12 @@ class Currency ():
         self.marketCap = None # in USD
         self.rank = None
         self.ath = None # in USD
+        self.favorite = False
+        # graph data is a list of (object datetime, float price)
         self.dayGraphData = None
         self.monthGraphData = None
         self.yearGraphData = None
         self.allGraphData = None
-        self.favorite = False
 
     def calculateAth (self, baseCurrency):
         """
@@ -54,10 +55,22 @@ class Currency ():
             return 0
         actualPrice = self.price / baseCurrency.price
         athPrice = None
-        for index1, (dateTime1, price1) in enumerate(self.allGraphData):
-            for index2, (dateTime2, price2) in enumerate(baseCurrency.allGraphData):
-                if dateTime1 == dateTime2:
-                    price = price1 / price2
-                    if athPrice is None or price > athPrice:
-                        athPrice = price
+        i1, i2 = 0, 0
+        l1, l2 = len(self.allGraphData), len(baseCurrency.allGraphData)
+        while i1 < l1 and i2 < l2:
+            d1 = self.allGraphData[i1][0]
+            d2 = baseCurrency.allGraphData[i2][0]
+            tdelta = d1 - d2
+            if tdelta.days == 0:
+                p1 = self.allGraphData[i1][1]
+                p2 = baseCurrency.allGraphData[i2][1]
+                price = p1 / p2
+                if athPrice is None or price > athPrice:
+                    athPrice = price
+                i1 += 1
+                i2 += 1
+            elif tdelta.days < 0:
+                i1 += 1
+            else:
+                i2 += 1
         return actualPrice / athPrice
