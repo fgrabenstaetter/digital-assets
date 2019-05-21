@@ -16,6 +16,8 @@ endif
 # Install the desktop file
 desktop_file_install = find_program('desktop-file-install')
 run_command(desktop_file_install, meson.project_name() + '.desktop')
+install_data(meson.project_name() + '.desktop',
+			 install_dir: join_paths(DATA_DIR, 'applications'))
 
 # Validate the gschema file
 glib_compile_schemas = find_program('glib-compile-schemas')
