@@ -1,9 +1,11 @@
 {
     "app-id": "fr.fgrabenstaetter.DigitalAssets",
     "runtime": "org.gnome.Platform",
-    "runtime-version": "3.32",
+    "runtime-version": "master",
     "sdk": "org.gnome.Sdk",
     "command": "fr.fgrabenstaetter.DigitalAssets",
+	"tags": ["devel", "development", "nightly"],
+	"desktop-file-name-prefix": "(Development) ",
     "finish-args": [
         "--socket=fallback-x11",
         "--socket=wayland",
@@ -14,16 +16,17 @@
         "--talk-name=ca.desrt.dconf",
         "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
     ],
-    "cleanup-commands": [ "glib-compile-schemas /app/share/glib-2.0/schemas" ],
     "modules": [
         {
             "name": "digital-assets",
             "buildsystem": "meson",
+			"post-install": [ 
+				"glib-compile-schemas /app/share/glib-2.0/schemas" 
+			],
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://gitlab.gnome.org/fgrabenstaetter/digital-assets.git",
-                    "commit": "325e25d2252e8337d8f747015ee7ead7c74b9e9d"
+                    "url": "https://gitlab.gnome.org/fgrabenstaetter/digital-assets.git"
                 }
             ]
         }
