@@ -7,7 +7,7 @@
 	"tags": ["devel", "development", "nightly"],
 	"desktop-file-name-prefix": "(Development) ",
     "finish-args": [
-        "--socket=fallback-x11",
+        "--socket=x11",
         "--socket=wayland",
         "--share=ipc",
         "--share=network",
