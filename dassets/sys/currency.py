@@ -30,40 +30,42 @@ class Currency ():
         self.name = name
         self.symbol = symbol
         self.websiteURL = websiteURL
+        self.favorite = False
 
-        self.price = None # in USD
-        self.lastDayPrice = None # in USD
-        self.dayVolume = None # in USD
+        self.priceUSD = None
+        self.lastDayPriceUSD = None
+        self.dayVolumeUSD = None
+        self.marketCapUSD = None
+        self.athUSD = None
+
         self.circulatingSupply = None
         self.maxSupply = None
-        self.marketCap = None # in USD
         self.rank = None
-        self.ath = None # in USD
-        self.favorite = False
+
         # graph data is a list of (object datetime, float price)
-        self.dayGraphData = None
-        self.monthGraphData = None
-        self.yearGraphData = None
-        self.allGraphData = None
+        self.dayGraphDataUSD = None
+        self.monthGraphDataUSD = None
+        self.yearGraphDataUSD = None
+        self.alltimeGraphDataUSD = None
 
     def calculateAth (self, baseCurrency):
         """
             Calcululate the ATH ratio (between 0 and 1) for the self currency
-            against the baseCurrency
+            compared to the baseCurrency
         """
-        if self.allGraphData is None or baseCurrency.allGraphData is None:
+        if self.alltimeGraphDataUSD is None or baseCurrency.alltimeGraphDataUSD is None:
             return 0
-        actualPrice = self.price / baseCurrency.price
+        actualPrice = self.priceUSD / baseCurrency.priceUSD
         athPrice = None
         i1, i2 = 0, 0
-        l1, l2 = len(self.allGraphData), len(baseCurrency.allGraphData)
+        l1, l2 = len(self.alltimeGraphDataUSD), len(baseCurrency.alltimeGraphDataUSD)
         while i1 < l1 and i2 < l2:
-            d1 = self.allGraphData[i1][0]
-            d2 = baseCurrency.allGraphData[i2][0]
+            d1 = self.alltimeGraphDataUSD[i1][0]
+            d2 = baseCurrency.alltimeGraphDataUSD[i2][0]
             tdelta = d1 - d2
             if tdelta.days == 0:
-                p1 = self.allGraphData[i1][1]
-                p2 = baseCurrency.allGraphData[i2][1]
+                p1 = self.alltimeGraphDataUSD[i1][1]
+                p2 = baseCurrency.alltimeGraphDataUSD[i2][1]
                 price = p1 / p2
                 if athPrice is None or price > athPrice:
                     athPrice = price

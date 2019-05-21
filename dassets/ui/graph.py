@@ -51,7 +51,7 @@ class Graph (Gtk.DrawingArea):
             newGraphData = graphData
         else:
             baseCurrencyGraphData = getattr(baseCurrency,
-                                            graphTime + 'GraphData')
+                                            graphTime + 'GraphDataUSD')
             if len(graphData) == 0 or len(baseCurrencyGraphData) == 0:
                 newGraphData = None
             else:
@@ -166,7 +166,7 @@ class Graph (Gtk.DrawingArea):
                     dateStr = str(dateTime.day).zfill(2)
                 elif self.__graphInfos['time'] == 'year':
                     dateStr = str(dateTime.month).zfill(2)
-                elif self.__graphInfos['time'] == 'all':
+                elif self.__graphInfos['time'] == 'alltime':
                     dateStr = str(dateTime.year).zfill(2)
                 else:
                     return
@@ -218,7 +218,7 @@ class Graph (Gtk.DrawingArea):
             timeDataType = _('Day')
         elif (self.__graphInfos['time'] == 'year'):
             timeDataType = _('Month')
-        elif (self.__graphInfos['time'] == 'all'):
+        elif (self.__graphInfos['time'] == 'alltime'):
             timeDataType = _('Year')
         else:
             return

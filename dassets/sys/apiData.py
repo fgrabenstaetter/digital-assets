@@ -55,8 +55,8 @@ class APIData ():
             self.__setRequest('resortCurrencySwitcher')
 
         if (self.__nbReloadedloaded % self.__bigDataReloadModulo) == 0 \
-                or self.__mainWindow.currencies['BTC'].dayVolume is None \
-                or self.__mainWindow.currencies['BTC'].dayGraphData is None:
+                or self.__mainWindow.currencies['BTC'].dayVolumeUSD is None \
+                or self.__mainWindow.currencies['BTC'].dayGraphDataUSD is None:
             # reload currencies general data (dashboard)
             dataInfos = self.__reloadInfos(dataPrices)
             self.__setRequest('resortCurrencySwitcher')
@@ -120,7 +120,7 @@ class APIData ():
         for symbol in self.__mainWindow.currencies.keys():
             for dataCur in dataPrices:
                 if dataCur['currency'] == symbol:
-                    self.__mainWindow.currencies[symbol].price = \
+                    self.__mainWindow.currencies[symbol].priceUSD = \
                                                         float(dataCur['price'])
                     break
         # it is necessary for __reloadInfos to calculate the correct rank
@@ -153,10 +153,10 @@ class APIData ():
             for dataCur in dataInfos:
                 if dataCur['currency'] == symbol:
                     if dataCur['dayOpen'] is not None:
-                        self.__mainWindow.currencies[symbol].lastDayPrice = \
+                        self.__mainWindow.currencies[symbol].lastDayPriceUSD = \
                                                     float(dataCur['dayOpen'])
                     if dataCur['dayVolume'] is not None:
-                        self.__mainWindow.currencies[symbol].dayVolume = \
+                        self.__mainWindow.currencies[symbol].dayVolumeUSD = \
                                                     float(dataCur['dayVolume'])
                     if dataCur['availableSupply'] is not None:
                         self.__mainWindow.currencies[symbol].circulatingSupply = \
@@ -165,7 +165,7 @@ class APIData ():
                         self.__mainWindow.currencies[symbol].maxSupply = \
                                                     float(dataCur['maxSupply'])
                     if dataCur['high'] is not None:
-                        self.__mainWindow.currencies[symbol].ath = \
+                        self.__mainWindow.currencies[symbol].athUSD = \
                                                         float(dataCur['high'])
         # calcul rank and marketcap
         marketcapsSorted = [] # list of tuples (marketCap, symbol)
@@ -185,7 +185,7 @@ class APIData ():
         i = 1
         for marketCap, symbol in marketcapsSorted:
             if symbol in self.__mainWindow.currencies.keys():
-                self.__mainWindow.currencies[symbol].marketCap = marketCap
+                self.__mainWindow.currencies[symbol].marketCapUSD = marketCap
                 self.__mainWindow.currencies[symbol].rank = i
             i += 1
 
@@ -199,19 +199,19 @@ class APIData ():
         toReload.append(('day', tools.datetimeToStr(lastDayTime)))
 
         # reload only once month and year graphs (when the app start)
-        if self.__mainWindow.currencies['BTC'].monthGraphData is None:
+        if self.__mainWindow.currencies['BTC'].monthGraphDataUSD is None:
             lastMonthTime = datetime.datetime.today() \
                             - datetime.timedelta(days = 30)
             toReload.append(('month', tools.datetimeToStr(lastMonthTime)))
 
-        if self.__mainWindow.currencies['BTC'].yearGraphData is None:
+        if self.__mainWindow.currencies['BTC'].yearGraphDataUSD is None:
             lastYearTime = datetime.datetime.today() \
                            - datetime.timedelta(days = 365)
             toReload.append(('year', tools.datetimeToStr(lastYearTime)))
 
-        if self.__mainWindow.currencies['BTC'].allGraphData is None:
+        if self.__mainWindow.currencies['BTC'].alltimeGraphDataUSD is None:
             allTime = datetime.datetime(2010, 1, 1)
-            toReload.append(('all', tools.datetimeToStr(allTime)))
+            toReload.append(('alltime', tools.datetimeToStr(allTime)))
 
         for graphTime in toReload:
             try:
@@ -247,5 +247,5 @@ class APIData ():
                             GraphData.append((dateTime,
                                               float(dataCur['prices'][index])))
                         setattr(self.__mainWindow.currencies[symbol],
-                                graphTime[0] + 'GraphData',
+                                graphTime[0] + 'GraphDataUSD',
                                 GraphData)

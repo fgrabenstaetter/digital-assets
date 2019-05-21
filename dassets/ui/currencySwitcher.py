@@ -147,12 +147,12 @@ class CurrencySwitcher (Gtk.ListBox):
             rankAndNone = sortMethodName == 'rank' \
                 and row1Cur.rank is None and row2Cur.rank is None
             dayPriceChangeAndNone = sortMethodName == 'dayPriceChange' \
-                and (row1Cur.lastDayPrice is None or row1Cur.price is None) \
-                and (row2Cur.lastDayPrice is None or row2Cur.price is None)
+                and (row1Cur.lastDayPriceUSD is None or row1Cur.priceUSD is None) \
+                and (row2Cur.lastDayPriceUSD is None or row2Cur.priceUSD is None)
             volumeAndNone = sortMethodName == 'volume' \
-                and row1Cur.dayVolume is None and row2Cur.dayVolume is None
+                and row1Cur.dayVolumeUSD is None and row2Cur.dayVolumeUSD is None
             athAndNone = sortMethodName == 'ath' \
-                and row1Cur.ath is None and row2Cur.ath is None
+                and row1Cur.athUSD is None and row2Cur.athUSD is None
 
             if rankAndNone or dayPriceChangeAndNone or volumeAndNone \
                     or athAndNone:
@@ -174,43 +174,43 @@ class CurrencySwitcher (Gtk.ListBox):
                     return 1
             elif sortMethodName == 'dayPriceChange':
                 baseCurrency = self.__mainWindow.getActualBaseCurrency()
-                if baseCurrency.lastDayPrice is None \
-                        or baseCurrency.price is None:
+                if baseCurrency.lastDayPriceUSD is None \
+                        or baseCurrency.priceUSD is None:
                     return 0
-                elif row1Cur.lastDayPrice is None or row1Cur.price is None:
+                elif row1Cur.lastDayPriceUSD is None or row1Cur.priceUSD is None:
                     return 1
-                elif row2Cur.lastDayPrice is None or row2Cur.price is None:
+                elif row2Cur.lastDayPriceUSD is None or row2Cur.priceUSD is None:
                     return -1
                 else:
-                    row1DayPriceChange = float(row1Cur.lastDayPrice) \
-                                       / float(baseCurrency.lastDayPrice)
-                    row1DayPriceChange = (float(row1Cur.price) \
-                        / float(baseCurrency.price)) / row1DayPriceChange
-                    row2DayPriceChange = float(row2Cur.lastDayPrice) \
-                                       / float(baseCurrency.lastDayPrice)
-                    row2DayPriceChange = (float(row2Cur.price) \
-                        / float(baseCurrency.price)) / row2DayPriceChange
+                    row1DayPriceChange = float(row1Cur.lastDayPriceUSD) \
+                                       / float(baseCurrency.lastDayPriceUSD)
+                    row1DayPriceChange = (float(row1Cur.priceUSD) \
+                        / float(baseCurrency.priceUSD)) / row1DayPriceChange
+                    row2DayPriceChange = float(row2Cur.lastDayPriceUSD) \
+                                       / float(baseCurrency.lastDayPriceUSD)
+                    row2DayPriceChange = (float(row2Cur.priceUSD) \
+                        / float(baseCurrency.priceUSD)) / row2DayPriceChange
                     if row1DayPriceChange > row2DayPriceChange:
                         return -1
                     else:
                         return 1
             elif sortMethodName == 'volume':
-                if row1Cur.dayVolume is None:
+                if row1Cur.dayVolumeUSD is None:
                     return 1
-                elif row2Cur.dayVolume is None:
+                elif row2Cur.dayVolumeUSD is None:
                     return -1
-                elif row1Cur.dayVolume > row2Cur.dayVolume:
+                elif row1Cur.dayVolumeUSD > row2Cur.dayVolumeUSD:
                     return -1
                 else:
                     return 1
             elif sortMethodName == 'ath':
-                if row1Cur.ath is None:
+                if row1Cur.athUSD is None:
                     return 1
-                elif row2Cur.ath is None:
+                elif row2Cur.athUSD is None:
                     return -1
                 else:
-                    row1AthRelativePercentage = row1Cur.price / row1Cur.ath
-                    row2AthRelativePercentage = row2Cur.price / row2Cur.ath
+                    row1AthRelativePercentage = row1Cur.priceUSD / row1Cur.athUSD
+                    row2AthRelativePercentage = row2Cur.priceUSD / row2Cur.athUSD
                     if row1AthRelativePercentage > row2AthRelativePercentage:
                         return -1
                     else:
