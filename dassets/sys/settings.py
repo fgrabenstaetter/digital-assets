@@ -30,7 +30,7 @@ class Settings (Gio.Settings):
         """
             Init Settings
         """
-        Gio.Settings.__init__(self, PRGM_NAME)
+        Gio.Settings.__init__(self, schema_id = PRGM_NAME)
 
     def saveLastCurrenciesRank (self, currencies):
         """

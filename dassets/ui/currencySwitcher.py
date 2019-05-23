@@ -61,8 +61,8 @@ class CurrencySwitcher (Gtk.ListBox):
         stepIncrement = boxVadj.get_step_increment()
         pageIncrement = boxVadj.get_page_increment()
         pageSize = boxVadj.get_page_size()
-        self.__mainWindow.currencySwitcherBox.set_vadjustment(Gtk.Adjustment(
-            value, 0, upper, stepIncrement, pageIncrement, pageSize))
+        self.__mainWindow.currencySwitcherBox.set_vadjustment(Gtk.Adjustment \
+                .new(value, 0, upper, stepIncrement, pageIncrement, pageSize))
 
     ###########
     # PRIVATE #
@@ -101,7 +101,7 @@ class CurrencySwitcher (Gtk.ListBox):
         nameTopBox.pack_start(nameLabel, False, False, 0)
         nameTopBox.pack_end(row.favoriteImageRevealer, True, True, 0)
 
-        symbolLabel = Gtk.Label(currency.symbol, xalign = 0)
+        symbolLabel = Gtk.Label(label = currency.symbol, xalign = 0)
 
         nameBox.add(nameTopBox)
         nameBox.add(symbolLabel)

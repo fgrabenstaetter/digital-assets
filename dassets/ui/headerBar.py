@@ -93,11 +93,12 @@ class HeaderBar (Gtk.HeaderBar):
             aboutDialog.set_transient_for(self.__mainWindow)
             aboutDialog.show()
 
-        menuPopoverButtonSettings = Gtk.ModelButton(_('Settings'), xalign = 0)
+        menuPopoverButtonSettings = Gtk.ModelButton(text = _('Settings'),
+                                                    xalign = 0)
         menuPopoverButtonSettings.connect('clicked', showSettingsDialog)
-        menuPopoverButtonAbout = Gtk.ModelButton(_('About'), xalign = 0)
+        menuPopoverButtonAbout = Gtk.ModelButton(text = _('About'), xalign = 0)
         menuPopoverButtonAbout.connect('clicked', showAboutDialog)
-        menuPopoverButtonQuit = Gtk.ModelButton(_('Quit'), xalign = 0)
+        menuPopoverButtonQuit = Gtk.ModelButton(text = _('Quit'), xalign = 0)
         menuPopoverButtonQuit.connect('clicked', self.__mainWindow.quit)
 
         menupopoverCurrenciesBox.add(menuPopoverButtonSettings)
@@ -114,7 +115,7 @@ class HeaderBar (Gtk.HeaderBar):
         switchButtonLabelName = Gtk.Label()
         switchButtonLabelName.set_markup('<b>' + actualBaseCurrency.name \
                                                                     + '</b>')
-        switchButtonLabelSymbol = Gtk.Label(actualBaseCurrency.symbol)
+        switchButtonLabelSymbol = Gtk.Label.new(actualBaseCurrency.symbol)
 
         buttonBox.add(switchButtonLabelName)
         buttonBox.add(switchButtonLabelSymbol)
@@ -288,7 +289,7 @@ class HeaderBar (Gtk.HeaderBar):
             row.connect('clicked', rowClickedEvent)
 
             rowBox = row.get_children()[0]
-            label = Gtk.Label(str)
+            label = Gtk.Label.new(str)
             popoverCurrenciesBoxChildren = popoverCurrenciesBox.get_children()
 
             if len(popoverCurrenciesBoxChildren) > 0:

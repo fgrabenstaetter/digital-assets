@@ -46,18 +46,19 @@ class SettingsWindow (Gtk.Window):
 
         # Nomics API Key
         apiKeyHBox = Gtk.Box(spacing = 18, border_width = 6)
-        apiKeyLabel = Gtk.Label(_('Nomics API Key'), expand = True, xalign = 0)
+        apiKeyLabel = Gtk.Label(label = _('Nomics API Key'), expand = True,
+                                xalign = 0)
         self.__apiKeyEntry = Gtk.Entry(width_chars = 32, expand = True,
                                     text = self.__settings.loadNomicsAPIKey())
         apiKeyHBox.add(apiKeyLabel)
         apiKeyHBox.add(self.__apiKeyEntry)
 
-        apiKeyInfosLabel = Gtk.Label(_('Please choose a new Nomics API key,'
-                                ' as the default one can be overloaded'),
-                                wrap = True,
-                                max_width_chars = 40,
-                                expand = True,
-                                name = 'settingsAPIKeyInfos')
+        apiKeyInfosLabel = Gtk.Label(label = _('Please choose a new Nomics API key,'
+                                     ' as the default one can be overloaded'),
+                                     wrap = True,
+                                     max_width_chars = 40,
+                                     expand = True,
+                                     name = 'settingsAPIKeyInfos')
         apiKeyInfosWebsite = Gtk.LinkButton.new_with_label(
                                                     'https://www.nomics.com',
                                                     'Nomics')

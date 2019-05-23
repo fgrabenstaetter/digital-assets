@@ -19,7 +19,7 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk, GdkPixbuf, Gio, GObject
+from gi.repository import Gtk, Gdk, GdkPixbuf, Gio, GLib
 from dassets.ui.headerBar import HeaderBar
 from dassets.ui.currencySwitcher import CurrencySwitcher
 from dassets.ui.currencyView import CurrencyView
@@ -66,10 +66,11 @@ class Window (Gtk.ApplicationWindow):
         currencyViewBox = Gtk.ScrolledWindow()
         currencyViewBox.add(self.currencyView)
 
-        networkErrorLabel = Gtk.Label(_('There is a network problem, please'
-                                      ' verify your connection and try again'),
-                                      xalign = 0,
-                                      name = 'infoBarText')
+        networkErrorLabel = Gtk.Label.new(_('There is a network problem, please'
+                                      ' verify your connection and try again'))
+        networkErrorLabel.set_xalign(0)
+        networkErrorLabel.set_name('infoBarText')
+
         networkErrorBar = Gtk.InfoBar(message_type = Gtk.MessageType.ERROR)
         networkErrorBar.pack_start(networkErrorLabel, True, True, 0)
         self.networkErrorBarRevealer = Gtk.Revealer(border_width = 10)
@@ -175,7 +176,7 @@ class Window (Gtk.ApplicationWindow):
             self.apiDataRequests['resortCurrencySwitcher'] = False
             self.currencySwitcher.invalidate_sort()
 
-        GObject.timeout_add(1000, self.__nextRequestsTimer)
+        GLib.timeout_add(1000, self.__nextRequestsTimer)
 
     def __windowKeyPressEvent (self, obj, data):
         """

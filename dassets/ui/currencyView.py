@@ -248,30 +248,34 @@ class CurrencyView (Gtk.Box):
         self.__priceLabel = Gtk.Label(name = 'currencyPrice')
         self.__baseCurrencySymbolLabel = Gtk.Label(name = 'currencyPrice')
 
-        self.__dayPriceChangeNameLabel = Gtk.Label(_('Change'),
-                                                 name = 'infoTitle')
+        self.__dayPriceChangeNameLabel = Gtk.Label(label = _('Change'),
+                                                   name = 'infoTitle')
         self.__dayPriceChangeLabel = Gtk.Label()
 
-        self.__marketCapNameLabel = Gtk.Label(_('Markep Cap'), name = 'infoTitle')
+        self.__marketCapNameLabel = Gtk.Label(label = _('Markep Cap'),
+                                              name = 'infoTitle')
         self.__marketCapLabel = Gtk.Label()
         self.__marketCapBaseCurrencySymbolLabel = Gtk.Label()
 
-        self.__volumeNameLabel = Gtk.Label(_('Volume'), name = 'infoTitle')
+        self.__volumeNameLabel = Gtk.Label(label = _('Volume'),
+                                           name = 'infoTitle')
         self.__volumeLabel = Gtk.Label()
         self.__volumeBaseCurrencySymbolLabel = Gtk.Label()
 
-        self.__athNameLabel = Gtk.Label('ATH', name = 'infoTitle')
+        self.__athNameLabel = Gtk.Label(label = 'ATH', name = 'infoTitle')
         self.__athLabel = Gtk.Label(visible = None)
 
-        self.__rankNameLabel = Gtk.Label(_('Rank'), name = 'infoTitle')
+        self.__rankNameLabel = Gtk.Label(label = _('Rank'), name = 'infoTitle')
         self.__rankLabel = Gtk.Label()
 
-        self.__circulatingSupplyNameLabel = Gtk.Label(_('Circulating Supply'),
-                                                    name = 'infoTitle')
+        self.__circulatingSupplyNameLabel = Gtk.Label(
+                                                label = _('Circulating Supply'),
+                                                name = 'infoTitle')
         self.__circulatingSupplyLabel = Gtk.Label()
         self.__circulatingSupplyBaseCurrencySymbolLabel = Gtk.Label()
 
-        self.__maxSupplyNameLabel = Gtk.Label(_('Max Supply'), name = 'infoTitle')
+        self.__maxSupplyNameLabel = Gtk.Label(label = _('Max Supply'),
+                                              name = 'infoTitle')
         self.__maxSupplyLabel = Gtk.Label()
         self.__maxSupplyBaseCurrencySymbolLabel = Gtk.Label()
 
@@ -409,7 +413,7 @@ class CurrencyView (Gtk.Box):
 
             buttonBox = Gtk.Box(spacing = 8, border_width = 4,
                                 halign = Gtk.Align.CENTER)
-            buttonLabel = Gtk.Label(str)
+            buttonLabel = Gtk.Label.new(str)
             buttonSpinner = Gtk.Spinner(active = True)
             button.spinner = buttonSpinner
 
