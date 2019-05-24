@@ -37,6 +37,7 @@ class Currency ():
         self.dayVolumeUSD = None
         self.marketCapUSD = None
         self.athUSD = None
+        self.__lastCalculatedAthPrice = None
 
         self.circulatingSupply = None
         self.maxSupply = None
@@ -57,22 +58,27 @@ class Currency ():
             return 0
         actualPrice = self.priceUSD / baseCurrency.priceUSD
         athPrice = None
-        i1, i2 = 0, 0
-        l1, l2 = len(self.alltimeGraphDataUSD), len(baseCurrency.alltimeGraphDataUSD)
-        while i1 < l1 and i2 < l2:
-            d1 = self.alltimeGraphDataUSD[i1][0]
-            d2 = baseCurrency.alltimeGraphDataUSD[i2][0]
-            tdelta = d1 - d2
-            if tdelta.days == 0:
-                p1 = self.alltimeGraphDataUSD[i1][1]
-                p2 = baseCurrency.alltimeGraphDataUSD[i2][1]
-                price = p1 / p2
-                if athPrice is None or price > athPrice:
-                    athPrice = price
-                i1 += 1
-                i2 += 1
-            elif tdelta.days < 0:
-                i1 += 1
-            else:
-                i2 += 1
+        if self.__lastCalculatedAthPrice is None \
+                or self.__lastCalculatedAthPrice[0] != baseCurrency.symbol:
+            i1, i2 = 0, 0
+            l1, l2 = len(self.alltimeGraphDataUSD), len(baseCurrency.alltimeGraphDataUSD)
+            while i1 < l1 and i2 < l2:
+                d1 = self.alltimeGraphDataUSD[i1][0]
+                d2 = baseCurrency.alltimeGraphDataUSD[i2][0]
+                tdelta = d1 - d2
+                if tdelta.days == 0:
+                    p1 = self.alltimeGraphDataUSD[i1][1]
+                    p2 = baseCurrency.alltimeGraphDataUSD[i2][1]
+                    price = p1 / p2
+                    if athPrice is None or price > athPrice:
+                        athPrice = price
+                    i1 += 1
+                    i2 += 1
+                elif tdelta.days < 0:
+                    i1 += 1
+                else:
+                    i2 += 1
+            self.__lastCalculatedAthPrice = (baseCurrency.symbol, athPrice)
+        else:
+            athPrice = self.__lastCalculatedAthPrice[1]
         return actualPrice / athPrice
