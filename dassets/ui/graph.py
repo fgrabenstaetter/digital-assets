@@ -21,7 +21,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, cairo
 from dassets.sys import tools
-import math
+import math, datetime
 
 class Graph (Gtk.DrawingArea):
 
@@ -34,7 +34,7 @@ class Graph (Gtk.DrawingArea):
         self.connect('draw', self.__drawGraph)
 
         self.__textBorderSpace = 10
-        self.__padding = {'top': 40, 'right': 10, 'bottom': 60, 'left': 80}
+        self.__padding = {'top': 40, 'right': 20, 'bottom': 60, 'left': 80}
         self.__graphData = None
         self.__graphInfos = {}
         self.__baseCurrency = None
@@ -161,7 +161,8 @@ class Graph (Gtk.DrawingArea):
                                 + self.__padding['bottom'] - self.__textBorderSpace
 
                 if self.__graphInfos['time'] == 'day':
-                    dateStr = str(dateTime.hour).zfill(2)
+                    dateStr = str(dateTime.strftime('%X')).split(':')[0] \
+                        + str(dateTime.strftime(' %p'))
                 elif self.__graphInfos['time'] == 'month':
                     dateStr = str(dateTime.day).zfill(2)
                 elif self.__graphInfos['time'] == 'year':
