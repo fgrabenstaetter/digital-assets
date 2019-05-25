@@ -98,12 +98,9 @@ class HeaderBar (Gtk.HeaderBar):
         menuPopoverButtonSettings.connect('clicked', showSettingsDialog)
         menuPopoverButtonAbout = Gtk.ModelButton(text = _('About'), xalign = 0)
         menuPopoverButtonAbout.connect('clicked', showAboutDialog)
-        menuPopoverButtonQuit = Gtk.ModelButton(text = _('Quit'), xalign = 0)
-        menuPopoverButtonQuit.connect('clicked', self.__mainWindow.quit)
 
         menupopoverCurrenciesBox.add(menuPopoverButtonSettings)
         menupopoverCurrenciesBox.add(menuPopoverButtonAbout)
-        menupopoverCurrenciesBox.add(menuPopoverButtonQuit)
         menupopoverCurrenciesBox.show_all()
 
     def __createBaseCurrencySwitch (self):
