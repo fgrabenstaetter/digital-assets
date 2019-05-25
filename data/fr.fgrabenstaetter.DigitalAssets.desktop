@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Digital Assets
-Comment=Cryptocurrencies prices, statistics and informations
+Comment=Cryptocurrencies prices and statistics
 Type=Application
 Exec=fr.fgrabenstaetter.DigitalAssets
 Terminal=false

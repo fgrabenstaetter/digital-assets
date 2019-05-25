@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2019-05-19 14:54+0200\n"
+"POT-Creation-Date: 2019-05-25 13:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,89 +15,82 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: dassets/ui/currencyView.py:111 dassets/ui/currencyView.py:128
-#: dassets/ui/currencyView.py:139 dassets/ui/currencyView.py:148
-#: dassets/ui/currencyView.py:157 dassets/ui/currencyView.py:163
-#: dassets/ui/currencyView.py:173
+#: dassets/ui/currencyView.py:111 dassets/ui/currencyView.py:129
+#: dassets/ui/currencyView.py:140 dassets/ui/currencyView.py:155
+#: dassets/ui/currencyView.py:174 dassets/ui/currencyView.py:180
+#: dassets/ui/currencyView.py:190
 msgid "Undefined"
 msgstr ""
 
-#: dassets/ui/currencyView.py:236 dassets/ui/headerBar.py:275
+#: dassets/ui/currencyView.py:254 dassets/ui/headerBar.py:272
 msgid "Change"
 msgstr ""
 
-#: dassets/ui/currencyView.py:240
+#: dassets/ui/currencyView.py:258
 msgid "Markep Cap"
 msgstr ""
 
-#: dassets/ui/currencyView.py:244 dassets/ui/headerBar.py:276
+#: dassets/ui/currencyView.py:263 dassets/ui/headerBar.py:273
 msgid "Volume"
 msgstr ""
 
-#: dassets/ui/currencyView.py:251 dassets/ui/headerBar.py:273
+#: dassets/ui/currencyView.py:271 dassets/ui/headerBar.py:270
 msgid "Rank"
 msgstr ""
 
-#: dassets/ui/currencyView.py:254
+#: dassets/ui/currencyView.py:275
 msgid "Circulating Supply"
 msgstr ""
 
-#: dassets/ui/currencyView.py:259
+#: dassets/ui/currencyView.py:280
 msgid "Max Supply"
 msgstr ""
 
-#: dassets/ui/currencyView.py:267
+#: dassets/ui/currencyView.py:289
 msgid "Website"
 msgstr ""
 
-#: dassets/ui/currencyView.py:382 dassets/ui/graph.py:207
+#: dassets/ui/currencyView.py:408 dassets/ui/graph.py:219
 msgid "Day"
 msgstr ""
 
-#: dassets/ui/currencyView.py:383 dassets/ui/graph.py:209
+#: dassets/ui/currencyView.py:409 dassets/ui/graph.py:221
 msgid "Month"
 msgstr ""
 
-#: dassets/ui/currencyView.py:384 dassets/ui/graph.py:211
+#: dassets/ui/currencyView.py:410 dassets/ui/graph.py:223
 msgid "Year"
 msgstr ""
 
-#: dassets/ui/currencyView.py:385
+#: dassets/ui/currencyView.py:411
 msgid "All"
 msgstr ""
 
-#: dassets/ui/graph.py:205
+#: dassets/ui/graph.py:217
 msgid "Hour"
 msgstr ""
 
-#: dassets/ui/graph.py:222
+#: dassets/ui/graph.py:234
 msgid "Price"
 msgstr ""
 
 #: dassets/ui/headerBar.py:84
-msgid ""
-"Prices, statistics and informations about Digital Assets\n"
-"Thanks to Nomics (https://nomics.com) for their free API\n"
-"Donations"
+msgid "Cryptocurrencies prices and statistics"
 msgstr ""
 
-#: dassets/ui/headerBar.py:96 dassets/ui/settingsWindow.py:33
+#: dassets/ui/headerBar.py:94 dassets/ui/settingsWindow.py:33
 msgid "Settings"
 msgstr ""
 
-#: dassets/ui/headerBar.py:98
+#: dassets/ui/headerBar.py:97
 msgid "About"
 msgstr ""
 
-#: dassets/ui/headerBar.py:100
-msgid "Quit"
-msgstr ""
-
-#: dassets/ui/headerBar.py:274
+#: dassets/ui/headerBar.py:271
 msgid "Name"
 msgstr ""
 
-#: dassets/ui/settingsWindow.py:50
+#: dassets/ui/settingsWindow.py:49
 msgid "Nomics API Key"
 msgstr ""
 

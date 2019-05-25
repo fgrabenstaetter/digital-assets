@@ -2,7 +2,7 @@
 <component type="desktop">
     <id>fr.fgrabenstaetter.DigitalAssets</id>
     <name>Digital Assets</name>
-    <summary>Cryptocurrencies prices, statistics and informations</summary>
+    <summary>Cryptocurrencies prices and statistics</summary>
     <url type="homepage">https://gitlab.gnome.org/fgrabenstaetter/digital-assets</url>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>GPL-3.0+</project_license>
@@ -11,7 +11,7 @@
     <update_contact>francoisgrabenstaetter@gmail.com</update_contact>
 	<translation type="gettext">fr.fgrabenstaetter.DigitalAssets</translation>
     <description>
-        <p>Digital Assets is a utility to follow cryptocurrencies prices, statistics and informations, and integrates well with the GNOME desktop.</p>
+        <p>Digital Assets is a utility to follow cryptocurrencies prices and statistics which integrates well with the GNOME desktop.</p>
     </description>
     <categories>
         <category>Utility</category>
@@ -23,16 +23,13 @@
         </screenshot>
     </screenshots>
     <releases>
-        <release version="1.0.0" date="2019-05-19">
+        <release version="1.0.2" date="2019-05-25">
             <description>
-                <p>Digital Assets 1.0.0 brings the basic features to track your favorite cryptocurrencies market informations.</p>
+                <p>What's new in this release:</p>
                 <ul>
-                    <li>Price, variation, volume, rank, market cap</li>
-                    <li>Circulating and max supply, ATH</li>
-                    <li>Price graphics (day, month, year, all-time)</li>
-                    <li>Sort cryptocurrencies and make them favorites</li>
-                    <li>Choose a base currency</li>
-                    <li>Support of the most popular cryptocurrencies</li>
+                    <li>Some bug and style fixes</li>
+                    <li>Support of 12-hour clock for day graphics</li>
+                    <li>Remove the quit menu entry</li>
                 </ul>
             </description>
         </release>
