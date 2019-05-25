@@ -8,17 +8,28 @@ Thanks to Nomics (https://nomics.com) for their free API.
 
 ![Screenshot of Digital Assets](screenshot.png)
 
-## AUTHOR
+## Author
 
 Created in 2019 by François Grabenstaetter <francoisgrabenstaetter@gmail.com>
 
-## LICENSE
+## License
 
 This program is distributed under the GNU GPL 3.0 License.
 
 For more informations: https://www.gnu.org/licenses/gpl-3.0.en.html
 
-## INSTALL AND RUN
+## Install and run
+
+### From Flathub
+
+A Flatpak version is available here: https://flathub.org/apps/details/fr.fgrabenstaetter.DigitalAssets
+
+```bash
+	flatpak install flathub fr.fgrabenstaetter.DigitalAssets
+	flatpak run fr.fgrabenstaetter.DigitalAssets
+```
+
+### From source
 
 ```bash
 	mkdir build && cd build
