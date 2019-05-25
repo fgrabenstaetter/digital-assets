@@ -110,7 +110,8 @@ class HeaderBar (Gtk.HeaderBar):
         """
             Create and add base currency switch widgets to the HeaderBar
         """
-        actualBaseCurrency = self.__baseCurrencies[self.actualBaseCurrencySymbol]
+        actualBaseCurrency = \
+                        self.__baseCurrencies[self.actualBaseCurrencySymbol]
         buttonBox = Gtk.Box(spacing = 10)
         switchButtonLabelName = Gtk.Label()
         switchButtonLabelName.set_markup('<b>' + actualBaseCurrency.name \
@@ -294,7 +295,7 @@ class HeaderBar (Gtk.HeaderBar):
 
             if len(popoverCurrenciesBoxChildren) > 0:
                 radioButton = Gtk.RadioButton(
-                            group = popoverCurrenciesBoxChildren[0].radioButton)
+                        group = popoverCurrenciesBoxChildren[0].radioButton)
             else:
                 radioButton = Gtk.RadioButton()
 

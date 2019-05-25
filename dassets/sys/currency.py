@@ -54,14 +54,16 @@ class Currency ():
             Calcululate the ATH ratio (between 0 and 1) for the self currency
             compared to the baseCurrency
         """
-        if self.alltimeGraphDataUSD is None or baseCurrency.alltimeGraphDataUSD is None:
+        if self.alltimeGraphDataUSD is None \
+                or baseCurrency.alltimeGraphDataUSD is None:
             return 0
         actualPrice = self.priceUSD / baseCurrency.priceUSD
         athPrice = None
         if self.__lastCalculatedAthPrice is None \
                 or self.__lastCalculatedAthPrice[0] != baseCurrency.symbol:
             i1, i2 = 0, 0
-            l1, l2 = len(self.alltimeGraphDataUSD), len(baseCurrency.alltimeGraphDataUSD)
+            l1 = len(self.alltimeGraphDataUSD)
+            l2 = len(baseCurrency.alltimeGraphDataUSD)
             while i1 < l1 and i2 < l2:
                 d1 = self.alltimeGraphDataUSD[i1][0]
                 d2 = baseCurrency.alltimeGraphDataUSD[i2][0]

@@ -113,7 +113,8 @@ class APIData ():
             return False
 
         # hide network error message if its visible
-        if self.__mainWindow.networkErrorBarRevealer.get_child_revealed() is True:
+        if self.__mainWindow.networkErrorBarRevealer.get_child_revealed() \
+                                                                    is True:
             self.__mainWindow.networkErrorBarRevealer.set_reveal_child(False)
 
         dataPrices = json.loads(res)
@@ -133,7 +134,8 @@ class APIData ():
         """
         try:
             res = urllib.request.urlopen(
-                'https://api.nomics.com/v1/dashboard?key=' + self.__APIKey).read()
+                'https://api.nomics.com/v1/dashboard?key=' \
+                + self.__APIKey).read()
         except urllib.error.URLError:
             # show network error message
             if self.__mainWindow.networkErrorBarRevealer.get_child_revealed() \
@@ -151,22 +153,23 @@ class APIData ():
         dataInfos = json.loads(res)
         for symbol in self.__mainWindow.currencies.keys():
             for dataCur in dataInfos:
-                if dataCur['currency'] == symbol:
-                    if dataCur['dayOpen'] is not None:
-                        self.__mainWindow.currencies[symbol].lastDayPriceUSD = \
-                                                    float(dataCur['dayOpen'])
-                    if dataCur['dayVolume'] is not None:
-                        self.__mainWindow.currencies[symbol].dayVolumeUSD = \
-                                                    float(dataCur['dayVolume'])
-                    if dataCur['availableSupply'] is not None:
-                        self.__mainWindow.currencies[symbol].circulatingSupply = \
-                                            float(dataCur['availableSupply'])
-                    if dataCur['maxSupply'] is not None:
-                        self.__mainWindow.currencies[symbol].maxSupply = \
-                                                    float(dataCur['maxSupply'])
-                    if dataCur['high'] is not None:
-                        self.__mainWindow.currencies[symbol].athUSD = \
-                                                        float(dataCur['high'])
+                if dataCur['currency'] != symbol:
+                    continue
+                if dataCur['dayOpen'] is not None:
+                    self.__mainWindow.currencies[symbol].lastDayPriceUSD = \
+                                                float(dataCur['dayOpen'])
+                if dataCur['dayVolume'] is not None:
+                    self.__mainWindow.currencies[symbol].dayVolumeUSD = \
+                                                float(dataCur['dayVolume'])
+                if dataCur['availableSupply'] is not None:
+                    self.__mainWindow.currencies[symbol].circulatingSupply = \
+                                        float(dataCur['availableSupply'])
+                if dataCur['maxSupply'] is not None:
+                    self.__mainWindow.currencies[symbol].maxSupply = \
+                                                float(dataCur['maxSupply'])
+                if dataCur['high'] is not None:
+                    self.__mainWindow.currencies[symbol].athUSD = \
+                                                    float(dataCur['high'])
         # calcul rank and marketcap
         marketcapsSorted = [] # list of tuples (marketCap, symbol)
         for dataCur in dataInfos:
@@ -229,8 +232,9 @@ class APIData ():
 
             # hide network error message if its visible
             if self.__mainWindow.networkErrorBarRevealer.get_child_revealed() \
-                                                                        is True:
-                self.__mainWindow.networkErrorBarRevealer.set_reveal_child(False)
+                                                                    is True:
+                self.__mainWindow.networkErrorBarRevealer.set_reveal_child(
+                                                                        False)
 
             dataGraphData = json.loads(res)
             def utcToLocal (dt):

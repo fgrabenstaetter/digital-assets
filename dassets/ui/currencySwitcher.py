@@ -44,8 +44,8 @@ class CurrencySwitcher (Gtk.ListBox):
 
     def scrollToActualChild (self):
         """
-            Scroll the Gtk.ScrolledWindow (self.__mainWindow.currencySwitcherBox)
-            to the current ListBoxRow
+            Scroll the Gtk.ScrolledWindow
+            (self.__mainWindow.currencySwitcherBox) to the current ListBoxRow
         """
         sumHeightBeforeChild = 0
         sumChildrenHeight = 0
@@ -148,10 +148,13 @@ class CurrencySwitcher (Gtk.ListBox):
             rankAndNone = sortMethodName == 'rank' \
                 and row1Cur.rank is None and row2Cur.rank is None
             dayPriceChangeAndNone = sortMethodName == 'dayPriceChange' \
-                and (row1Cur.lastDayPriceUSD is None or row1Cur.priceUSD is None) \
-                and (row2Cur.lastDayPriceUSD is None or row2Cur.priceUSD is None)
+                and (row1Cur.lastDayPriceUSD is None \
+                    or row1Cur.priceUSD is None) \
+                and (row2Cur.lastDayPriceUSD is None \
+                    or row2Cur.priceUSD is None)
             volumeAndNone = sortMethodName == 'volume' \
-                and row1Cur.dayVolumeUSD is None and row2Cur.dayVolumeUSD is None
+                and row1Cur.dayVolumeUSD is None \
+                and row2Cur.dayVolumeUSD is None
             athAndNone = sortMethodName == 'ath' \
                 and ((baseCurrency.symbol == 'USD' and row1Cur.athUSD is None \
                 and row2Cur.athUSD is None) or (baseCurrency.symbol != 'USD') \
@@ -180,9 +183,11 @@ class CurrencySwitcher (Gtk.ListBox):
                 if baseCurrency.lastDayPriceUSD is None \
                         or baseCurrency.priceUSD is None:
                     return 0
-                elif row1Cur.lastDayPriceUSD is None or row1Cur.priceUSD is None:
+                elif row1Cur.lastDayPriceUSD is None \
+                        or row1Cur.priceUSD is None:
                     return 1
-                elif row2Cur.lastDayPriceUSD is None or row2Cur.priceUSD is None:
+                elif row2Cur.lastDayPriceUSD is None \
+                        or row2Cur.priceUSD is None:
                     return -1
                 else:
                     row1DayPriceChange = float(row1Cur.lastDayPriceUSD) \

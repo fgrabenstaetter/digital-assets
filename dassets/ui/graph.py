@@ -158,7 +158,7 @@ class Graph (Gtk.DrawingArea):
             if (i % dateTextModulo) == 0:
                 dateTextX = x
                 dateTextY = areaHeight + self.__padding['top'] \
-                                + self.__padding['bottom'] - self.__textBorderSpace
+                            + self.__padding['bottom'] - self.__textBorderSpace
 
                 if self.__graphInfos['time'] == 'day':
                     dateStr = str(dateTime.strftime('%X')).split(':')[0] \
@@ -225,8 +225,8 @@ class Graph (Gtk.DrawingArea):
             return
 
         ctx.move_to(self.__textBorderSpace,
-                    areaHeight + self.__padding['top'] + self.__padding['bottom'] \
-                                                     - self.__textBorderSpace)
+                    areaHeight + self.__padding['top'] \
+                    + self.__padding['bottom'] - self.__textBorderSpace)
         ctx.show_text(timeDataType)
 
         # show price column name

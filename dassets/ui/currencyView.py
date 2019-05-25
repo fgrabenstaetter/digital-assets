@@ -77,7 +77,7 @@ class CurrencyView (Gtk.Box):
 
         # price
         nbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(
-                                            currency.priceUSD, baseCurrency.priceUSD)
+                                    currency.priceUSD, baseCurrency.priceUSD)
         priceRounded = round(currency.priceUSD / baseCurrency.priceUSD,
                              nbDigitsAfterDecimalPoint)
 
@@ -89,7 +89,7 @@ class CurrencyView (Gtk.Box):
 
         if currency.favorite is True:
             with self.__favoriteButton.handler_block(
-                                                self.__favoriteButton.handlerID):
+                                            self.__favoriteButton.handlerID):
                 self.__favoriteButton.set_active(True)
                 self.__favoriteButtonImage.set_from_icon_name(
                                                         'starred-symbolic', 1)
@@ -112,8 +112,9 @@ class CurrencyView (Gtk.Box):
             else:
                 dayPriceChange = currency.lastDayPriceUSD \
                                / baseCurrency.lastDayPriceUSD
-                dayPriceChange = round(((currency.priceUSD / baseCurrency.priceUSD) \
-                                        / dayPriceChange) * 100 - 100, 1)
+                dayPriceChange = round(
+                    ((currency.priceUSD / baseCurrency.priceUSD) \
+                    / dayPriceChange) * 100 - 100, 1)
                 dayPriceChangeStr = ''
                 if dayPriceChange >= 0:
                     self.__dayPriceChangeLabel.set_name('priceGreen')
@@ -138,10 +139,12 @@ class CurrencyView (Gtk.Box):
             if currency.dayVolumeUSD is None:
                 self.__volumeLabel.set_label(_('Undefined'))
             else:
-                volumeRounded = round(currency.dayVolumeUSD / baseCurrency.priceUSD)
-                self.__volumeLabel.set_label(tools.beautifyNumber(volumeRounded))
+                volumeRounded = round(currency.dayVolumeUSD \
+                                      / baseCurrency.priceUSD)
+                self.__volumeLabel.set_label(
+                                        tools.beautifyNumber(volumeRounded))
                 self.__volumeBaseCurrencySymbolLabel.set_label(
-                                                            baseCurrency.symbol)
+                                                        baseCurrency.symbol)
 
             # ATH (actual % relative to ATH)
             if baseCurrency.symbol == 'USD':
@@ -151,8 +154,8 @@ class CurrencyView (Gtk.Box):
                 if currency.athUSD is None:
                     self.__athLabel.set_label(_('Undefined'))
                 else:
-                    athPercentage = round((currency.priceUSD / currency.athUSD) \
-                                          * 100, 1)
+                    athPercentage = round(
+                                (currency.priceUSD / currency.athUSD) * 100, 1)
                     self.__athLabel.set_label(str(athPercentage) + ' %')
             elif currency.alltimeGraphDataUSD is not None \
                     and baseCurrency.alltimeGraphDataUSD is not None:
@@ -189,8 +192,8 @@ class CurrencyView (Gtk.Box):
                 maxSupplyRounded = tools.beautifyNumber(round(
                                                             currency.maxSupply))
                 self.__maxSupplyLabel.set_label(str(maxSupplyRounded))
-                self.__maxSupplyBaseCurrencySymbolLabel.set_label(currency.symbol)
-
+                self.__maxSupplyBaseCurrencySymbolLabel.set_label(
+                                                            currency.symbol)
             # day graph prices is the first loaded
             if currency.dayGraphDataUSD is not None:
                 if self.__spinner2 is not None:
@@ -291,8 +294,8 @@ class CurrencyView (Gtk.Box):
         self.__favoriteButton = Gtk.ToggleButton(valign = Gtk.Align.CENTER)
         self.__favoriteButton.add(self.__favoriteButtonImage)
         self.__favoriteButton.handlerID = self.__favoriteButton.connect(
-                                                'toggled',
-                                                self.__favoriteButtonToggledEvent)
+                                            'toggled',
+                                            self.__favoriteButtonToggledEvent)
 
         # spinners
         self.__spinner2 = Gtk.Spinner()
@@ -477,12 +480,12 @@ class CurrencyView (Gtk.Box):
         if currency.favorite is True:
             self.__favoriteButtonImage.set_from_icon_name('starred-symbolic', 1)
             self.__mainWindow.currencySwitcher.actualRow.favoriteImageRevealer \
-                                                        .set_reveal_child(True)
+                                                    .set_reveal_child(True)
         else:
             self.__favoriteButtonImage.set_from_icon_name(
                                                     'non-starred-symbolic', 1)
             self.__mainWindow.currencySwitcher.actualRow.favoriteImageRevealer \
-                                                        .set_reveal_child(False)
+                                                    .set_reveal_child(False)
 
         self.__mainWindow.currencySwitcher.invalidate_sort()
 
@@ -504,7 +507,7 @@ class CurrencyView (Gtk.Box):
         currency = self.__mainWindow.currencies[self.__actualCurrencySymbol]
         baseCurrency = self.__mainWindow.getActualBaseCurrency()
         nbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(
-                                            currency.priceUSD, baseCurrency.priceUSD)
+                                    currency.priceUSD, baseCurrency.priceUSD)
 
         self.__graph.setGraph(getattr(currency, obj.name + 'GraphDataUSD'),
                             obj.name,
