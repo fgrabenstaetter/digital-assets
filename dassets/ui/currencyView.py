@@ -23,6 +23,7 @@ from gi.repository import Gtk, GdkPixbuf
 from dassets.sys import tools
 from dassets.ui.graph import Graph
 from dassets.env import *
+import datetime
 
 class CurrencyView (Gtk.Box):
 
@@ -153,18 +154,23 @@ class CurrencyView (Gtk.Box):
                     self.__athLabel.set_visible(True)
                 if currency.athUSD is None:
                     self.__athLabel.set_label(_('Undefined'))
+                    self.__athLabel.set_has_tooltip(False)
                 else:
                     athPercentage = round(
-                                (currency.priceUSD / currency.athUSD) * 100, 1)
+                                (currency.priceUSD / currency.athUSD[0]) * 100, 1)
                     self.__athLabel.set_label(str(athPercentage) + ' %')
+                    dtStr = currency.athUSD[1].strftime('%x')
+                    self.__athLabel.set_tooltip_text(dtStr)
             elif currency.alltimeGraphDataUSD is not None \
                     and baseCurrency.alltimeGraphDataUSD is not None:
                 if self.__athSpinner.get_visible() is True:
                     self.__athSpinner.set_visible(False)
                     self.__athLabel.set_visible(True)
-                athPercentage = round(currency.calculateAth(baseCurrency) \
-                                * 100, 1)
+                ath = currency.calculateAth(baseCurrency)
+                athPercentage = round(ath[0] * 100, 1)
                 self.__athLabel.set_label(str(athPercentage) + ' %')
+                dtStr = ath[1].strftime('%x')
+                self.__athLabel.set_tooltip_text(dtStr)
             else:
                 self.__athSpinner.set_visible(True)
                 self.__athLabel.set_visible(False)

@@ -169,7 +169,10 @@ class APIData ():
                                                 float(dataCur['maxSupply'])
                 if dataCur['high'] is not None:
                     self.__mainWindow.currencies[symbol].athUSD = \
-                                                    float(dataCur['high'])
+                        (float(dataCur['high']),
+                        self.__utcToLocal(datetime.datetime.strptime(
+                            dataCur['highTimestamp'], '%Y-%m-%dT%H:%M:%SZ')))
+
         # calcul rank and marketcap
         marketcapsSorted = [] # list of tuples (marketCap, symbol)
         for dataCur in dataInfos:
@@ -235,21 +238,18 @@ class APIData ():
                                                                     is True:
                 self.__mainWindow.networkErrorBarRevealer.set_reveal_child(
                                                                         False)
-
             dataGraphData = json.loads(res)
-            def utcToLocal (dt):
-                return dt.replace(tzinfo = datetime.timezone.utc) \
-                         .astimezone(tz = None)
-
             for symbol in self.__mainWindow.currencies.keys():
                 for dataCur in dataGraphData:
                     if dataCur['currency'] == symbol:
                         GraphData = []
                         for index, value in enumerate(dataCur['timestamps']):
-                            dateTime = utcToLocal(datetime.datetime.strptime(
+                            dateTime = self.__utcToLocal(datetime.datetime.strptime(
                                                 value, '%Y-%m-%dT%H:%M:%SZ'))
                             GraphData.append((dateTime,
                                               float(dataCur['prices'][index])))
                         setattr(self.__mainWindow.currencies[symbol],
                                 graphTime[0] + 'GraphDataUSD',
                                 GraphData)
+    def __utcToLocal (self, dt):
+        return dt.replace(tzinfo = datetime.timezone.utc).astimezone(tz = None)

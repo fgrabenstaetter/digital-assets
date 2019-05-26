@@ -36,8 +36,8 @@ class Currency ():
         self.lastDayPriceUSD = None
         self.dayVolumeUSD = None
         self.marketCapUSD = None
-        self.athUSD = None
-        self.__lastCalculatedAthPrice = None
+        self.athUSD = None # None or (price, date)
+        self.__lastCalculatedAth = None # None or (baseCurrency, price, date)
 
         self.circulatingSupply = None
         self.maxSupply = None
@@ -51,16 +51,18 @@ class Currency ():
 
     def calculateAth (self, baseCurrency):
         """
-            Calcululate the ATH ratio (between 0 and 1) for the self currency
+            Calcululate the ATH ratio (between 0 and 1) and the ATH date for the self currency
             compared to the baseCurrency
+            @return tuple (ratio, date)
         """
         if self.alltimeGraphDataUSD is None \
                 or baseCurrency.alltimeGraphDataUSD is None:
             return 0
         actualPrice = self.priceUSD / baseCurrency.priceUSD
         athPrice = None
-        if self.__lastCalculatedAthPrice is None \
-                or self.__lastCalculatedAthPrice[0] != baseCurrency.symbol:
+        athDate = None
+        if self.__lastCalculatedAth is None \
+                or self.__lastCalculatedAth[0] != baseCurrency.symbol:
             i1, i2 = 0, 0
             l1 = len(self.alltimeGraphDataUSD)
             l2 = len(baseCurrency.alltimeGraphDataUSD)
@@ -74,13 +76,15 @@ class Currency ():
                     price = p1 / p2
                     if athPrice is None or price > athPrice:
                         athPrice = price
+                        athDate = d1
                     i1 += 1
                     i2 += 1
                 elif tdelta.days < 0:
                     i1 += 1
                 else:
                     i2 += 1
-            self.__lastCalculatedAthPrice = (baseCurrency.symbol, athPrice)
+            self.__lastCalculatedAth = (baseCurrency.symbol, athPrice, athDate)
         else:
-            athPrice = self.__lastCalculatedAthPrice[1]
-        return actualPrice / athPrice
+            athPrice = self.__lastCalculatedAth[1]
+            athDate = self.__lastCalculatedAth[2]
+        return (actualPrice / athPrice), athDate
