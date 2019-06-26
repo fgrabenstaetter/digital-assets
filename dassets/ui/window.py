@@ -24,6 +24,7 @@ from dassets.ui.headerBar import HeaderBar
 from dassets.ui.currencySwitcher import CurrencySwitcher
 from dassets.ui.currencyView import CurrencyView
 from dassets.sys.apiData import APIData
+from dassets.sys.settings import Settings
 from dassets.env import *
 
 class Window (Gtk.ApplicationWindow):
@@ -51,6 +52,14 @@ class Window (Gtk.ApplicationWindow):
         self.currencySwitcherBox.set_min_content_width(200)
         self.currencySwitcherBox.set_max_content_width(200)
         self.currencySwitcherBox.add(self.currencySwitcher)
+
+        # activate the last currency
+        lastCurrencySymbol = Settings().loadLastCurrencySymbol()
+        if self.currencies[lastCurrencySymbol] is not None:
+            for row in self.currencySwitcher.get_children():
+                if row.curSymbol == lastCurrencySymbol:
+                   row.activate()
+                   break
 
         self.searchEntry = Gtk.SearchEntry()
         self.searchEntryBox = Gtk.Box(halign = Gtk.Align.CENTER,

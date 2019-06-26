@@ -16,5 +16,10 @@
             <summary>Last assets ranks</summary>
             <description>Save last assets ranks to avoid unorder assets list on next app launch</description>
         </key>
+        <key name="last-currency-symbol" type="s">
+            <default>'BTC'</default>
+            <summary>Last currency symbol</summary>
+            <description>Save last currency symbol to directly select it on the next app launch</description>
+        </key>
     </schema>
 </schemalist>

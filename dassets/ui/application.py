@@ -69,4 +69,5 @@ class Application (Gtk.Application):
         """
         self.__settings.saveLastCurrenciesRank(self.currencies)
         self.__settings.saveFavoriteCurrencies(self.currencies)
+        self.__settings.saveLastCurrencySymbol(self.__mainWindow.currencySwitcher.actualRow.curSymbol)
         Gtk.main_quit()

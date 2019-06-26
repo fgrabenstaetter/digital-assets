@@ -59,6 +59,13 @@ class Settings (Gio.Settings):
         """
         self.set_string('nomics-api-key', apiKey)
 
+    def saveLastCurrencySymbol (self, currencySymbol):
+        """
+            Save last currency symbol in GSettings
+        """
+        self.set_string('last-currency-symbol', currencySymbol)
+            
+
     def loadFavoriteCurrencies (self, currencies):
         """
             Load favorites currencies from GSettings
@@ -90,3 +97,9 @@ class Settings (Gio.Settings):
             Load Nomics API key from GSettings and return it
         """
         return self.get_string('nomics-api-key')
+
+    def loadLastCurrencySymbol (self):
+        """
+            Load last currency symbol from GSettings and return it
+        """
+        return self.get_string('last-currency-symbol')
