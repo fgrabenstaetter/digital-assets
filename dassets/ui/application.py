@@ -50,7 +50,7 @@ class Application (Gtk.Application):
         self.currencies['USD'] = Currency('Dollars', 'USD', None)
         self.currencies['USD'].priceUSD = 1
         self.currencies['USD'].lastDayPriceUSD = 1
-        self.currencies['USD'].athUSD = 1
+        self.currencies['USD'].athUSD = (1, None)
         self.currencies['USD'].rank = 0
 
         # add digital assets

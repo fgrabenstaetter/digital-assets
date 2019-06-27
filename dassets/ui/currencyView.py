@@ -159,7 +159,11 @@ class CurrencyView (Gtk.Box):
                     athPercentage = round(
                                 (currency.priceUSD / currency.athUSD[0]) * 100, 1)
                     self.__athLabel.set_label(str(athPercentage) + ' %')
-                    dtStr = currency.athUSD[1].strftime('%x')
+                    
+                    athPrice = currency.athUSD[0]
+                    bestDecimalDigitsNb = tools.bestDigitsNumberAfterDecimalPoint(athPrice, 1)
+                    dtStr = str(round(athPrice, bestDecimalDigitsNb)) + ' ' + baseCurrency.symbol + ' - '
+                    dtStr += currency.athUSD[1].strftime('%x')
                     self.__athLabel.set_tooltip_text(dtStr)
             elif currency.alltimeGraphDataUSD is not None \
                     and baseCurrency.alltimeGraphDataUSD is not None:
@@ -169,7 +173,11 @@ class CurrencyView (Gtk.Box):
                 ath = currency.calculateAth(baseCurrency)
                 athPercentage = round(ath[0] * 100, 1)
                 self.__athLabel.set_label(str(athPercentage) + ' %')
-                dtStr = ath[1].strftime('%x')
+
+                athPrice = (currency.priceUSD / baseCurrency.priceUSD) / ath[0]
+                bestDecimalDigitsNb = tools.bestDigitsNumberAfterDecimalPoint(athPrice, 1)
+                dtStr = str(round(athPrice, bestDecimalDigitsNb)) + ' ' + baseCurrency.symbol + ' - '
+                dtStr += ath[1].strftime('%x')
                 self.__athLabel.set_tooltip_text(dtStr)
             else:
                 self.__athSpinner.set_visible(True)
