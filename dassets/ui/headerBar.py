@@ -25,7 +25,7 @@ from dassets.ui.settingsWindow import SettingsWindow
 
 class HeaderBar (Gtk.HeaderBar):
 
-    def __init__ (self, mainWindow):
+    def __init__ (self, mainWindow, defaultBaseCurrencySymbol):
         """
             Init HeaderBar
         """
@@ -35,8 +35,7 @@ class HeaderBar (Gtk.HeaderBar):
         self.set_title('Digital Assets')
 
         self.__baseCurrencies =  self.__mainWindow.currencies
-        self.actualBaseCurrencySymbol = \
-            self.__baseCurrencies[list(self.__baseCurrencies.keys())[0]].symbol
+        self.actualBaseCurrencySymbol = defaultBaseCurrencySymbol
         # default sort method
         self.actualSortMethodName = 'rank'
         self.__createMenu()

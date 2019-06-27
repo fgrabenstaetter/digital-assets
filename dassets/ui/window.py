@@ -42,8 +42,10 @@ class Window (Gtk.ApplicationWindow):
         self.__application = application
         self.currencies = self.__application.currencies
 
+        settings = Settings()
+
         # load widgets
-        self.headerBar = HeaderBar(self)
+        self.headerBar = HeaderBar(self, settings.loadLastBaseCurrencySymbol())
         self.set_titlebar(self.headerBar)
 
         self.currencyView = CurrencyView(self)
@@ -54,7 +56,7 @@ class Window (Gtk.ApplicationWindow):
         self.currencySwitcherBox.add(self.currencySwitcher)
 
         # activate the last currency
-        lastCurrencySymbol = Settings().loadLastCurrencySymbol()
+        lastCurrencySymbol = settings.loadLastCurrencySymbol()
         if self.currencies[lastCurrencySymbol] is not None:
             for row in self.currencySwitcher.get_children():
                 if row.curSymbol == lastCurrencySymbol:

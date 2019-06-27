@@ -80,5 +80,8 @@ def getCurrencies ():
         ('Aeternity', 'AE', 'https://www.aeternity.com/'),
         ('Ravencoin', 'RVN', 'https://ravencoin.org/'),
         ('TomoChain', 'TOMO', 'https://tomochain.com/'),
-        ('Cosmos', 'ATOM', 'https://cosmos.network/')
+        ('Cosmos', 'ATOM', 'https://cosmos.network/'),
+        ('Theta', 'THETA', 'https://www.thetatoken.org/'),
+        ('ICON', 'ICX', 'https://www.icon.foundation/'),
+        ('USD Coin', 'USDC', 'https://www.centre.io/usdc/')
     ]

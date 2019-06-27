@@ -60,5 +60,8 @@
     <file compressed="true">img/BNB.svg</file>
     <file compressed="true">img/GNT.svg</file>
     <file compressed="true">img/BSV.svg</file>
+    <file compressed="true">img/THETA.svg</file>
+    <file compressed="true">img/ICX.svg</file>
+    <file compressed="true">img/USDC.svg</file>
   </gresource>
 </gresources>
