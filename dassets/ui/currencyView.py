@@ -148,25 +148,22 @@ class CurrencyView (Gtk.Box):
                                                         baseCurrency.symbol)
 
             # ATH (actual % relative to ATH)
-            if baseCurrency.symbol == 'USD':
+            if baseCurrency.symbol == 'USD' and currency.athUSD is not None:
                 if self.__athSpinner.get_visible() is True:
                     self.__athSpinner.set_visible(False)
                     self.__athLabel.set_visible(True)
-                if currency.athUSD is None:
-                    self.__athLabel.set_label(_('Undefined'))
-                    self.__athLabel.set_has_tooltip(False)
-                else:
-                    athPercentage = round(
-                                (currency.priceUSD / currency.athUSD[0]) * 100, 1)
-                    self.__athLabel.set_label(str(athPercentage) + ' %')
-                    
-                    athPrice = currency.athUSD[0]
-                    bestDecimalDigitsNb = tools.bestDigitsNumberAfterDecimalPoint(athPrice, 1)
-                    dtStr = str(round(athPrice, bestDecimalDigitsNb)) + ' ' + baseCurrency.symbol + ' - '
-                    dtStr += currency.athUSD[1].strftime('%x')
-                    self.__athLabel.set_tooltip_text(dtStr)
+                athPercentage = round(
+                            (currency.priceUSD / currency.athUSD[0]) * 100, 1)
+                self.__athLabel.set_label(str(athPercentage) + ' %')
+                
+                athPrice = currency.athUSD[0]
+                bestDecimalDigitsNb = tools.bestDigitsNumberAfterDecimalPoint(athPrice, 1)
+                dtStr = str(tools.beautifyNumber(round(athPrice, bestDecimalDigitsNb))) + ' ' + baseCurrency.symbol + ' - '
+                dtStr += currency.athUSD[1].strftime('%x')
+                self.__athLabel.set_tooltip_text(dtStr)
             elif currency.alltimeGraphDataUSD is not None \
-                    and baseCurrency.alltimeGraphDataUSD is not None:
+                    and (baseCurrency.alltimeGraphDataUSD is not None \
+                    or (baseCurrency.symbol == 'USD')):
                 if self.__athSpinner.get_visible() is True:
                     self.__athSpinner.set_visible(False)
                     self.__athLabel.set_visible(True)
@@ -176,7 +173,7 @@ class CurrencyView (Gtk.Box):
 
                 athPrice = (currency.priceUSD / baseCurrency.priceUSD) / ath[0]
                 bestDecimalDigitsNb = tools.bestDigitsNumberAfterDecimalPoint(athPrice, 1)
-                dtStr = str(round(athPrice, bestDecimalDigitsNb)) + ' ' + baseCurrency.symbol + ' - '
+                dtStr = str(tools.beautifyNumber(round(athPrice, bestDecimalDigitsNb))) + ' ' + baseCurrency.symbol + ' - '
                 dtStr += ath[1].strftime('%x')
                 self.__athLabel.set_tooltip_text(dtStr)
             else:

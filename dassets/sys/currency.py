@@ -55,7 +55,19 @@ class Currency ():
             compared to the baseCurrency
             @return tuple (ratio, date)
         """
-        if self.alltimeGraphDataUSD is None \
+
+        # function to calculate ATH only with USD base currency
+        def maxUSD ():
+            max = None
+            for (dt, price) in self.alltimeGraphDataUSD:
+                if max is None or price > max[0]:
+                    max = (price, dt)
+            # convert max price to ratio and return
+            return (self.priceUSD / max[0], max[1])
+
+        if self.alltimeGraphDataUSD is not None and baseCurrency.alltimeGraphDataUSD is None:
+            return maxUSD()
+        elif self.alltimeGraphDataUSD is None \
                 or baseCurrency.alltimeGraphDataUSD is None:
             return 0
         actualPrice = self.priceUSD / baseCurrency.priceUSD
