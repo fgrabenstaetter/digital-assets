@@ -100,14 +100,15 @@ class Window (Gtk.ApplicationWindow):
         self.connect('key_press_event', self.__windowKeyPressEvent)
         self.connect('key_release_event', self.__windowKeyReleaseEvent)
         self.searchEntry.connect('key_press_event',
-                                 self.searchEntryKeyPressEvent)
-        self.searchEntry.connect('search-changed', self.searchEntrySearchEvent)
+                                 self.__searchEntryKeyPressEvent)
+        self.searchEntry.connect('search-changed', self.__searchEntrySearchEvent)
         self.connect('delete_event', self.quit)
         self.show_all()
 
         # some tweaks
         self.searchEntryRevealer.set_reveal_child(False)
         self.networkErrorBarRevealer.set_reveal_child(False)
+        self.searchEntry.realize()
 
         # APIData requests (to avoid crash due to thread colision)
         self.apiDataRequests = {'reloadCurrencyView': False,
@@ -122,26 +123,6 @@ class Window (Gtk.ApplicationWindow):
             Quit event method handler, call quit method of the application
         """
         self.__application.quit()
-
-    def searchEntryKeyPressEvent (self, obj, data):
-        """
-            A button has been pressed in the search entry
-        """
-        if data.get_keyval() == (True, Gdk.KEY_Escape) \
-                and self.headerBar.searchButton.get_active() is True:
-            self.headerBar.searchButton.clicked()
-
-    def searchEntrySearchEvent (self, obj, data = None):
-        """
-            Search entry input event
-        """
-        text = obj.get_text().lower()
-        for button in self.currencySwitcher.get_children():
-            if text not in button.curName.lower() \
-                    and text not in button.curSymbol.lower():
-                button.hide()
-            else:
-                button.show()
 
     def getCurrencyBySymbol (self, symbol):
         """
@@ -201,6 +182,9 @@ class Window (Gtk.ApplicationWindow):
         if self.__keysPressed['Ctrl'] is True \
                 and self.__keysPressed['f'] is True:
             self.headerBar.searchButton.clicked()
+        elif self.headerBar.searchButton.get_active() is False:
+            self.searchEntry.grab_focus_without_selecting()
+            GLib.timeout_add(0, self.__searchEntrySearchEvent)
 
     def __windowKeyReleaseEvent (self, obj, data):
         """
@@ -210,3 +194,34 @@ class Window (Gtk.ApplicationWindow):
             self.__keysPressed['Ctrl'] = False
         elif data.get_keyval() == (True, Gdk.KEY_f):
             self.__keysPressed['f'] = False
+
+    def __searchEntryKeyPressEvent (self, obj, data):
+        """
+            A button has been pressed in the search entry
+        """
+        if data.get_keyval() == (True, Gdk.KEY_Escape) \
+                and self.headerBar.searchButton.get_active() is True:
+            if len(self.searchEntry.get_text()) > 0:
+                self.searchEntry.set_text('')
+            else:
+                self.headerBar.searchButton.clicked()
+
+    def __searchEntrySearchEvent (self, obj = None, data = None):
+        """
+            Search entry input event
+        """
+        if (self.headerBar.searchButton.get_active() is False and len(self.searchEntry.get_text()) > 0) or (self.headerBar.searchButton.get_active() is True and len(self.searchEntry.get_text()) == 0):
+            self.headerBar.searchButton.clicked()
+        self.__reloadSearchResults()
+
+    def __reloadSearchResults (self):
+        """
+            Reload the matching assets from the search pane
+        """
+        text = self.searchEntry.get_text().lower()
+        for button in self.currencySwitcher.get_children():
+            if text not in button.curName.lower() \
+                    and text not in button.curSymbol.lower():
+                button.hide()
+            else:
+                button.show()

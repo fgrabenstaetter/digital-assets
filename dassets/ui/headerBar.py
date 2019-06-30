@@ -234,14 +234,16 @@ class HeaderBar (Gtk.HeaderBar):
 
         def searchButtonClicked (obj = None, data = None):
             if self.searchButton.get_active() is False:
+                with self.searchButton.handler_block(handler):
+                    self.__mainWindow.searchEntry.set_text('')
+                    self.searchButton.set_active(False)
                 self.__mainWindow.searchEntryRevealer.set_reveal_child(False)
-                self.__mainWindow.searchEntry.set_text('')
                 self.__mainWindow.currencySwitcher.scrollToActualChild()
             else:
                 self.__mainWindow.searchEntryRevealer.set_reveal_child(True)
-                self.__mainWindow.searchEntry.grab_focus()
+                self.__mainWindow.searchEntry.grab_focus_without_selecting()
 
-        self.searchButton.connect('clicked', searchButtonClicked)
+        handler = self.searchButton.connect('clicked', searchButtonClicked)
 
     def __createSortMethodSwitch (self):
         """
