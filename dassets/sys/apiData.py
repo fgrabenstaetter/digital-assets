@@ -64,9 +64,7 @@ class APIData ():
                 self.__setRequest('reloadCurrencyView')
 
             # graph prices reload
-            dataGraph = self.__reloadGraphData()
-            if dataGraph is not False:
-                self.__setRequest('reloadCurrencyView')
+            self.__reloadGraphData()
 
     def __loop (self):
         """
@@ -251,5 +249,6 @@ class APIData ():
                         setattr(self.__mainWindow.currencies[symbol],
                                 graphTime[0] + 'GraphDataUSD',
                                 GraphData)
+            self.__setRequest('reloadCurrencyView')
     def __utcToLocal (self, dt):
         return dt.replace(tzinfo = datetime.timezone.utc).astimezone(tz = None)
