@@ -168,7 +168,7 @@ class Window (Gtk.ApplicationWindow):
             self.apiDataRequests['resortCurrencySwitcher'] = False
             self.currencySwitcher.invalidate_sort()
 
-        GLib.timeout_add(1000, self.__nextRequestsTimer)
+        GLib.timeout_add(500, self.__nextRequestsTimer)
 
     def __windowKeyPressEvent (self, obj, data):
         """
