@@ -213,7 +213,7 @@ class HeaderBar (Gtk.HeaderBar):
         """
             Return a sorted list of base currencies
         """
-        if self.__baseCurrencies['BTC'].dayVolumeUSD is not None:
+        if self.__baseCurrencies['BTC'].rank is not None:
             # sort by rank
             return sorted(list(self.__baseCurrencies.values()),
                           key = lambda cur: cur.rank if cur.rank is not None \
