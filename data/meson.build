@@ -28,7 +28,7 @@ test('Validating the gschema file',
 # Install the gschema file
 install_data(meson.project_name() + '.gschema.xml',
              install_dir: join_paths(DATA_DIR, 'glib-2.0/schemas'))
-run_command(glib_compile_schemas, join_paths(DATA_DIR, 'glib-2.0/schemas'))
+run_command(glib_compile_schemas, join_paths(DATA_DIR, 'glib-2.0/schemas/'))
 
 # Install the gresource file
 gnome = import('gnome')
