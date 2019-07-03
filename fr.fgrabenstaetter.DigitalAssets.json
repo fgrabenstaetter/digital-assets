@@ -5,7 +5,7 @@
     "sdk": "org.gnome.Sdk",
     "command": "fr.fgrabenstaetter.DigitalAssets",
 	"tags": ["devel", "development", "nightly"],
-	"desktop-file-name-prefix": "(Development) ",
+	"desktop-file-name-prefix": "(Dev) ",
     "finish-args": [
         "--socket=x11",
         "--socket=wayland",
@@ -21,7 +21,7 @@
             "name": "digital-assets",
             "buildsystem": "meson",
 			"post-install": [ 
-				"glib-compile-schemas /app/share/glib-2.0/schemas" 
+				"glib-compile-schemas /app/share/glib-2.0/schemas/" 
 			],
             "sources": [
                 {

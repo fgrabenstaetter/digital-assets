@@ -23,13 +23,15 @@
         </screenshot>
     </screenshots>
     <releases>
-        <release version="1.0.2" date="2019-05-25">
+        <release version="1.1.0" date="2019-07-03">
             <description>
                 <p>What's new in this release:</p>
                 <ul>
-                    <li>Some bug and style fixes</li>
-                    <li>Support of 12-hour clock for day graphics</li>
-                    <li>Remove the quit menu entry</li>
+                    <li>Fixes and improvements of the ATH ratio and results with the ATH sort method</li>
+                    <li>Allow to enable search by pressing any entry visible key</li>
+                    <li>Remember the last selected currency and base currency to activate them on the next app launch</li>
+                    <li>Add Theta, ICON and USD Coin assets</li>
+                    <li>Some fixes and performance improvements</li>
                 </ul>
             </description>
         </release>
