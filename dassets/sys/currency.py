@@ -69,7 +69,7 @@ class Currency ():
             return maxUSD()
         elif self.alltimeGraphDataUSD is None \
                 or baseCurrency.alltimeGraphDataUSD is None:
-            return 0
+            return 0, None
         actualPrice = self.priceUSD / baseCurrency.priceUSD
         athPrice = None
         athDate = None

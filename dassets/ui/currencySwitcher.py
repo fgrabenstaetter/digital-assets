@@ -157,9 +157,9 @@ class CurrencySwitcher (Gtk.ListBox):
                 and row2Cur.dayVolumeUSD is None
             athAndNone = sortMethodName == 'ath' \
                 and ((baseCurrency.symbol == 'USD' and row1Cur.athUSD is None \
-                and row2Cur.athUSD is None) or (baseCurrency.symbol != 'USD') \
-                and row1Cur.alltimeGraphDataUSD is None \
-                and row2Cur.alltimeGraphDataUSD is None)
+                and row2Cur.athUSD is None and row1Cur.alltimeGraphDataUSD is None \
+                and row2Cur.alltimeGraphDataUSD is None) or (baseCurrency.symbol != 'USD' \
+                and row1Cur.alltimeGraphDataUSD is None and row2Cur.alltimeGraphDataUSD is None))
 
             if rankAndNone or dayPriceChangeAndNone or volumeAndNone \
                     or athAndNone:
@@ -213,26 +213,23 @@ class CurrencySwitcher (Gtk.ListBox):
                     return 1
             elif sortMethodName == 'ath':
                 if baseCurrency.symbol == 'USD':
-                    if row1Cur.athUSD is None:
-                        return 1
-                    elif row2Cur.athUSD is None:
+                    if row1Cur.athUSD is not None:
+                        row1AthRatio = row1Cur.priceUSD / row1Cur.athUSD[0]
+                    else:
+                        row1AthRatio = row1Cur.calculateAth(baseCurrency)[0] 
+                    if row2Cur.athUSD is not None:
+                        row2AthRatio = row2Cur.priceUSD / row2Cur.athUSD[0]
+                    else:
+                        row2AthRatio = row2Cur.calculateAth(baseCurrency)[0]
+
+                    if row1AthRatio > row2AthRatio:
                         return -1
                     else:
-                        row1AthRatio = row1Cur.priceUSD / row1Cur.athUSD
-                        row2AthRatio = row2Cur.priceUSD / row2Cur.athUSD
-                        if row1AthRatio > row2AthRatio:
-                            return -1
-                        else:
-                            return 1
+                        return 1
                 else: # base currency != USD
-                    if row1Cur.alltimeGraphDataUSD is None:
-                        return 1
-                    elif row2Cur.alltimeGraphDataUSD is None:
+                    row1AthRatio = row1Cur.calculateAth(baseCurrency)[0]
+                    row2AthRatio = row2Cur.calculateAth(baseCurrency)[0]
+                    if row1AthRatio > row2AthRatio:
                         return -1
                     else:
-                        row1AthRatio = row1Cur.calculateAth(baseCurrency)
-                        row2AthRatio = row2Cur.calculateAth(baseCurrency)
-                        if row1AthRatio > row2AthRatio:
-                            return -1
-                        else:
-                            return 1
+                        return 1
