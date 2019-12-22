@@ -6,10 +6,10 @@
     <url type="homepage">https://gitlab.gnome.org/fgrabenstaetter/digital-assets</url>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>GPL-3.0+</project_license>
-    <launchable type="desktop-id">fr.fgrabenstaetter.DigitalAssets.desktop</launchable>
+    <launchable type="desktop-id">digital-assets.desktop</launchable>
     <developer_name>François Grabenstaetter</developer_name>
     <update_contact>francoisgrabenstaetter@gmail.com</update_contact>
-	<translation type="gettext">fr.fgrabenstaetter.DigitalAssets</translation>
+	<translation type="gettext">digital-assets</translation>
     <description>
         <p>Digital Assets is a utility to follow cryptocurrencies prices and statistics which integrates well with the GNOME desktop.</p>
     </description>

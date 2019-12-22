@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schemalist gettext-domain="fr.fgrabenstaetter.DigitalAssets">
+<schemalist gettext-domain="digital-assets">
     <schema id="fr.fgrabenstaetter.DigitalAssets" path="/fr/fgrabenstaetter/digital-assets/">
         <key name="nomics-api-key" type="s">
             <default>'540cc835b097c5802c1d8ff21bc5731b'</default>
