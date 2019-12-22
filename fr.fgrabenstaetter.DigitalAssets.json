@@ -20,9 +20,9 @@
         {
             "name": "digital-assets",
             "buildsystem": "meson",
-			"post-install": [ 
-				"glib-compile-schemas /app/share/glib-2.0/schemas/" 
-			],
+                "post-install": [
+                            "glib-compile-schemas /app/share/glib-2.0/schemas/"
+                    ],
             "sources": [
                 {
                     "type": "git",

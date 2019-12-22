@@ -30,7 +30,7 @@ class Settings (Gio.Settings):
         """
             Init Settings
         """
-        Gio.Settings.__init__(self, schema_id = PRGM_NAME)
+        Gio.Settings.__init__(self, schema_id = APP_ID)
 
     def saveLastCurrenciesRank (self, currencies):
         """
@@ -64,7 +64,7 @@ class Settings (Gio.Settings):
             Save last currency symbol in GSettings
         """
         self.set_string('last-currency-symbol', currencySymbol)
-            
+
 
     def saveLastBaseCurrencySymbol (self, baseCurrencySymbol):
         """

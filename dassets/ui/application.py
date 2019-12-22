@@ -33,7 +33,7 @@ class Application (Gtk.Application):
             Init Application
         """
         Gtk.Application.__init__(self)
-        self.new(PRGM_NAME, Gio.ApplicationFlags.FLAGS_NONE)
+        self.new(APP_ID, Gio.ApplicationFlags.FLAGS_NONE)
         GLib.set_prgname(PRGM_NAME)
         GLib.set_application_name(PRGM_HNAME)
 
