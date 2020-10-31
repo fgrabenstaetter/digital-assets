@@ -266,7 +266,7 @@ class CurrencyView (Gtk.Box):
                                                    name = 'infoTitle')
         self.__dayPriceChangeLabel = Gtk.Label()
 
-        self.__marketCapNameLabel = Gtk.Label(label = _('Markep Cap'),
+        self.__marketCapNameLabel = Gtk.Label(label = _('Market Cap'),
                                               name = 'infoTitle')
         self.__marketCapLabel = Gtk.Label()
         self.__marketCapBaseCurrencySymbolLabel = Gtk.Label()
