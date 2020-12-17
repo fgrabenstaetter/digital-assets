@@ -27,7 +27,7 @@ msgid "Change"
 msgstr ""
 
 #: dassets/ui/currencyView.py:258
-msgid "Markep Cap"
+msgid "Market Cap"
 msgstr ""
 
 #: dassets/ui/currencyView.py:263 dassets/ui/headerBar.py:273
