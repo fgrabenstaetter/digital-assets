@@ -38,8 +38,9 @@
 	font-weight: bold;
 }
 
-#infoBarText {
+#networkErrorLabel {
 	font-weight: bold;
+	font-size: 16px;
 }
 
 #linkButton {

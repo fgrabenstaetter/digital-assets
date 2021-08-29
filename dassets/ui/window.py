@@ -83,14 +83,17 @@ class Window (Gtk.ApplicationWindow):
         currencyViewBox = Gtk.ScrolledWindow()
         currencyViewBox.add(self.currencyView)
 
-        networkErrorLabel = Gtk.Label.new(_('There is a network problem, please'
-                                      ' verify your connection and try again'))
-        networkErrorLabel.set_xalign(0)
-        networkErrorLabel.set_name('infoBarText')
+        self.networkErrorLabel = Gtk.Label.new(None)
+        self.networkErrorLabel.set_xalign(0)
+        self.networkErrorLabel.set_name('networkErrorLabel')
 
         networkErrorBar = Gtk.InfoBar(message_type = Gtk.MessageType.ERROR)
-        networkErrorBar.pack_start(networkErrorLabel, True, True, 0)
-        self.networkErrorBarRevealer = Gtk.Revealer(border_width = 10)
+        networkErrorBar.get_content_area().set_center_widget(self.networkErrorLabel)
+
+        self.networkErrorBarSettingsButton = networkErrorBar.add_button(_('Settings'), 1)
+        self.networkErrorBarSettingsButton.hide()
+
+        self.networkErrorBarRevealer = Gtk.Revealer(border_width = 6)
         self.networkErrorBarRevealer.add(networkErrorBar)
 
         rightBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
@@ -103,6 +106,12 @@ class Window (Gtk.ApplicationWindow):
         self.add(mainBox)
 
         # load events
+        def wantChangeAPIKey (obj = None, data = None):
+            if data == 1:
+                self.headerBar.showSettingsDialog()
+
+        networkErrorBar.connect('response', wantChangeAPIKey)
+
         self.connect('key_press_event', self.__windowKeyPressEvent)
         self.connect('key_release_event', self.__windowKeyReleaseEvent)
         self.searchEntry.connect('key_press_event',
