@@ -1,27 +1,27 @@
 {
     "app-id": "fr.fgrabenstaetter.DigitalAssets",
     "runtime": "org.gnome.Platform",
-    "runtime-version": "master",
+    "runtime-version": "40",
     "sdk": "org.gnome.Sdk",
-    "command": "fr.fgrabenstaetter.DigitalAssets",
-	"tags": ["devel", "development", "nightly"],
+    "command": "digital-assets",
+	"tags": ["devel", "development"],
 	"desktop-file-name-prefix": "(Dev) ",
+    "rename-icon": "digital-assets",
+    "rename-desktop-file": "digital-assets.desktop",
+    "rename-appdata-file": "digital-assets.appdata.xml",
     "finish-args": [
         "--socket=x11",
         "--socket=wayland",
         "--share=ipc",
         "--share=network",
-        "--filesystem=xdg-run/dconf",
-        "--filesystem=~/.config/dconf:ro",
-        "--talk-name=ca.desrt.dconf",
-        "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
+        "--metadata=X-DConf=migrate-path=/fr/fgrabenstaetter/digital-assets/"
     ],
     "modules": [
         {
             "name": "digital-assets",
             "buildsystem": "meson",
                 "post-install": [
-                            "glib-compile-schemas /app/share/glib-2.0/schemas/"
+                            "glib-compile-schemas --strict /app/share/glib-2.0/schemas/"
                     ],
             "sources": [
                 {
