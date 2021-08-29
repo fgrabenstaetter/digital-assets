@@ -34,7 +34,7 @@ class Graph (Gtk.DrawingArea):
         self.connect('draw', self.__drawGraph)
 
         self.__textBorderSpace = 10
-        self.__padding = {'top': 40, 'right': 20, 'bottom': 60, 'left': 80}
+        self.__padding = {'top': 40, 'right': 20, 'bottom': 60, 'left': 90}
         self.__graphData = None
         self.__graphInfos = {}
         self.__baseCurrency = None
@@ -94,10 +94,6 @@ class Graph (Gtk.DrawingArea):
         self.__graphInfos['nbPrices'] = nbPrices
         self.__graphInfos['time'] = graphTime
 
-    def redraw (self):
-        """
-            Ask for redraw the actual graph
-        """
         self.queue_draw()
 
     ###########
@@ -123,7 +119,7 @@ class Graph (Gtk.DrawingArea):
         areaHeight = self.get_size_request()[1] - self.__padding['top'] \
                                                 - self.__padding['bottom']
         ctx.set_line_width(4)
-        ctx.set_font_size(11)
+        ctx.set_font_size(12)
         lastX, lastY = None, None
         dateTextModulo = math.ceil(self.__graphInfos['nbPrices'] / 8)
         i = 0
@@ -141,7 +137,7 @@ class Graph (Gtk.DrawingArea):
                     + self.__padding['top']
 
             # graph color
-            ctx.set_source_rgb(0.8, 0.6, 0.4)
+            ctx.set_source_rgb(0.26, 0.65, 0.96)
 
             if lastX is not None and lastY is not None:
                 ctx.move_to(lastX, lastY)

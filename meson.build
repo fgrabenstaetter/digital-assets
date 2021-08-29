@@ -29,14 +29,14 @@ conf.set('PRGM_HNAME', PRGM_HNAME)
 conf.set('PRGM_PATH', PRGM_PATH)
 conf.set('APP_ID', APP_ID)
 
-# Configure and install env file
+# Configure and install exec file
 configure_file(input: meson.project_name() + '.in',
                output: meson.project_name(),
                configuration: conf)
 install_data(join_paths(meson.current_build_dir(), meson.project_name()),
              install_dir: BIN_DIR)
 
-# Configure and install exec file
+# Configure and install env file
 configure_file(input: join_paths(PYTHON_PACKAGE_NAME, 'env.in'),
                output: 'env.py',
                configuration: conf)

@@ -126,25 +126,25 @@ class CurrencyView (Gtk.Box):
                 self.__dayPriceChangeLabel.set_label(dayPriceChangeStr)
 
             # marketcap
-            if currency.marketCapUSD is None:
-                self.__marketCapLabel.set_label(_('Undefined'))
+            if currency.marketCapUSD is None or baseCurrency.priceUSD is None:
+                self.__marketCapLabel.set_text(_('Undefined'))
             else:
                 marketCapRounded = round(currency.marketCapUSD \
                                        / baseCurrency.priceUSD)
-                self.__marketCapLabel.set_label(tools.beautifyNumber(
+                self.__marketCapLabel.set_text(tools.beautifyNumber(
                                                             marketCapRounded))
-                self.__marketCapBaseCurrencySymbolLabel.set_label(
+                self.__marketCapBaseCurrencySymbolLabel.set_text(
                                                             baseCurrency.symbol)
 
             # day volume
-            if currency.dayVolumeUSD is None:
-                self.__volumeLabel.set_label(_('Undefined'))
+            if currency.dayVolumeUSD is None or baseCurrency.priceUSD is None:
+                self.__volumeLabel.set_text(_('Undefined'))
             else:
                 volumeRounded = round(currency.dayVolumeUSD \
                                       / baseCurrency.priceUSD)
-                self.__volumeLabel.set_label(
+                self.__volumeLabel.set_text(
                                         tools.beautifyNumber(volumeRounded))
-                self.__volumeBaseCurrencySymbolLabel.set_label(
+                self.__volumeBaseCurrencySymbolLabel.set_text(
                                                         baseCurrency.symbol)
 
             # ATH (actual % relative to ATH)
@@ -154,14 +154,16 @@ class CurrencyView (Gtk.Box):
                     self.__athLabel.set_visible(True)
                 athPercentage = round(
                             (currency.priceUSD / currency.athUSD[0]) * 100, 1)
-                self.__athLabel.set_label(str(athPercentage) + ' %')
-                
+                self.__athLabel.set_text(str(athPercentage) + ' %')
+
                 athPrice = currency.athUSD[0]
                 bestDecimalDigitsNb = tools.bestDigitsNumberAfterDecimalPoint(athPrice, 1)
                 dtStr = str(tools.beautifyNumber(round(athPrice, bestDecimalDigitsNb))) + ' ' + baseCurrency.symbol + ' - '
                 dtStr += currency.athUSD[1].strftime('%x')
                 self.__athLabel.set_tooltip_text(dtStr)
             elif currency.alltimeGraphDataUSD is not None \
+                    and currency.priceUSD is not None \
+                    and baseCurrency.priceUSD is not None \
                     and (baseCurrency.alltimeGraphDataUSD is not None \
                     or (baseCurrency.symbol == 'USD')):
                 if self.__athSpinner.get_visible() is True:
@@ -169,7 +171,7 @@ class CurrencyView (Gtk.Box):
                     self.__athLabel.set_visible(True)
                 ath = currency.calculateAth(baseCurrency)
                 athPercentage = round(ath[0] * 100, 1)
-                self.__athLabel.set_label(str(athPercentage) + ' %')
+                self.__athLabel.set_text(str(athPercentage) + ' %')
 
                 athPrice = (currency.priceUSD / baseCurrency.priceUSD) / ath[0]
                 bestDecimalDigitsNb = tools.bestDigitsNumberAfterDecimalPoint(athPrice, 1)
@@ -228,18 +230,14 @@ class CurrencyView (Gtk.Box):
                         child.set_sensitive(False)
 
                 # graph set value
-                if self.__actualGraphTime is None \
-                        and len(self.__graphSwitcher.get_children()) > 0:
+                if self.__actualGraphTime is None:
                     self.__graphSwitcher.get_children()[0].set_active(True)
                 else:
                     for child in self.__graphSwitcher.get_children():
                         if child.name == self.__actualGraphTime:
-                            if child.get_active() is True:
-                                # re-activate
-                                child.set_active(False)
+                            # always re-update
                             child.set_active(True)
                             break
-        self.queue_draw()
         if self.__revealer is not None:
             self.__revealer.set_reveal_child(True)
 
@@ -485,7 +483,7 @@ class CurrencyView (Gtk.Box):
             When click on favorite button, make currency favorite or remove it
             from favorites
         """
-        currency = self.__mainWindow.currencies[self.__actualCurrencySymbol]
+        currency = self.__mainWindow.getActualCurrency()
         currency.favorite = not currency.favorite
 
         if currency.favorite is True:
@@ -515,7 +513,7 @@ class CurrencyView (Gtk.Box):
                         child.set_active(False)
 
         self.__actualGraphTime = obj.name
-        currency = self.__mainWindow.currencies[self.__actualCurrencySymbol]
+        currency = self.__mainWindow.getActualCurrency()
         baseCurrency = self.__mainWindow.getActualBaseCurrency()
         nbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(
                                     currency.priceUSD, baseCurrency.priceUSD)
@@ -524,4 +522,3 @@ class CurrencyView (Gtk.Box):
                             obj.name,
                             baseCurrency,
                             nbDigitsAfterDecimalPoint)
-        self.__graph.redraw()

@@ -43,6 +43,26 @@ class HeaderBar (Gtk.HeaderBar):
         self.__createSearchEntry()
         self.__createSortMethodSwitch()
 
+    def showSettingsDialog (self, obj = None, data = None):
+        settingsDialog = SettingsWindow(self.__mainWindow)
+
+    def showAboutDialog (self, obj = None, data = None):
+        aboutDialog = Gtk.AboutDialog(
+            authors = ['François Grabenstaetter <francoisgrabenstaetter@gmail.com>'],
+            license_type = Gtk.License.GPL_3_0_ONLY,
+            version = PRGM_VERSION,
+            comments = _('Cryptocurrencies prices and statistics') \
+                + '\nBTC:  bc1qejj6y2gvya5rrun4sfsl08qdeyv36ndhm0ml85',
+            website =
+                'https://gitlab.gnome.org/fgrabenstaetter/digital-assets',
+            website_label = 'GitLab',
+            copyright = _('Crypto market cap & pricing data provided by Nomics') + '\nhttps://nomics.com'
+        )
+        aboutDialog.set_modal(True)
+        aboutDialog.set_transient_for(self.__mainWindow)
+        aboutDialog.show()
+
+
     ###########
     # PRIVATE #
     ###########
@@ -71,30 +91,11 @@ class HeaderBar (Gtk.HeaderBar):
         menuPopover.connect('closed', menuPopoverClosedEvent)
         menuButton.connect('toggled', menuButtonToggledEvent)
 
-        def showSettingsDialog (obj = None, data = None):
-            settingsDialog = SettingsWindow(self.__mainWindow)
-
-        def showAboutDialog (obj = None, data = None):
-            menuPopover.popdown()
-            aboutDialog = Gtk.AboutDialog(
-                authors = ['François Grabenstaetter'],
-                license_type = Gtk.License.GPL_3_0_ONLY,
-                version = PRGM_VERSION,
-                comments = _('Cryptocurrencies prices and statistics') \
-                    + '\nBTC:   bc1qejj6y2gvya5rrun4sfsl08qdeyv36ndhm0ml85',
-                website =
-                    'https://gitlab.gnome.org/fgrabenstaetter/digital-assets',
-                website_label = 'GitLab'
-            )
-            aboutDialog.set_modal(True)
-            aboutDialog.set_transient_for(self.__mainWindow)
-            aboutDialog.show()
-
         menuPopoverButtonSettings = Gtk.ModelButton(text = _('Settings'),
                                                     xalign = 0)
-        menuPopoverButtonSettings.connect('clicked', showSettingsDialog)
+        menuPopoverButtonSettings.connect('clicked', self.showSettingsDialog)
         menuPopoverButtonAbout = Gtk.ModelButton(text = _('About'), xalign = 0)
-        menuPopoverButtonAbout.connect('clicked', showAboutDialog)
+        menuPopoverButtonAbout.connect('clicked', self.showAboutDialog)
 
         menupopoverCurrenciesBox.add(menuPopoverButtonSettings)
         menupopoverCurrenciesBox.add(menuPopoverButtonAbout)

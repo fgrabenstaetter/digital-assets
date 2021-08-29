@@ -39,7 +39,6 @@ class CurrencySwitcher (Gtk.ListBox):
             if symbol != 'USD':
                 self.__addCurrency(self.__mainWindow.currencies[symbol])
 
-        self.actualRow = self.get_children()[0]
         self.show_all()
 
     def scrollToActualChild (self):
@@ -124,7 +123,7 @@ class CurrencySwitcher (Gtk.ListBox):
 
         if lastRow is not row:
             # load stack
-            self.__mainWindow.currencyView.reload(True)
+            self.__mainWindow.currencyView.reload(lastRow is not None)
 
         # if search entry showed, hide it
         if self.__mainWindow.headerBar.searchButton.get_active() is True:

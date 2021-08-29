@@ -63,13 +63,15 @@ class Currency ():
                 if max is None or price > max[0]:
                     max = (price, dt)
             # convert max price to ratio and return
-            return (self.priceUSD / max[0], max[1])
+            return (max[0], max[1])
 
-        if self.alltimeGraphDataUSD is not None and baseCurrency.alltimeGraphDataUSD is None:
+        if self.alltimeGraphDataUSD is not None and baseCurrency.symbol == 'USD':
             return maxUSD()
         elif self.alltimeGraphDataUSD is None \
-                or baseCurrency.alltimeGraphDataUSD is None:
+                or baseCurrency.alltimeGraphDataUSD is None \
+                or self.priceUSD is None or baseCurrency.priceUSD is None:
             return 0, None
+
         actualPrice = self.priceUSD / baseCurrency.priceUSD
         athPrice = None
         athDate = None

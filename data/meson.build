@@ -2,8 +2,7 @@
 install_subdir('locale',
                install_dir: LOCALE_DIR,
                strip_directory: true,
-               exclude_files: [meson.project_name() + '.pot',
-                               'fr/LC_MESSAGES/' + meson.project_name() + '.po'])
+               exclude_files: ['fr/LC_MESSAGES/' + meson.project_name() + '.po'])
 
 # Validate the desktop file
 desktop_file_validate = find_program('desktop-file-validate', required: false)
@@ -28,7 +27,7 @@ test('Validating the gschema file',
 # Install the gschema file
 install_data(meson.project_name() + '.gschema.xml',
              install_dir: join_paths(DATA_DIR, 'glib-2.0/schemas'))
-run_command(glib_compile_schemas, join_paths(DATA_DIR, 'glib-2.0/schemas/'))
+run_command(glib_compile_schemas, '--strict', join_paths(DATA_DIR, 'glib-2.0/schemas/'))
 
 # Install the gresource file
 gnome = import('gnome')

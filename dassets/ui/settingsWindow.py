@@ -61,7 +61,7 @@ class SettingsWindow (Gtk.Window):
                             expand = True,
                             name = 'settingsAPIKeyInfos')
         apiKeyInfosWebsite = Gtk.LinkButton.new_with_label(
-                                                    'https://nomics.com',
+                                                    'https://p.nomics.com/pricing#free-plan',
                                                     'Nomics')
 
         apiKeyInfosBox = Gtk.Box(spacing = 18, border_width = 6)

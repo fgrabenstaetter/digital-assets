@@ -42,26 +42,32 @@ class Window (Gtk.ApplicationWindow):
         self.__application = application
         self.currencies = self.__application.currencies
 
+        # activate the last base currency
         settings = Settings()
+        baseCurrencySymbol = settings.loadLastBaseCurrencySymbol()
+        if baseCurrencySymbol not in self.currencies.keys():
+            baseCurrencySymbol = self.currencies.keys()[0]
 
         # load widgets
-        self.headerBar = HeaderBar(self, settings.loadLastBaseCurrencySymbol())
+        self.headerBar = HeaderBar(self, baseCurrencySymbol)
         self.set_titlebar(self.headerBar)
 
         self.currencyView = CurrencyView(self)
         self.currencySwitcher = CurrencySwitcher(self)
         self.currencySwitcherBox = Gtk.ScrolledWindow(vexpand = True)
-        self.currencySwitcherBox.set_min_content_width(200)
-        self.currencySwitcherBox.set_max_content_width(200)
+        self.currencySwitcherBox.set_min_content_width(220)
+        self.currencySwitcherBox.set_max_content_width(220)
         self.currencySwitcherBox.add(self.currencySwitcher)
 
         # activate the last currency
         lastCurrencySymbol = settings.loadLastCurrencySymbol()
-        if self.currencies[lastCurrencySymbol] is not None:
+        if lastCurrencySymbol in self.currencies.keys():
             for row in self.currencySwitcher.get_children():
                 if row.curSymbol == lastCurrencySymbol:
                    row.activate()
                    break
+        else:
+            self.currencySwitcher.get_children()[0].activate()
 
         self.searchEntry = Gtk.SearchEntry()
         self.searchEntryBox = Gtk.Box(halign = Gtk.Align.CENTER,

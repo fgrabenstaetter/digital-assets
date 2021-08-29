@@ -2,7 +2,7 @@
 
 Cryptocurrencies prices and statistics.
 
-Thanks to Nomics (https://nomics.com) for their free API.
+Crypto market cap & pricing data provided by Nomics (https://nomics.com)
 
 **Donations BTC: bc1qejj6y2gvya5rrun4sfsl08qdeyv36ndhm0ml85**
 

@@ -17,6 +17,8 @@
  along with Digital Assets. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import datetime
+
 def beautifyNumber (number):
     """
         If needed, add spaces to a number (int or float) and return the
@@ -65,3 +67,6 @@ def print_warning (str):
         Print warning message followed by the str string and continue the app
     """
     print(' >>> WARNING: ' + str)
+
+def utcToLocal (dt):
+    return dt.replace(tzinfo = datetime.timezone.utc).astimezone(tz = None)
