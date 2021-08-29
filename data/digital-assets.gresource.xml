@@ -19,7 +19,7 @@
     <file compressed="true">img/EOS.svg</file>
     <file compressed="true">img/NEO.svg</file>
     <file compressed="true">img/IOST.svg</file>
-    <file compressed="true">img/IOT.svg</file>
+    <file compressed="true">img/MIOTA.svg</file>
     <file compressed="true">img/XLM.svg</file>
     <file compressed="true">img/ONT.svg</file>
     <file compressed="true">img/DCR.svg</file>
@@ -46,5 +46,22 @@
     <file compressed="true">img/THETA.svg</file>
     <file compressed="true">img/ICX.svg</file>
     <file compressed="true">img/USDC.svg</file>
+    <file compressed="true">img/DOT.svg</file>
+    <file compressed="true">img/SOL.svg</file>
+    <file compressed="true">img/UNI.svg</file>
+    <file compressed="true">img/LUNA.svg</file>
+    <file compressed="true">img/BUSD.svg</file>
+    <file compressed="true">img/MATIC.svg</file>
+    <file compressed="true">img/ICP.svg</file>
+    <file compressed="true">img/AVAX.svg</file>
+    <file compressed="true">img/FIL.svg</file>
+    <file compressed="true">img/DAI.svg</file>
+    <file compressed="true">img/AAVE.svg</file>
+    <file compressed="true">img/CAKE.svg</file>
+    <file compressed="true">img/GRT.svg</file>
+    <file compressed="true">img/AXS.svg</file>
+    <file compressed="true">img/KLAY.svg</file>
+    <file compressed="true">img/CRO.svg</file>
+    <file compressed="true">img/ALGO.svg</file>
   </gresource>
 </gresources>
