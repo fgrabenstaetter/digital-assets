@@ -3,3 +3,4 @@ build*
 .flatpak-builder
 flatpak
 *.compiled
+tags
