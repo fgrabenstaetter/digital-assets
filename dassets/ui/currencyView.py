@@ -34,15 +34,8 @@ class CurrencyView (Gtk.Box):
         Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL,
                          expand = True, border_width = 40)
         self.__mainWindow = mainWindow
-        self.__actualCurrencySymbol = None
         self.__actualGraphTime = None
-
-        self.__spinner1 = Gtk.Spinner()
-        self.__spinner1.set_size_request(200, 200)
-        self.__spinner1.start()
-        self.add(self.__spinner1)
-
-        self.show_all()
+        self.__create()
 
     def reload (self, animate = False):
         """
@@ -52,12 +45,7 @@ class CurrencyView (Gtk.Box):
         currency = self.__mainWindow.getActualCurrency()
         baseCurrency = self.__mainWindow.getActualBaseCurrency()
 
-        if currency.priceUSD is None or baseCurrency.priceUSD is None:
-            return
-
-        if self.__spinner1 is not None:
-            self.__create()
-        elif animate is True:
+        if animate is True:
             self.__revealer.destroy()
             self.__revealer = None
             self.__create()
@@ -67,23 +55,42 @@ class CurrencyView (Gtk.Box):
                                             + ' (' + currency.symbol + ')')
 
         # top (header)
-        self.__actualCurrencySymbol = currency.symbol
         pixbuf = GdkPixbuf.Pixbuf().new_from_resource_at_scale(
                 PRGM_PATH + 'img/' + currency.symbol + '.svg', 100, 100, True)
         self.__image.set_from_pixbuf(pixbuf)
 
         # name and symbol
-        self.__nameLabel.set_label(currency.name)
-        self.__symbolLabel.set_label(currency.symbol)
+        self.__nameLabel.set_text(currency.name)
+        self.__symbolLabel.set_text(currency.symbol)
 
         # price
-        nbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(
-                                    currency.priceUSD, baseCurrency.priceUSD)
-        priceRounded = round(currency.priceUSD / baseCurrency.priceUSD,
-                             nbDigitsAfterDecimalPoint)
+        if currency.priceUSD is None or baseCurrency.priceUSD is None:
+            priceText = '. . .'
+            self.__priceUpDownLabel.set_text('')
+        else:
+            if currency.lastPriceUSD is not None and baseCurrency.lastPriceUSD is not None:
+                actualPrice = currency.priceUSD / baseCurrency.priceUSD
+                lastPrice = currency.lastPriceUSD / baseCurrency.lastPriceUSD
 
-        self.__priceLabel.set_label(tools.beautifyNumber(priceRounded))
-        self.__baseCurrencySymbolLabel.set_label(baseCurrency.symbol)
+                if actualPrice < lastPrice:
+                    self.__priceUpDownLabel.set_text('↓')
+                    self.__priceUpDownLabel.set_name('currencyPriceDown')
+                elif actualPrice > lastPrice:
+                    self.__priceUpDownLabel.set_text('↑')
+                    self.__priceUpDownLabel.set_name('currencyPriceUp')
+                else:
+                    self.__priceUpDownLabel.set_text('')
+            else:
+                self.__priceUpDownLabel.set_text('')
+
+            nbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(
+                                    currency.priceUSD, baseCurrency.priceUSD)
+            priceRounded = round(currency.priceUSD / baseCurrency.priceUSD,
+                             nbDigitsAfterDecimalPoint)
+            priceText = tools.beautifyNumber(priceRounded)
+
+        self.__priceLabel.set_text(priceText)
+        self.__baseCurrencySymbolLabel.set_text(baseCurrency.symbol)
 
         # actions box
         self.__websiteButton.set_uri(currency.websiteURL)
@@ -95,21 +102,20 @@ class CurrencyView (Gtk.Box):
                 self.__favoriteButtonImage.set_from_icon_name(
                                                         'starred-symbolic', 1)
 
-        # only when all data has been loaded into currency
-        if currency.dayVolumeUSD is not None:
+        if currency.priceUSD is not None:
             if self.__infosBoxRevealer.get_child_revealed() is False:
                 self.__infosBoxRevealer.set_reveal_child(True)
 
-            if self.__spinner2 is not None \
-                    and self.__spinner2.get_visible() is True:
-                self.__spinner2.set_size_request(60, 60)
+            if self.__spinnerInfos is not None:
+                self.__spinnerInfos.set_size_request(60, 60)
 
             # general informations (day variation, day volume)
 
             # last day price
-            if currency.lastDayPriceUSD is None \
-                    or baseCurrency.lastDayPriceUSD is None:
-                self.__dayPriceChangeLabel.set_label(_('Undefined'))
+            if currency.lastDayPriceUSD is None or currency.priceUSD is None \
+                    or baseCurrency.lastDayPriceUSD is None \
+                    or baseCurrency.priceUSD is None:
+                self.__dayPriceChangeLabel.set_text(_('Undefined'))
             else:
                 dayPriceChange = currency.lastDayPriceUSD \
                                / baseCurrency.lastDayPriceUSD
@@ -117,13 +123,16 @@ class CurrencyView (Gtk.Box):
                     ((currency.priceUSD / baseCurrency.priceUSD) \
                     / dayPriceChange) * 100 - 100, 1)
                 dayPriceChangeStr = ''
-                if dayPriceChange >= 0:
+                if dayPriceChange > 0:
                     self.__dayPriceChangeLabel.set_name('priceGreen')
                     dayPriceChangeStr = '+ ' + str(abs(dayPriceChange)) + ' %'
-                else:
+                elif dayPriceChange < 0:
                     self.__dayPriceChangeLabel.set_name('priceRed')
                     dayPriceChangeStr = '- ' + str(abs(dayPriceChange)) + ' %'
-                self.__dayPriceChangeLabel.set_label(dayPriceChangeStr)
+                else:
+                    self.__dayPriceChangeLabel.set_name('priceGrey')
+                    dayPriceChangeStr = '0 %'
+                self.__dayPriceChangeLabel.set_text(dayPriceChangeStr)
 
             # marketcap
             if currency.marketCapUSD is None or baseCurrency.priceUSD is None:
@@ -148,10 +157,11 @@ class CurrencyView (Gtk.Box):
                                                         baseCurrency.symbol)
 
             # ATH (actual % relative to ATH)
-            if baseCurrency.symbol == 'USD' and currency.athUSD is not None:
-                if self.__athSpinner.get_visible() is True:
-                    self.__athSpinner.set_visible(False)
-                    self.__athLabel.set_visible(True)
+            if baseCurrency.symbol == 'USD' and currency.athUSD is not None \
+                    and currency.priceUSD is not None:
+                if self.__spinnerATH.get_visible() is True:
+                    self.__spinnerATH.hide()
+                    self.__athLabel.show()
                 athPercentage = round(
                             (currency.priceUSD / currency.athUSD[0]) * 100, 1)
                 self.__athLabel.set_text(str(athPercentage) + ' %')
@@ -166,9 +176,8 @@ class CurrencyView (Gtk.Box):
                     and baseCurrency.priceUSD is not None \
                     and (baseCurrency.alltimeGraphDataUSD is not None \
                     or (baseCurrency.symbol == 'USD')):
-                if self.__athSpinner.get_visible() is True:
-                    self.__athSpinner.set_visible(False)
-                    self.__athLabel.set_visible(True)
+                self.__spinnerATH.hide()
+                self.__athLabel.show()
                 ath = currency.calculateAth(baseCurrency)
                 athPercentage = round(ath[0] * 100, 1)
                 self.__athLabel.set_text(str(athPercentage) + ' %')
@@ -179,8 +188,8 @@ class CurrencyView (Gtk.Box):
                 dtStr += ath[1].strftime('%x')
                 self.__athLabel.set_tooltip_text(dtStr)
             else:
-                self.__athSpinner.set_visible(True)
-                self.__athLabel.set_visible(False)
+                self.__spinnerATH.show()
+                self.__athLabel.hide()
 
             # rank
             if currency.rank is None:
@@ -190,28 +199,26 @@ class CurrencyView (Gtk.Box):
 
             # circulating supply
             if currency.circulatingSupply is None:
-                self.__circulatingSupplyLabel.set_label(_('Undefined'))
+                self.__circulatingSupplyLabel.set_text(_('Undefined'))
             else:
                 circulatingSupplyRounded = round(currency.circulatingSupply)
-                self.__circulatingSupplyLabel.set_label(tools.beautifyNumber(
+                self.__circulatingSupplyLabel.set_text(tools.beautifyNumber(
                                                     circulatingSupplyRounded))
-                self.__circulatingSupplyBaseCurrencySymbolLabel.set_label(
+                self.__circulatingSupplyBaseCurrencySymbolLabel.set_text(
                                                                 currency.symbol)
 
             # max supply
             if currency.maxSupply is None:
-                self.__maxSupplyLabel.set_label(_('Undefined'))
+                self.__maxSupplyLabel.set_text(_('Undefined'))
             else:
                 maxSupplyRounded = tools.beautifyNumber(round(
                                                             currency.maxSupply))
-                self.__maxSupplyLabel.set_label(str(maxSupplyRounded))
-                self.__maxSupplyBaseCurrencySymbolLabel.set_label(
+                self.__maxSupplyLabel.set_text(str(maxSupplyRounded))
+                self.__maxSupplyBaseCurrencySymbolLabel.set_text(
                                                             currency.symbol)
             # day graph prices is the first loaded
             if currency.dayGraphDataUSD is not None:
-                if self.__spinner2 is not None:
-                    self.__spinner2.destroy()
-                    self.__spinner2 = None
+                self.__spinnerInfos.destroy()
 
                 if self.__graphBoxRevealer.get_child_revealed() is False:
                     self.__graphBoxRevealer.set_reveal_child(True)
@@ -249,16 +256,13 @@ class CurrencyView (Gtk.Box):
         """
             Create widgets
         """
-        if self.__spinner1 is not None:
-            self.__spinner1.destroy()
-            self.__spinner1 = None
-
         # widgets
         self.__image = Gtk.Image()
         self.__nameLabel = Gtk.Label(name = 'currencyName', xalign = 0)
         self.__symbolLabel = Gtk.Label(name = 'currencySymbol', xalign = 0)
+        self.__priceUpDownLabel = Gtk.Label()
         self.__priceLabel = Gtk.Label(name = 'currencyPrice')
-        self.__baseCurrencySymbolLabel = Gtk.Label(name = 'currencyPrice')
+        self.__baseCurrencySymbolLabel = Gtk.Label(name = 'quote')
 
         self.__dayPriceChangeNameLabel = Gtk.Label(label = _('Change'),
                                                    name = 'infoTitle')
@@ -267,12 +271,12 @@ class CurrencyView (Gtk.Box):
         self.__marketCapNameLabel = Gtk.Label(label = _('Market Cap'),
                                               name = 'infoTitle')
         self.__marketCapLabel = Gtk.Label()
-        self.__marketCapBaseCurrencySymbolLabel = Gtk.Label()
+        self.__marketCapBaseCurrencySymbolLabel = Gtk.Label(name = 'quote')
 
         self.__volumeNameLabel = Gtk.Label(label = _('Volume'),
                                            name = 'infoTitle')
         self.__volumeLabel = Gtk.Label()
-        self.__volumeBaseCurrencySymbolLabel = Gtk.Label()
+        self.__volumeBaseCurrencySymbolLabel = Gtk.Label(name = 'quote')
 
         self.__athNameLabel = Gtk.Label(label = 'ATH', name = 'infoTitle')
         self.__athLabel = Gtk.Label(visible = None)
@@ -284,12 +288,12 @@ class CurrencyView (Gtk.Box):
                                                 label = _('Circulating Supply'),
                                                 name = 'infoTitle')
         self.__circulatingSupplyLabel = Gtk.Label()
-        self.__circulatingSupplyBaseCurrencySymbolLabel = Gtk.Label()
+        self.__circulatingSupplyBaseCurrencySymbolLabel = Gtk.Label(name = 'quote')
 
         self.__maxSupplyNameLabel = Gtk.Label(label = _('Max Supply'),
                                               name = 'infoTitle')
         self.__maxSupplyLabel = Gtk.Label()
-        self.__maxSupplyBaseCurrencySymbolLabel = Gtk.Label()
+        self.__maxSupplyBaseCurrencySymbolLabel = Gtk.Label(name = 'quote')
 
         # graph
         self.__graph = Graph()
@@ -307,12 +311,9 @@ class CurrencyView (Gtk.Box):
                                             self.__favoriteButtonToggledEvent)
 
         # spinners
-        self.__spinner2 = Gtk.Spinner()
-        self.__spinner2.set_size_request(100, 100)
-        self.__spinner2.start()
-
-        self.__athSpinner = Gtk.Spinner()
-        self.__athSpinner.start()
+        self.__spinnerATH = Gtk.Spinner(active = True)
+        self.__spinnerInfos = Gtk.Spinner(active = True)
+        self.__spinnerInfos.set_size_request(100, 100)
 
         # containers
 
@@ -327,7 +328,8 @@ class CurrencyView (Gtk.Box):
         titleBox.add(self.__image)
         titleBox.add(titleRightBox)
 
-        priceBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 10)
+        priceBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 10, name = 'priceBox')
+        priceBox.add(self.__priceUpDownLabel)
         priceBox.add(self.__priceLabel)
         priceBox.add(self.__baseCurrencySymbolLabel)
 
@@ -368,7 +370,7 @@ class CurrencyView (Gtk.Box):
                          halign = Gtk.Align.CENTER)
         athBox.add(self.__athNameLabel)
         athBox.add(self.__athLabel)
-        athBox.add(self.__athSpinner)
+        athBox.add(self.__spinnerATH)
 
         generalInfosBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 60)
         generalInfosBox.add(dayPriceChangeBox)
@@ -459,7 +461,7 @@ class CurrencyView (Gtk.Box):
                             halign = Gtk.Align.CENTER,
                             spacing = 30)
         bottomBox.add(self.__infosBoxRevealer)
-        bottomBox.add(self.__spinner2)
+        bottomBox.add(self.__spinnerInfos)
         bottomBox.add(self.__graphBoxRevealer)
 
         mainBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,

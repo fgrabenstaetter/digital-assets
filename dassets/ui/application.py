@@ -47,15 +47,16 @@ class Application (Gtk.Application):
 
         self.currencies = {}
         # add USD currency
-        self.currencies['USD'] = Currency('Dollars', 'USD', None)
+        self.currencies['USD'] = Currency('Dollars', 'USD', 'USD', None)
         self.currencies['USD'].priceUSD = 1
+        self.currencies['USD'].lastPriceUSD = 1
         self.currencies['USD'].lastDayPriceUSD = 1
         self.currencies['USD'].athUSD = (1, None)
         self.currencies['USD'].rank = 0
 
         # add digital assets
         for cur in currencies.getCurrencies():
-            currency = Currency(cur[0], cur[1], cur[2])
+            currency = Currency(cur[0], cur[1], cur[2], cur[3])
             self.currencies[currency.symbol] = currency
 
         self.__settings = Settings()

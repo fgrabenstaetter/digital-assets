@@ -23,16 +23,18 @@ from gi.repository import Gtk
 
 class Currency ():
 
-    def __init__ (self, name, symbol, websiteURL):
+    def __init__ (self, name, symbol, nomicsID, websiteURL):
         """
             Init Currency
         """
         self.name = name
         self.symbol = symbol
+        self.nomicsID = nomicsID
         self.websiteURL = websiteURL
         self.favorite = False
 
         self.priceUSD = None
+        self.lastPriceUSD = None # useful to know if price has up or down since last price
         self.lastDayPriceUSD = None
         self.dayVolumeUSD = None
         self.marketCapUSD = None

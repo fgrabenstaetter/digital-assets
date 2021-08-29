@@ -13,6 +13,14 @@
 	padding: 20px;
 }
 
+#infosBox label {
+	font-size: 16px;
+}
+
+#priceGrey, #priceGreen, #priceRed {
+	font-weight: bold;
+}
+
 #priceGreen {
 	color: #66BB6A;
 }
@@ -27,11 +35,31 @@
 }
 
 #currencySymbol {
-	font-size: 16px;
+	font-size: 17px;
 }
 
-#currencyPrice {
-	font-size: 18px;
+#currencyPriceDown, #currencyPriceUp {
+	font-size: 22px;
+}
+
+#currencyPriceDown {
+	color: #EF5350;
+}
+
+#currencyPriceUp {
+	color: #66BB6A;
+}
+
+#currencyPrice{
+	font-size: 21px;
+}
+
+#priceBox #quote {
+	font-size: 20px;
+}
+
+#quote {
+	opacity: 0.8;
 }
 
 #infoTitle {
