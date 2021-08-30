@@ -1,6 +1,4 @@
-project('digital-assets',
-        version: '1.1.1',
-        meson_version: '>= 0.50.0')
+project('digital-assets', version: '1.1.1', meson_version: '>= 0.50.0')
 
 pymod = import('python')
 pyins = pymod.find_installation('python3')
@@ -13,8 +11,8 @@ PRGM_PATH = '/fr/fgrabenstaetter/digital-assets/'
 PRGM_HNAME = 'Digital Assets'
 APP_ID = 'fr.fgrabenstaetter.DigitalAssets'
 PYTHON_PACKAGE_NAME = 'dassets'
-BIN_DIR = join_paths(get_option('prefix'), get_option('bindir'))
 PYTHON_DIR = pyins.get_install_dir()
+BIN_DIR = join_paths(get_option('prefix'), get_option('bindir'))
 DATA_DIR = join_paths(get_option('prefix'), get_option('datadir'))
 LOCALE_DIR = join_paths(get_option('prefix'), get_option('localedir'))
 

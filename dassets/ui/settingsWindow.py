@@ -28,10 +28,8 @@ class SettingsWindow (Gtk.Window):
         """
             Init SettingsWindow
         """
-        Gtk.Window.__init__(self, modal = True, resizable = False,
-                            transient_for =  mainWindow)
-        headerBar = Gtk.HeaderBar(title = _('Settings'),
-                                  show_close_button = True)
+        Gtk.Window.__init__(self, modal = True, resizable = False, transient_for =  mainWindow)
+        headerBar = Gtk.HeaderBar(title = _('Settings'), show_close_button = True)
         self.set_titlebar(headerBar)
         self.add_events(Gdk.EventType.KEY_PRESS)
         self.connect('key-press-event', self.__keyPressEvent)
@@ -40,36 +38,22 @@ class SettingsWindow (Gtk.Window):
 
         # Content
         self.set_border_width(30)
-        listBox = Gtk.ListBox(selection_mode = Gtk.SelectionMode.NONE,
-                              activate_on_single_click = False,
-                              can_focus = False)
+        listBox = Gtk.ListBox(selection_mode = Gtk.SelectionMode.NONE, activate_on_single_click = False, can_focus = False)
 
         # Nomics API Key
         apiKeyHBox = Gtk.Box(spacing = 18, border_width = 6)
-        apiKeyLabel = Gtk.Label(label = _('Nomics API Key'), expand = True,
-                                xalign = 0)
-        self.__apiKeyEntry = Gtk.Entry(width_chars = 32, expand = True,
-                                    text = self.__settings.loadNomicsAPIKey())
+        apiKeyLabel = Gtk.Label(label = _('Nomics API Key'), expand = True, xalign = 0)
+        self.__apiKeyEntry = Gtk.Entry(width_chars = 32, expand = True, text = self.__settings.loadNomicsAPIKey())
         apiKeyHBox.add(apiKeyLabel)
         apiKeyHBox.add(self.__apiKeyEntry)
 
-        apiKeyInfosLabel = Gtk.Label(
-                            label = _('Please choose a new Nomics API key,'
-                                      ' as the default one can be overloaded'),
-                            wrap = True,
-                            max_width_chars = 40,
-                            expand = True,
-                            name = 'settingsAPIKeyInfos')
-        apiKeyInfosWebsite = Gtk.LinkButton.new_with_label(
-                                                    'https://p.nomics.com/pricing#free-plan',
-                                                    'Nomics')
+        apiKeyInfosLabel = Gtk.Label(label = _('Please choose a new Nomics API key, as the default one can be overloaded'), wrap = True, max_width_chars = 40, expand = True, name = 'settingsAPIKeyInfos')
+        apiKeyInfosWebsite = Gtk.LinkButton.new_with_label('https://p.nomics.com/pricing#free-plan', 'Nomics')
 
         apiKeyInfosBox = Gtk.Box(spacing = 18, border_width = 6)
         apiKeyInfosBox.add(apiKeyInfosLabel)
         apiKeyInfosBox.add(apiKeyInfosWebsite)
-        apiKeyVBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL,
-                             border_width = 12,
-                             spacing = 6)
+        apiKeyVBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, border_width = 12, spacing = 6)
         apiKeyVBox.add(apiKeyHBox)
         apiKeyVBox.add(apiKeyInfosBox)
         listBox.add(apiKeyVBox)

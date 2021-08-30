@@ -66,11 +66,11 @@ class Settings (Gio.Settings):
         self.set_string('last-currency-symbol', currencySymbol)
 
 
-    def saveLastBaseCurrencySymbol (self, baseCurrencySymbol):
+    def saveLastQuoteCurrencySymbol (self, quoteCurrencySymbol):
         """
-            Save last base currency symbol in GSettings
+            Save last quote currency symbol in GSettings
         """
-        self.set_string('last-base-currency-symbol', baseCurrencySymbol)
+        self.set_string('last-quote-currency-symbol', quoteCurrencySymbol)
 
     def loadFavoriteCurrencies (self, currencies):
         """
@@ -110,8 +110,8 @@ class Settings (Gio.Settings):
         """
         return self.get_string('last-currency-symbol')
 
-    def loadLastBaseCurrencySymbol (self):
+    def loadLastQuoteCurrencySymbol (self):
         """
-            Load last base currency symbol from GSettings and return it
+            Load last quote currency symbol from GSettings and return it
         """
-        return self.get_string('last-base-currency-symbol')
+        return self.get_string('last-quote-currency-symbol')

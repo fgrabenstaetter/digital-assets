@@ -40,10 +40,7 @@ class Application (Gtk.Application):
         # load CSS
         cssProvider = Gtk.CssProvider()
         cssProvider.load_from_resource(PRGM_PATH + 'css/style.css')
-        Gtk.StyleContext().add_provider_for_screen(
-            Gdk.Screen.get_default(),
-            cssProvider,
-            Gtk.STYLE_PROVIDER_PRIORITY_USER)
+        Gtk.StyleContext().add_provider_for_screen(Gdk.Screen.get_default(), cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
         self.currencies = {}
         # add USD currency
@@ -71,5 +68,5 @@ class Application (Gtk.Application):
         self.__settings.saveLastCurrenciesRank(self.currencies)
         self.__settings.saveFavoriteCurrencies(self.currencies)
         self.__settings.saveLastCurrencySymbol(self.__mainWindow.getActualCurrency().symbol)
-        self.__settings.saveLastBaseCurrencySymbol(self.__mainWindow.getActualBaseCurrency().symbol)
+        self.__settings.saveLastQuoteCurrencySymbol(self.__mainWindow.getActualQuoteCurrency().symbol)
         Gtk.main_quit()

@@ -39,7 +39,7 @@ class Currency ():
         self.dayVolumeUSD = None
         self.marketCapUSD = None
         self.athUSD = None # None or (price, date)
-        self.__lastCalculatedAth = None # None or (baseCurrency, price, date)
+        self.__lastCalculatedAth = None # None or (quoteCurrency, price, date)
 
         self.circulatingSupply = None
         self.maxSupply = None
@@ -51,14 +51,14 @@ class Currency ():
         self.yearGraphDataUSD = None
         self.alltimeGraphDataUSD = None
 
-    def calculateAth (self, baseCurrency):
+    def calculateAth (self, quoteCurrency):
         """
             Calcululate the ATH ratio (between 0 and 1) and the ATH date for the self currency
-            compared to the baseCurrency
+            compared to the quoteCurrency
             @return tuple (ratio, date)
         """
 
-        # function to calculate ATH only with USD base currency
+        # function to calculate ATH only with USD quote currency
         def maxUSD ():
             max = None
             for (dt, price) in self.alltimeGraphDataUSD:
@@ -67,29 +67,29 @@ class Currency ():
             # convert max price to ratio and return
             return (max[0], max[1])
 
-        if self.alltimeGraphDataUSD is not None and baseCurrency.symbol == 'USD':
+        if self.alltimeGraphDataUSD is not None and quoteCurrency.symbol == 'USD':
             return maxUSD()
-        elif self.alltimeGraphDataUSD is None \
-                or baseCurrency.alltimeGraphDataUSD is None \
-                or self.priceUSD is None or baseCurrency.priceUSD is None:
+        elif self.alltimeGraphDataUSD is None or quoteCurrency.alltimeGraphDataUSD is None or self.priceUSD is None or quoteCurrency.priceUSD is None:
             return 0, None
 
-        actualPrice = self.priceUSD / baseCurrency.priceUSD
+        actualPrice = self.priceUSD / quoteCurrency.priceUSD
         athPrice = None
         athDate = None
-        if self.__lastCalculatedAth is None \
-                or self.__lastCalculatedAth[0] != baseCurrency.symbol:
+        if self.__lastCalculatedAth is None or self.__lastCalculatedAth[0] != quoteCurrency.symbol:
             i1, i2 = 0, 0
             l1 = len(self.alltimeGraphDataUSD)
-            l2 = len(baseCurrency.alltimeGraphDataUSD)
+            l2 = len(quoteCurrency.alltimeGraphDataUSD)
+
             while i1 < l1 and i2 < l2:
                 d1 = self.alltimeGraphDataUSD[i1][0]
-                d2 = baseCurrency.alltimeGraphDataUSD[i2][0]
+                d2 = quoteCurrency.alltimeGraphDataUSD[i2][0]
                 tdelta = d1 - d2
+
                 if tdelta.days == 0:
                     p1 = self.alltimeGraphDataUSD[i1][1]
-                    p2 = baseCurrency.alltimeGraphDataUSD[i2][1]
+                    p2 = quoteCurrency.alltimeGraphDataUSD[i2][1]
                     price = p1 / p2
+
                     if athPrice is None or price > athPrice:
                         athPrice = price
                         athDate = d1
@@ -99,8 +99,10 @@ class Currency ():
                     i1 += 1
                 else:
                     i2 += 1
-            self.__lastCalculatedAth = (baseCurrency.symbol, athPrice, athDate)
+
+            self.__lastCalculatedAth = (quoteCurrency.symbol, athPrice, athDate)
         else:
             athPrice = self.__lastCalculatedAth[1]
             athDate = self.__lastCalculatedAth[2]
+
         return (actualPrice / athPrice), athDate

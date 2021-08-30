@@ -30,9 +30,11 @@ def beautifyNumber (number):
     newNumberStr = ''
     canPutSpace = False
     isFloat = '.' in numberStr
+    i = 0
+
     if isFloat is False:
         canPutSpace = True
-    i = 0
+
     for char in numberStr:
         newNumberStr = char + newNumberStr
         if canPutSpace is True:
@@ -41,14 +43,15 @@ def beautifyNumber (number):
                 newNumberStr = ' ' + newNumberStr
         if char == '.':
             canPutSpace = True
+
     return newNumberStr
 
-def bestDigitsNumberAfterDecimalPoint (currencyPrice, baseCurrencyPrice):
+def bestDigitsNumberAfterDecimalPoint (currencyPrice, quoteCurrencyPrice):
     """
         Return the best digits number (after decimal point) for the currency
-        price and the base currency price given
+        price and the quote currency price given
     """
-    return len(str(round((baseCurrencyPrice * 1000) / currencyPrice)))
+    return len(str(round((quoteCurrencyPrice * 1000) / currencyPrice)))
 
 def datetimeToStr (dt):
     """

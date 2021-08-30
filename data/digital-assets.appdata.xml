@@ -29,7 +29,7 @@
                 <ul>
                     <li>Fixes and improvements of the ATH ratio and results with the ATH sort method</li>
                     <li>Allow to enable search by pressing any entry visible key</li>
-                    <li>Remember the last selected currency and base currency to activate them on the next app launch</li>
+                    <li>Remember the last selected currency and quote currency to activate them on the next app launch</li>
                     <li>Add Theta, ICON and USD Coin assets</li>
                     <li>Some fixes and performance improvements</li>
                 </ul>

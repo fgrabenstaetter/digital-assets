@@ -220,13 +220,16 @@ class APIData ():
         for row in candlesData:
             if 'currency' not in row:
                 continue
+
             nomicsID = row['currency']
             if nomicsID not in self.__nomicsIDToSymbol:
                 continue
+
             symbol = self.__nomicsIDToSymbol[nomicsID]
             currency = self.__mainWindow.currencies[symbol]
 
-            if 'timestamps' not in row or 'prices' not in row \
+            if 'timestamps' not in row \
+                    or 'prices' not in row \
                     or not isinstance(row['timestamps'], Iterable) \
                     or not isinstance(row['prices'], Iterable) \
                     or len(row['timestamps']) != len(row['prices']):
@@ -234,9 +237,7 @@ class APIData ():
 
             candles = []
             for index, value in enumerate(row['timestamps']):
-                dateTime = tools.utcToLocal(datetime.datetime.strptime(
-                                    value, '%Y-%m-%dT%H:%M:%SZ'))
-                candles.append((dateTime,
-                                  float(row['prices'][index])))
+                dateTime = tools.utcToLocal(datetime.datetime.strptime(value, '%Y-%m-%dT%H:%M:%SZ'))
+                candles.append((dateTime, float(row['prices'][index])))
 
             setattr(currency, graphName + 'GraphDataUSD', candles)
