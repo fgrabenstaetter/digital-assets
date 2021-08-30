@@ -32,13 +32,16 @@ class APIData ():
         self.__settings = Settings()
         self.__APIUrl = 'https://api.nomics.com/v1/'
         self.__APIKey = self.__settings.loadNomicsAPIKey()
+        self.__thread = None
+
         self.__loopCounter = 0
         self.__loopInterval = 2 # each 2 seconds
-        self.__loopAskInfosModulo = 5 # each 10 seconds
-        self.__loopAskDayCandlesModulo = 30 # each 60 seconds
+        self.__loopAskInfosInterval = 5 # each 10 seconds
+        self.__loopAskDayCandlesInterval = 30 # each 60 seconds
+        self.__loopAskInfosLast = 0
+        self.__loopAskDayCandlesLast = 0
         self.__tooManyRequestsCounter = 0
         self.__tooManyRequestsMaxAlert = 3
-        self.__thread = None
 
         self.__nomicsIDToSymbol = {}
         for cur in self.__mainWindow.currencies.values():
@@ -58,10 +61,12 @@ class APIData ():
         # only one request per loop tick
         # reload only once month, year and alltime graphs (when the app start)
 
-        if bitcoin.priceUSD is None or self.__loopCounter % self.__loopAskInfosModulo == 0:
-            self.__reloadInfos()
-        elif bitcoin.dayGraphDataUSD is None or self.__loopCounter % self.__loopAskDayCandlesModulo == 0:
-            self.__reloadCandles('day')
+        if bitcoin.priceUSD is None or self.__loopCounter >= self.__loopAskInfosLast + self.__loopAskInfosInterval:
+            if self.__reloadInfos() is not False:
+                self.__loopAskInfosLast += self.__loopAskInfosInterval
+        elif bitcoin.dayGraphDataUSD is None or self.__loopCounter >= self.__loopAskDayCandlesLast + self.__loopAskDayCandlesInterval:
+            if self.__reloadCandles('day') is not False:
+                self.__loopAskDayCandlesLast += self.__loopAskDayCandlesInterval
         elif bitcoin.monthGraphDataUSD is None:
             self.__reloadCandles('month')
         elif bitcoin.yearGraphDataUSD is None:
@@ -104,7 +109,6 @@ class APIData ():
             res = urllib.request.urlopen(self.__APIUrl + path + '&key=' + self.__APIKey).read()
         except urllib.error.HTTPError as err:
             if err.code == 429:
-                self.__loopCounter -= 1 # try again next loop tick
                 self.__tooManyRequestsCounter += 1
 
                 if self.__tooManyRequestsCounter >= self.__tooManyRequestsMaxAlert:
@@ -129,7 +133,6 @@ class APIData ():
 
             return False
         except urllib.error.URLError as err:
-            self.__loopCounter -= 1 # try again next loop tick
             errorText = _('There is a network problem, please verify your connection')
             self.__mainWindow.networkErrorBarSettingsButton.hide()
             self.__mainWindow.networkErrorLabel.set_label(errorText)

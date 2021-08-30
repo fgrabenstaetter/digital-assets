@@ -214,7 +214,6 @@ class CurrencyView (Gtk.Box):
                 else:
                     for child in self.__graphSwitcher.get_children():
                         if child.name == self.__actualGraphTime:
-                            # always re-update
                             child.set_active(True)
                             break
 
