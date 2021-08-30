@@ -4,7 +4,9 @@ Cryptocurrencies prices and statistics.
 
 Crypto market cap & pricing data provided by Nomics (https://nomics.com)
 
-**Donations BTC: bc1qejj6y2gvya5rrun4sfsl08qdeyv36ndhm0ml85**
+**Donations BTC: bc1q4vupl5zwxctn7lwacqdqp4u07gfwj2jsy7ums0**
+
+**Donations ETH: 0xE7F52826f22B0F48BD045b4f9B61a219A64cb5f8**
 
 ![Screenshot of Digital Assets](screenshot.png)
 

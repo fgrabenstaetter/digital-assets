@@ -51,7 +51,7 @@ class HeaderBar (Gtk.HeaderBar):
             authors = ['François Grabenstaetter <francoisgrabenstaetter@gmail.com>'],
             license_type = Gtk.License.GPL_3_0_ONLY,
             version = PRGM_VERSION,
-            comments = _('Cryptocurrencies prices and statistics') + '\nBTC:  bc1qejj6y2gvya5rrun4sfsl08qdeyv36ndhm0ml85',
+            comments = _('Cryptocurrencies prices and statistics') + '\nBTC:  bc1q4vupl5zwxctn7lwacqdqp4u07gfwj2jsy7ums0 \nETH:  0xE7F52826f22B0F48BD045b4f9B61a219A64cb5f8',
             website = 'https://gitlab.gnome.org/fgrabenstaetter/digital-assets',
             website_label = 'GitLab',
             copyright = _('Crypto market cap & pricing data provided by Nomics') + '\nhttps://nomics.com'
