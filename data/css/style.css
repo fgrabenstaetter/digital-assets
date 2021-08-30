@@ -54,6 +54,10 @@
 	font-size: 21px;
 }
 
+#priceBox {
+	min-height: 100px;
+}
+
 #priceBox #quote {
 	font-size: 20px;
 }
