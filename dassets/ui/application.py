@@ -25,6 +25,7 @@ from dassets.env import *
 from dassets.sys import currencies
 from dassets.sys.currency import Currency
 from dassets.sys.settings import Settings
+import signal
 
 class Application (Gtk.Application):
 
@@ -61,7 +62,10 @@ class Application (Gtk.Application):
         self.__settings.loadFavoriteCurrencies(self.currencies)
         self.__mainWindow = Window(self)
 
-    def quit (self):
+        signal.signal(signal.SIGINT, self.quit)
+        signal.signal(signal.SIGTERM, self.quit)
+
+    def quit (self, sig = None, frame = None):
         """
             Quit the app and save some data
         """
