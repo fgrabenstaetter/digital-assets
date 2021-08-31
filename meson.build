@@ -1,4 +1,4 @@
-project('digital-assets', version: '1.1.1', meson_version: '>= 0.50.0')
+project('digital-assets', version: '1.2.0', meson_version: '>= 0.50.0')
 
 pymod = import('python')
 pyins = pymod.find_installation('python3')

@@ -19,10 +19,22 @@
     <content_rating type="oars-1.0"></content_rating>
     <screenshots>
         <screenshot type="default">
-            <image type="source" width="1032" height="718">https://gitlab.gnome.org/fgrabenstaetter/digital-assets/raw/master/screenshot.png</image>
+            <image type="source" width="1052" height="814">https://gitlab.gnome.org/fgrabenstaetter/digital-assets/raw/master/screenshot.png</image>
         </screenshot>
     </screenshots>
     <releases>
+        <release version="1.2.0" date="2021-08-31">
+            <description>
+                <p>What's new in this release:</p>
+                <ul>
+                    <li>Rework of API requests and better networking errors handling</li>
+                    <li>New price up/down live indicator</li>
+                    <li>Improved interface and charts</li>
+                    <li>Support of 40+ new cryptos</li>
+                    <li>Some fixes and performance improvements</li>
+                </ul>
+            </description>
+        </release>
         <release version="1.1.0" date="2019-07-03">
             <description>
                 <p>What's new in this release:</p>
