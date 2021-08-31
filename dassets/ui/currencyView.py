@@ -234,7 +234,7 @@ class CurrencyView (Gtk.Box):
         self.__symbolLabel = Gtk.Label(name = 'currencySymbol', xalign = 0)
         self.__priceUpDownLabel = Gtk.Label()
         self.__priceLabel = Gtk.Label(name = 'currencyPrice')
-        self.__quoteCurrencySymbolLabel = Gtk.Label(name = 'quote')
+        self.__quoteCurrencySymbolLabel = Gtk.Label()
 
         self.__dayPriceChangeNameLabel = Gtk.Label(label = _('Change'), name = 'infoTitle')
         self.__dayPriceChangeLabel = Gtk.Label()
@@ -293,12 +293,9 @@ class CurrencyView (Gtk.Box):
         priceBox.add(self.__priceLabel)
         priceBox.add(self.__quoteCurrencySymbolLabel)
 
-        topBoxMain = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 100, border_width = 20)
-        topBoxMain.add(titleBox);
-        topBoxMain.add(priceBox)
-
-        topBox = Gtk.Button()
-        topBox.add(topBoxMain)
+        topBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 100, border_width = 20)
+        topBox.add(titleBox);
+        topBox.add(priceBox)
 
         # general informations box
         dayPriceChangeBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10, halign = Gtk.Align.CENTER)
