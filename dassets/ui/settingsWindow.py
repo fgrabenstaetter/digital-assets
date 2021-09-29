@@ -18,59 +18,47 @@
 """
 
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk, Gdk
 from dassets.sys.settings import Settings
 
-class SettingsWindow (Gtk.Window):
+class SettingsWindow ():
 
-    def __init__ (self, mainWindow):
+    def __init__ (self, builder):
         """
             Init SettingsWindow
         """
-        Gtk.Window.__init__(self, modal = True, resizable = False, transient_for =  mainWindow)
-        headerBar = Gtk.HeaderBar(title = _('Settings'), show_close_button = True)
-        self.set_titlebar(headerBar)
-        self.add_events(Gdk.EventType.KEY_PRESS)
-        self.connect('key-press-event', self.__keyPressEvent)
-        self.connect('delete-event', self.__deleteEvent)
+        self.__builder = builder
         self.__settings = Settings()
+        self.__uiObj = self.__builder.get_object('settingsWindow')
+        self.__uiObj.connect('close-request', self.__closeEvent)
 
-        # Content
-        self.set_border_width(30)
-        listBox = Gtk.ListBox(selection_mode = Gtk.SelectionMode.NONE, activate_on_single_click = False, can_focus = False)
+        self.__settingsApiKeyEntryUiObj = self.__builder.get_object('settingsApiKeyEntry')
 
-        # Nomics API Key
-        apiKeyHBox = Gtk.Box(spacing = 18, border_width = 6)
-        apiKeyLabel = Gtk.Label(label = _('Nomics API Key'), expand = True, xalign = 0)
-        self.__apiKeyEntry = Gtk.Entry(width_chars = 32, expand = True, text = self.__settings.loadNomicsAPIKey())
-        apiKeyHBox.add(apiKeyLabel)
-        apiKeyHBox.add(self.__apiKeyEntry)
+        controllerKey = Gtk.EventControllerKey()
+        self.__uiObj.add_controller(controllerKey)
+        controllerKey.connect('key-pressed', self.__keyPressEvent)
 
-        apiKeyInfosLabel = Gtk.Label(label = _('Please choose a new Nomics API key, as the default one can be overloaded'), wrap = True, max_width_chars = 40, expand = True, name = 'settingsAPIKeyInfos')
-        apiKeyInfosWebsite = Gtk.LinkButton.new_with_label('https://p.nomics.com/pricing#free-plan', 'Nomics')
+        self.__setApiKey()
 
-        apiKeyInfosBox = Gtk.Box(spacing = 18, border_width = 6)
-        apiKeyInfosBox.add(apiKeyInfosLabel)
-        apiKeyInfosBox.add(apiKeyInfosWebsite)
-        apiKeyVBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, border_width = 12, spacing = 6)
-        apiKeyVBox.add(apiKeyHBox)
-        apiKeyVBox.add(apiKeyInfosBox)
-        listBox.add(apiKeyVBox)
-
-        self.add(listBox)
-        self.show_all()
-
-    def __keyPressEvent (self, obj, data):
+    def __keyPressEvent (self, ctrl, keyval, keycode, state):
         """
             Close the settings window if the key pressed is Escape (ESC)
         """
-        if data.keyval == Gdk.KEY_Escape:
-            self.close()
+        if keyval == Gdk.KEY_Escape:
+            self.__closeEvent()
 
-    def __deleteEvent (self, obj = None, data = None):
+    def __setApiKey (self):
+        """
+            Load API key from settings and put it in the entry
+        """
+        nomicsApiKey = self.__settings.loadNomicsAPIKey()
+        self.__settingsApiKeyEntryUiObj.set_text(nomicsApiKey)
+
+    def __closeEvent (self, obj = None, data = None):
         """
             Save the settings when closing the window
         """
-        nomicsAPIKey = self.__apiKeyEntry.get_text()
+        nomicsAPIKey = self.__settingsApiKeyEntryUiObj.get_text()
         self.__settings.saveNomicsAPIKey(nomicsAPIKey)
+        self.__uiObj.hide()

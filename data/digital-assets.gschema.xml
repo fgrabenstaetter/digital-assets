@@ -21,10 +21,10 @@
             <summary>Last currency symbol</summary>
             <description>Save last currency symbol to directly select it on the next app launch</description>
         </key>
-        <key name="last-quote-currency-symbol" type="s">
+        <key name="last-quote-symbol" type="s">
             <default>'USD'</default>
-            <summary>Last quote currency symbol</summary>
-            <description>Save last quote currency symbol to directly select it on the next app launch</description>
+            <summary>Last quote symbol</summary>
+            <description>Save last quote symbol to directly select it on the next app launch</description>
         </key>
     </schema>
 </schemalist>

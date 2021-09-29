@@ -18,8 +18,8 @@
 """
 
 import gi
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk, GdkPixbuf, Gio, GLib
+gi.require_version('Gtk', '4.0')
+from gi.repository import Gtk, Gdk, GLib
 from dassets.ui.headerBar import HeaderBar
 from dassets.ui.currencySwitcher import CurrencySwitcher
 from dassets.ui.currencyView import CurrencyView
@@ -27,100 +27,51 @@ from dassets.sys.apiData import APIData
 from dassets.sys.settings import Settings
 from dassets.env import *
 
-class Window (Gtk.ApplicationWindow):
+class Window ():
 
     def __init__ (self, application):
         """
             Init Window
         """
-        Gtk.ApplicationWindow.__init__(self)
-        self.set_default_size(1000, 600)
-        icon = GdkPixbuf.Pixbuf().new_from_resource_at_scale(PRGM_PATH + 'img/BTC.svg', 128, 128, True)
-        self.set_default_icon(icon)
         self.__keysPressed = {'Ctrl': False, 'f': False}
         self.__application = application
+        self.builder = self.__application.builder
         self.currencies = self.__application.currencies
+        self.__uiObj = self.builder.get_object('mainWindow')
+        self.__uiObj.set_application(self.__application)
 
-        # activate the last quote currency
+        # Search for settings
         settings = Settings()
-        quoteCurrencySymbol = settings.loadLastQuoteCurrencySymbol()
-        if quoteCurrencySymbol not in self.currencies.keys():
-            quoteCurrencySymbol = self.currencies.keys()[0]
+        quoteSymbol = settings.loadLastQuoteSymbol()
+        if quoteSymbol not in self.currencies.keys():
+            quoteSymbol = self.currencies.keys()[0]
 
-        # load widgets
-        self.headerBar = HeaderBar(self, quoteCurrencySymbol)
-        self.set_titlebar(self.headerBar)
-
-        self.currencyView = CurrencyView(self)
-        self.currencySwitcher = CurrencySwitcher(self)
-        self.currencySwitcherBox = Gtk.ScrolledWindow(vexpand = True)
-        self.currencySwitcherBox.set_min_content_width(220)
-        self.currencySwitcherBox.set_max_content_width(220)
-        self.currencySwitcherBox.add(self.currencySwitcher)
-
-        # activate the last currency
+        firstSymbol = 'BTC'
         lastCurrencySymbol = settings.loadLastCurrencySymbol()
         if lastCurrencySymbol in self.currencies.keys():
-            for row in self.currencySwitcher.get_children():
-                if row.curSymbol == lastCurrencySymbol:
-                   row.activate()
-                   break
-        else:
-            self.currencySwitcher.get_children()[0].activate()
+            firstSymbol = lastCurrencySymbol
 
-        self.searchEntry = Gtk.SearchEntry()
-        self.searchEntryBox = Gtk.Box(halign = Gtk.Align.CENTER, border_width = 10)
-        self.searchEntryBox.add(self.searchEntry)
-        self.searchEntryRevealer = Gtk.Revealer()
-        self.searchEntryRevealer.add(self.searchEntryBox)
-
-        leftBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-        leftBox.pack_start(self.searchEntryRevealer, False, False, 0)
-        leftBox.pack_end(self.currencySwitcherBox, True, True, 0)
-
-        currencyViewBox = Gtk.ScrolledWindow()
-        currencyViewBox.add(self.currencyView)
-
-        self.networkErrorLabel = Gtk.Label.new(None)
-        self.networkErrorLabel.set_xalign(0)
-        self.networkErrorLabel.set_name('networkErrorLabel')
-
-        networkErrorBar = Gtk.InfoBar(message_type = Gtk.MessageType.ERROR)
-        networkErrorBar.get_content_area().set_center_widget(self.networkErrorLabel)
-
-        self.networkErrorBarSettingsButton = networkErrorBar.add_button(_('Settings'), 1)
-        self.networkErrorBarSettingsButton.hide()
-
-        self.networkErrorBarRevealer = Gtk.Revealer(border_width = 6)
-        self.networkErrorBarRevealer.add(networkErrorBar)
-
-        rightBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-        rightBox.pack_start(self.networkErrorBarRevealer, False, False, 0)
-        rightBox.pack_end(currencyViewBox, True, True, 0)
-
-        mainBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
-        mainBox.add(leftBox)
-        mainBox.add(rightBox)
-        self.add(mainBox)
+        # load widgets
+        self.headerBar = HeaderBar(self, self.currencies[quoteSymbol])
+        self.currencySwitcher = CurrencySwitcher(self, firstSymbol)
+        self.currencyView = CurrencyView(self)
 
         # load events
         def wantChangeAPIKey (obj = None, data = None):
             if data == 1:
                 self.headerBar.showSettingsDialog()
 
-        networkErrorBar.connect('response', wantChangeAPIKey)
+        self.__errorBarUiObj = self.builder.get_object('errorBar')
+        self.__errorBarTextUiObj = self.builder.get_object('errorBarText')
+        self.__errorBarButtonUiObj = self.builder.get_object('errorBarButton')
+        self.__errorBarButtonUiObj.connect('clicked', self.__application.actionSettingsEvent)
 
-        self.connect('key_press_event', self.__windowKeyPressEvent)
-        self.connect('key_release_event', self.__windowKeyReleaseEvent)
-        self.searchEntry.connect('key_press_event', self.__searchEntryKeyPressEvent)
-        self.searchEntry.connect('search-changed', self.__searchEntrySearchEvent)
-        self.connect('delete_event', self.quit)
-        self.show_all()
+        controllerKey = Gtk.EventControllerKey()
+        self.__uiObj.add_controller(controllerKey)
+        controllerKey.connect('key-pressed', self.__keyPressEvent)
 
-        # some tweaks
-        self.searchEntryRevealer.set_reveal_child(False)
-        self.networkErrorBarRevealer.set_reveal_child(False)
-        self.searchEntry.realize()
+        self.__uiObj.connect('close-request', self.quit)
+        self.__uiObj.show()
 
         # APIData requests (to avoid crash due to thread colision)
         self.apiDataRequests = {'reloadCurrencyView': False, 'resortCurrencySwitcher': False}
@@ -135,6 +86,20 @@ class Window (Gtk.ApplicationWindow):
         """
         self.__application.quit()
 
+    def close (self):
+        """
+            Close the window
+        """
+        self.__uiObj.close()
+
+    def showError (self, text, settingsButton = False):
+        self.__errorBarUiObj.set_revealed(True)
+        self.__errorBarTextUiObj.set_text(text)
+        self.__errorBarButtonUiObj.set_visible(settingsButton)
+
+    def hideError (self):
+        self.__errorBarUiObj.set_revealed(False)
+
     def getCurrencyBySymbol (self, symbol):
         """
             Return the currency which corresponds with symbol
@@ -145,14 +110,14 @@ class Window (Gtk.ApplicationWindow):
         """
             Return the actual currency
         """
-        symbol = self.currencySwitcher.actualRow.curSymbol
+        symbol = self.currencySwitcher.actualRow.currencySymbol
         return self.currencies[symbol]
 
-    def getActualQuoteCurrency (self):
+    def getActualQuote (self):
         """
             Return the actual quote currency
         """
-        symbol = self.headerBar.actualQuoteCurrencySymbol
+        symbol = self.headerBar.actualQuoteSymbol
         return self.currencies[symbol]
 
     def getActualSortMethodName (self):
@@ -161,6 +126,12 @@ class Window (Gtk.ApplicationWindow):
             variation, ath)
         """
         return self.headerBar.actualSortMethodName
+
+    def changeTitle (self, title):
+        """
+            Change window title
+        """
+        self.__uiObj.set_title(title)
 
     ###########
     # PRIVATE #
@@ -177,59 +148,16 @@ class Window (Gtk.ApplicationWindow):
 
         if self.apiDataRequests['resortCurrencySwitcher'] is True:
             self.apiDataRequests['resortCurrencySwitcher'] = False
-            self.currencySwitcher.invalidate_sort()
+            self.currencySwitcher.sort()
 
         GLib.timeout_add(500, self.__nextRequestsTimer)
 
-    def __windowKeyPressEvent (self, obj, data):
+    def __keyPressEvent (self, ctrl, keyval, keycode, state):
         """
             A key has been pressed in the window
         """
-        if data.get_keyval() == (True, Gdk.KEY_Control_L):
-            self.__keysPressed['Ctrl'] = True
-        elif data.get_keyval() == (True, Gdk.KEY_f):
-            self.__keysPressed['f'] = True
-
-        if self.__keysPressed['Ctrl'] is True and self.__keysPressed['f'] is True:
-            self.headerBar.searchButton.clicked()
-        elif self.headerBar.searchButton.get_active() is False:
-            self.searchEntry.grab_focus_without_selecting()
-            GLib.timeout_add(0, self.__searchEntrySearchEvent)
-
-    def __windowKeyReleaseEvent (self, obj, data):
-        """
-            A key has been released in the window
-        """
-        if data.get_keyval() == (True, Gdk.KEY_Control_L):
-            self.__keysPressed['Ctrl'] = False
-        elif data.get_keyval() == (True, Gdk.KEY_f):
-            self.__keysPressed['f'] = False
-
-    def __searchEntryKeyPressEvent (self, obj, data):
-        """
-            A button has been pressed in the search entry
-        """
-        if data.get_keyval() == (True, Gdk.KEY_Escape) and self.headerBar.searchButton.get_active() is True:
-            if len(self.searchEntry.get_text()) > 0:
-                self.searchEntry.set_text('')
-            else:
-                self.headerBar.searchButton.clicked()
-
-    def __searchEntrySearchEvent (self, obj = None, data = None):
-        """
-            Search entry input event
-        """
-        if (self.headerBar.searchButton.get_active() is False and len(self.searchEntry.get_text()) > 0) or (self.headerBar.searchButton.get_active() is True and len(self.searchEntry.get_text()) == 0):
-            self.headerBar.searchButton.clicked()
-        self.__reloadSearchResults()
-
-    def __reloadSearchResults (self):
-        """
-            Reload the matching assets from the search pane
-        """
-        text = self.searchEntry.get_text().lower()
-        for button in self.currencySwitcher.get_children():
-            if text not in button.curName.lower() and text not in button.curSymbol.lower():
-                button.hide()
-            else:
-                button.show()
+        if keyval == Gdk.KEY_f and state & Gdk.ModifierType.CONTROL_MASK:
+            self.headerBar.toggleSearch()
+        elif (keyval >= Gdk.KEY_A and keyval <= Gdk.KEY_Z) or (keyval >= Gdk.KEY_a and keyval <= Gdk.KEY_z):
+            self.headerBar.startSearch()
+            self.currencySwitcher.searchInsertChar(keyval)

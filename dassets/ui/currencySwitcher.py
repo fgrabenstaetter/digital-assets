@@ -18,96 +18,106 @@
 """
 
 import gi
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GdkPixbuf
+gi.require_version('Gtk', '4.0')
+from gi.repository import Gtk, Gdk
 from dassets.sys import currencies
 from dassets.env import *
 
-class CurrencySwitcher (Gtk.ListBox):
+@Gtk.Template(filename = DATA_DIR + '/ui/currencyRowTemplate.ui')
+class CurrencyRowTemplate (Gtk.ListBoxRow):
+    __gtype_name__ = 'CurrencyRowTemplate'
+    logoUiObj = Gtk.Template.Child('currencyLogo')
+    nameUiObj = Gtk.Template.Child('currencyName')
+    symbolUiObj = Gtk.Template.Child('currencySymbol')
+    favoriteRevealerUiObj = Gtk.Template.Child('currencyFavoriteRevealer')
 
-    def __init__ (self, mainWindow):
+class CurrencySwitcher ():
+
+    def __init__ (self, mainWindow, firstSymbol):
         """
             Init CurrencySwitcher
         """
-        Gtk.ListBox.__init__(self, name = 'currencySwitcher')
         self.__mainWindow = mainWindow
+        self.__builder = self.__mainWindow.builder
+        self.__uiObj = self.__builder.get_object('currencyList')
+        self.__uiObj.set_sort_func(self.__currenciesSort)
+        self.__uiObj.set_filter_func(self.__currenciesFilter)
+        self.__uiObj.connect('row-activated', self.__rowActivatedEvent)
+        self.__currencySearchRevealerUiObj = self.__builder.get_object('currencySearchRevealer')
+        self.__currencySearchUiObj = self.__builder.get_object('currencySearch')
         self.actualRow = None
-        self.set_sort_func(self.__currenciesSort)
-        self.connect('row-activated', self.__rowActivatedEvent)
 
         for symbol in self.__mainWindow.currencies.keys():
             if symbol != 'USD':
-                self.__addCurrency(self.__mainWindow.currencies[symbol])
+                self.__addCurrency(self.__mainWindow.currencies[symbol], firstSymbol)
+        self.__currencySearchUiObj.connect('search-changed', self.__searchChangedEvent)
+        controllerKey = Gtk.EventControllerKey()
+        self.__currencySearchUiObj.add_controller(controllerKey)
+        controllerKey.connect('key-pressed', self.__searchKeyPressedEvent)
 
-        self.show_all()
-
-    def scrollToActualChild (self):
+    def sort (self):
         """
-            Scroll the Gtk.ScrolledWindow
-            (self.__mainWindow.currencySwitcherBox) to the current ListBoxRow
+            Sort again all currencies with the current sort method
         """
-        sumHeightBeforeChild = 0
-        sumChildrenHeight = 0
-        childIndex = self.actualRow.get_index()
+        self.__uiObj.invalidate_sort()
 
-        for key, child in enumerate(self.get_children()):
-            if key < childIndex:
-                sumHeightBeforeChild += child.get_allocated_height()
-            sumChildrenHeight += child.get_allocated_height()
+    def setCurrentFavorite (self, favorite):
+        """
+            Make the current row favorite or not
+        """
+        self.actualRow.favoriteRevealerUiObj.set_reveal_child(favorite)
 
-        value = sumHeightBeforeChild
-        upper = sumChildrenHeight
-        boxVadj = self.__mainWindow.currencySwitcherBox.get_vadjustment()
-        stepIncrement = boxVadj.get_step_increment()
-        pageIncrement = boxVadj.get_page_increment()
-        pageSize = boxVadj.get_page_size()
-        self.__mainWindow.currencySwitcherBox.set_vadjustment(Gtk.Adjustment.new(value, 0, upper, stepIncrement, pageIncrement, pageSize))
+    def changeSearchVisibility (self, visible):
+        """
+            Change search entry state to visible or hidden
+        """
+        self.__currencySearchUiObj.set_text('')
+        self.__currencySearchRevealerUiObj.set_reveal_child(visible)
+        self.__uiObj.invalidate_filter()
+
+        if visible:
+            self.__currencySearchUiObj.grab_focus()
+
+    def searchInsertChar (self, char):
+        self.__currencySearchUiObj.insert_text(chr(char), -1)
+        self.__currencySearchUiObj.set_position(-1)
 
     ###########
     # PRIVATE #
     ###########
 
-    def __addCurrency (self, currency):
-        # add a currency to the currency switcher
+    def __searchKeyPressedEvent (self, ctrl, keyval, keycode, state):
         """
-            Add a currency to the currency switcher
+            An key has been pressed in the search entry
         """
-        row = Gtk.ListBoxRow()
-        row.curName = currency.name
-        row.curSymbol = currency.symbol
+        if keyval == Gdk.KEY_Escape:
+            self.__mainWindow.headerBar.stopSearch()
 
-        pixbuf = GdkPixbuf.Pixbuf.new_from_resource_at_scale(PRGM_PATH + 'img/' + currency.symbol + '.svg', 32, 32, True)
-        icon = Gtk.Image.new_from_pixbuf(pixbuf)
-        nameBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 2)
-        nameLabel = Gtk.Label(xalign = 0)
-        nameLabel.set_line_wrap(True)
-        nameLabel.set_markup('<b>' + currency.name + '</b>')
+    def __searchChangedEvent (self, obj, data = None):
+        """
+            Called when the text in currency search entry has changed
+        """
+        self.__uiObj.invalidate_filter()
 
-        favoriteImage = Gtk.Image(xalign = 1)
-        favoriteImage.set_from_icon_name('starred-symbolic', 1)
-        row.favoriteImageRevealer = Gtk.Revealer(transition_type = Gtk.RevealerTransitionType.CROSSFADE, transition_duration = 1000)
-        row.favoriteImageRevealer.add(favoriteImage)
+    def __addCurrency (self, currency, firstSymbol):
+        """
+            Add a currency to the currency switcher and activate firstSymbol
+            correponding row
+        """
+        row = CurrencyRowTemplate()
+        row.nameUiObj.set_text(currency.name)
+        row.symbolUiObj.set_text(currency.symbol)
+        row.logoUiObj.set_from_resource(PRGM_PATH + 'img/' + currency.symbol + '.svg')
 
         if currency.favorite:
-            row.favoriteImageRevealer.set_reveal_child(True)
+            row.favoriteRevealerUiObj.set_reveal_child(True)
 
-        nameTopBox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, hexpand = True)
-        nameTopBox.pack_start(nameLabel, False, False, 0)
-        nameTopBox.pack_end(row.favoriteImageRevealer, True, True, 0)
+        row.currencySymbol = currency.symbol
+        row.currencyName = currency.name
+        self.__uiObj.append(row)
 
-        symbolLabel = Gtk.Label(label = currency.symbol, xalign = 0)
-
-        nameBox.add(nameTopBox)
-        nameBox.add(symbolLabel)
-
-        box = Gtk.Box(hexpand = False)
-        box.set_spacing(16)
-        box.set_border_width(10)
-        box.add(icon)
-        box.add(nameBox)
-
-        row.add(box)
-        self.add(row)
+        if currency.symbol == firstSymbol:
+            row.activate()
 
     def __rowActivatedEvent (self, obj, row):
         """
@@ -116,103 +126,108 @@ class CurrencySwitcher (Gtk.ListBox):
         lastRow = self.actualRow
         self.actualRow = row
 
-        if lastRow is not row:
-            # load stack
-            self.__mainWindow.currencyView.reload(lastRow is not None)
+        if lastRow is not row and hasattr(self.__mainWindow, 'currencyView'):
+            self.__mainWindow.currencyView.reload(True)
 
-        # if search entry showed, hide it
-        if self.__mainWindow.headerBar.searchButton.get_active() is True:
-            self.__mainWindow.headerBar.searchButton.clicked()
+        if self.__currencySearchRevealerUiObj.get_reveal_child() is True:
+            self.__mainWindow.headerBar.stopSearch()
+
+    def __currenciesFilter (self, row):
+        """
+            Tell if row should be visible or not in the list box
+        """
+        searchText = self.__currencySearchUiObj.get_text().lower()
+        if searchText not in row.currencyName.lower() and searchText not in row.currencySymbol.lower():
+            return False
+
+        return True
 
     def __currenciesSort (self, row1, row2):
         """
             Sort between currencies row1 and row2
         """
-        sortMethodName = self.__mainWindow.getActualSortMethodName()
-        quoteCurrency = self.__mainWindow.getActualQuoteCurrency()
-        row1Cur = self.__mainWindow.currencies[row1.curSymbol]
-        row2Cur = self.__mainWindow.currencies[row2.curSymbol]
 
-        if not row1Cur.favorite and row2Cur.favorite:
+        if self.__currencySearchUiObj.get_text():
+            sortMethodName = 'rank'
+        else:
+            sortMethodName = self.__mainWindow.getActualSortMethodName()
+        quote = self.__mainWindow.getActualQuote()
+        cur1 = self.__mainWindow.currencies[row1.currencySymbol]
+        cur2 = self.__mainWindow.currencies[row2.currencySymbol]
+
+        if not cur1.favorite and cur2.favorite:
             return 1
-        elif row1Cur.favorite and not row2Cur.favorite:
+        elif cur1.favorite and not cur2.favorite:
             return -1
         else:
             # avoid two rows with None value to be randomly ordered
-            rankAndNone = sortMethodName == 'rank' and row1Cur.rank is None and row2Cur.rank is None
-            volumeAndNone = sortMethodName == 'volume' and row1Cur.dayVolumeUSD is None and row2Cur.dayVolumeUSD is None
-            dayPriceChangeAndNone = sortMethodName == 'dayPriceChange' \
-                and (row1Cur.lastDayPriceUSD is None \
-                    or row1Cur.priceUSD is None) \
-                and (row2Cur.lastDayPriceUSD is None \
-                    or row2Cur.priceUSD is None)
-            athAndNone = sortMethodName == 'ath' \
-                and ((quoteCurrency.symbol == 'USD' and row1Cur.athUSD is None \
-                and row2Cur.athUSD is None and row1Cur.alltimeGraphDataUSD is None \
-                and row2Cur.alltimeGraphDataUSD is None) or (quoteCurrency.symbol != 'USD' \
-                and row1Cur.alltimeGraphDataUSD is None and row2Cur.alltimeGraphDataUSD is None))
+            rankAndNone = sortMethodName == 'rank' and cur1.rank is None and cur2.rank is None
+            volumeAndNone = sortMethodName == 'volume' and cur1.dayVolumeUSD is None and cur2.dayVolumeUSD is None
+            dayPriceChangeAndNone = sortMethodName == 'change' and (cur1.lastDayPriceUSD is None or cur1.priceUSD is None) and (cur2.lastDayPriceUSD is None or cur2.priceUSD is None)
+            athAndNone = sortMethodName == 'ath' and ((quote.symbol == 'USD' and cur1.athUSD is None and cur2.athUSD is None and cur1.allCandlesUSD is None and cur2.allCandlesUSD is None) or (quote.symbol != 'USD' and cur1.allCandlesUSD is None and cur2.allCandlesUSD is None))
 
             if rankAndNone or dayPriceChangeAndNone or volumeAndNone or athAndNone:
                 sortMethodName = 'name'
 
             if sortMethodName == 'name':
-                if row1Cur.name < row2Cur.name:
+                if cur1.name.lower() < cur2.name.lower():
                     return -1
                 else:
                     return 1
             elif sortMethodName == 'rank':
-                if row1Cur.rank is None:
+                if cur1.rank is None:
                     return 1
-                elif row2Cur.rank is None:
+                elif cur2.rank is None:
                     return -1
-                elif row1Cur.rank < row2Cur.rank:
+                elif cur1.rank < cur2.rank:
                     return -1
                 else:
                     return 1
-            elif sortMethodName == 'dayPriceChange':
-                if quoteCurrency.lastDayPriceUSD is None or quoteCurrency.priceUSD is None:
+            elif sortMethodName == 'change':
+                if quote.lastDayPriceUSD is None or quote.priceUSD is None:
                     return 0
-                elif row1Cur.lastDayPriceUSD is None or row1Cur.priceUSD is None:
+                elif cur1.lastDayPriceUSD is None or cur1.priceUSD is None:
                     return 1
-                elif row2Cur.lastDayPriceUSD is None or row2Cur.priceUSD is None:
+                elif cur2.lastDayPriceUSD is None or cur2.priceUSD is None:
                     return -1
                 else:
-                    row1DayPriceChange = float(row1Cur.lastDayPriceUSD) / float(quoteCurrency.lastDayPriceUSD)
-                    row1DayPriceChange = (float(row1Cur.priceUSD) / float(quoteCurrency.priceUSD)) / row1DayPriceChange
-                    row2DayPriceChange = float(row2Cur.lastDayPriceUSD) / float(quoteCurrency.lastDayPriceUSD)
-                    row2DayPriceChange = (float(row2Cur.priceUSD) / float(quoteCurrency.priceUSD)) / row2DayPriceChange
-                    if row1DayPriceChange > row2DayPriceChange:
+                    cur1DayPriceChange = float(cur1.lastDayPriceUSD) / float(quote.lastDayPriceUSD)
+                    cur1DayPriceChange = (float(cur1.priceUSD) / float(quote.priceUSD)) / cur1DayPriceChange
+                    cur2DayPriceChange = float(cur2.lastDayPriceUSD) / float(quote.lastDayPriceUSD)
+                    cur2DayPriceChange = (float(cur2.priceUSD) / float(quote.priceUSD)) / cur2DayPriceChange
+                    if cur1DayPriceChange > cur2DayPriceChange:
                         return -1
                     else:
                         return 1
             elif sortMethodName == 'volume':
-                if row1Cur.dayVolumeUSD is None:
+                if cur1.dayVolumeUSD is None:
                     return 1
-                elif row2Cur.dayVolumeUSD is None:
+                elif cur2.dayVolumeUSD is None:
                     return -1
-                elif row1Cur.dayVolumeUSD > row2Cur.dayVolumeUSD:
+                elif cur1.dayVolumeUSD > cur2.dayVolumeUSD:
                     return -1
                 else:
                     return 1
             elif sortMethodName == 'ath':
-                if quoteCurrency.symbol == 'USD':
-                    if row1Cur.athUSD is not None:
-                        row1AthRatio = row1Cur.priceUSD / row1Cur.athUSD[0]
-                    else:
-                        row1AthRatio = row1Cur.calculateAth(quoteCurrency)[0]
-                    if row2Cur.athUSD is not None:
-                        row2AthRatio = row2Cur.priceUSD / row2Cur.athUSD[0]
-                    else:
-                        row2AthRatio = row2Cur.calculateAth(quoteCurrency)[0]
+                if quote.priceUSD is None:
+                    return 0
+                elif cur1.priceUSD is None:
+                    return 1
+                elif cur2.priceUSD is None:
+                    return -1
 
-                    if row1AthRatio > row2AthRatio:
-                        return -1
-                    else:
-                        return 1
-                else: # quote currency != USD
-                    row1AthRatio = row1Cur.calculateAth(quoteCurrency)[0]
-                    row2AthRatio = row2Cur.calculateAth(quoteCurrency)[0]
-                    if row1AthRatio > row2AthRatio:
-                        return -1
-                    else:
-                        return 1
+                cur1Ath = cur1.calculateAth(quote)
+                cur2Ath = cur2.calculateAth(quote)
+
+                if cur1Ath is None:
+                    return 1
+                elif cur2Ath is None:
+                    return -1
+
+                cur1AthRatio = cur1.priceUSD / quote.priceUSD / cur1Ath[0]
+                cur2AthRatio = cur2.priceUSD / quote.priceUSD / cur2Ath[0]
+
+                if cur1AthRatio > cur2AthRatio:
+                    return -1
+                else:
+                    return 1

@@ -18,55 +18,57 @@
 """
 
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk, Gdk, cairo
 from dassets.sys import tools
 import math, datetime
 
-class Graph (Gtk.DrawingArea):
+class Graph ():
 
-    def __init__ (self):
+    def __init__ (self, builder):
         """
             Init Graph
         """
-        Gtk.DrawingArea.__init__(self)
-        self.set_size_request(600, 250)
-        self.connect('draw', self.__drawGraph)
+        self.__builder = builder
+        self.__uiObj = self.__builder.get_object('currencyGraphDrawingArea')
+        self.__uiObj.set_draw_func(self.__render)
 
         self.__textBorderSpace = 10
         self.__padding = {'top': 40, 'right': 20, 'bottom': 60, 'left': 90}
-        self.__graphData = None
+        self.__candles = None
         self.__graphInfos = {}
-        self.__quoteCurrency = None
+        self.__quote = None
 
-        self.show_all()
+    def setGraph (self, currency, quote, graphTime):
+        """
+            Load new candles data into the graph
+        """
+        self.__quote = quote
+        currencyCandles = getattr(currency, graphTime + 'CandlesUSD')
 
-    def setGraph (self, graphData, graphTime, quoteCurrency, priceNbDigitsAfterDecimalPoint):
-        """
-            Load a new graph into the Graph object
-        """
-        # Change prices to consider quoteCurrency prices
-        if quoteCurrency.symbol == 'USD':
-            newGraphData = graphData
+        # Change prices to consider quote prices
+        if quote.symbol == 'USD':
+            newCandles = currencyCandles
         else:
-            quoteCurrencyGraphData = getattr(quoteCurrency, graphTime + 'GraphDataUSD')
-            if len(graphData) == 0 or len(quoteCurrencyGraphData) == 0:
-                newGraphData = None
+            quoteCandles = getattr(quote, graphTime + 'CandlesUSD')
+
+            if currencyCandles is None or quoteCandles is None or len(currencyCandles) == 0 or len(quoteCandles) == 0:
+                newCandles = None
             else:
-                newGraphData = []
+                newCandles = []
                 i1, i2 = 0, 0
-                l1, l2 = len(graphData), len(quoteCurrencyGraphData)
+                l1, l2 = len(currencyCandles), len(quoteCandles)
 
                 while i1 < l1 and i2 < l2:
-                    d1 = graphData[i1][0]
-                    d2 = quoteCurrencyGraphData[i2][0]
+                    d1 = currencyCandles[i1][0]
+                    d2 = quoteCandles[i2][0]
                     tdelta = d1 - d2
 
                     if tdelta.days == 0:
-                        p1 = graphData[i1][1]
-                        p2 = quoteCurrencyGraphData[i2][1]
+                        p1 = currencyCandles[i1][1]
+                        p2 = quoteCandles[i2][1]
                         price = p1 / p2
-                        newGraphData.append((d1, price))
+                        newCandles.append((d1, price))
                         i1 += 1
                         i2 += 1
                     elif tdelta.days < 0:
@@ -74,15 +76,15 @@ class Graph (Gtk.DrawingArea):
                     else:
                         i2 += 1
 
-        self.__graphData = newGraphData
-        self.__quoteCurrency = quoteCurrency
-        self.__priceNbDigitsAfterDecimalPoint = priceNbDigitsAfterDecimalPoint
+        self.__candles = newCandles
+        if currency.priceUSD is not None and quote.priceUSD is not None:
+            self.__priceNbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(currency.priceUSD, quote.priceUSD)
 
         # loading graph infos
         minPrice, maxPrice, nbPrices = None, None, 0
 
-        if self.__graphData is not None:
-            for gp in self.__graphData:
+        if self.__candles is not None:
+            for gp in self.__candles:
                 if minPrice is None or gp[1] < minPrice:
                     minPrice = gp[1]
                 if maxPrice is None or gp[1] > maxPrice:
@@ -94,36 +96,36 @@ class Graph (Gtk.DrawingArea):
         self.__graphInfos['nbPrices'] = nbPrices
         self.__graphInfos['time'] = graphTime
 
-        self.queue_draw()
+        self.__uiObj.queue_draw()
 
     ###########
     # PRIVATE #
     ###########
 
-    def __drawGraph (self, obj, ctx):
+    def __render (self, obj, ctx, width, height):
         """
             Draw the current graph
         """
-        # graphData is an array of (timestamp, price)
-        if self.__graphData is None or len(self.__graphData) < 3:
+        # candles is an array of (timestamp, price)
+        if self.__candles is None or len(self.__candles) < 3:
             # no data for this period and this currency / quote currency
             ctx.set_source_rgba(0, 0, 0, 0)
             ctx.fill()
             return
 
-        areaWidth = self.get_size_request()[0] - self.__padding['left'] - self.__padding['right']
-        areaHeight = self.get_size_request()[1] - self.__padding['top'] - self.__padding['bottom']
+        areaWidth = self.__uiObj.get_size_request()[0] - self.__padding['left'] - self.__padding['right']
+        areaHeight = self.__uiObj.get_size_request()[1] - self.__padding['top'] - self.__padding['bottom']
         coords = []
         cnt = 0
 
         # calculate coords and draw dates
         dateTextModulo = math.ceil(self.__graphInfos['nbPrices'] / 8)
-        fontColor = self.get_style_context().get_color(Gtk.StateFlags.NORMAL)
+        fontColor = self.__uiObj.get_style_context().get_color()
         fontColor.parse('rgba')
         ctx.set_source_rgba(fontColor.red, fontColor.green, fontColor.blue, fontColor.alpha)
         ctx.set_font_size(12)
 
-        for dateTime, price in self.__graphData:
+        for dateTime, price in self.__candles:
             x = (cnt / self.__graphInfos['nbPrices']) * areaWidth + self.__padding['left']
 
             if self.__graphInfos['minPrice'] == self.__graphInfos['maxPrice']:
@@ -144,7 +146,7 @@ class Graph (Gtk.DrawingArea):
                     dateStr = str(dateTime.day).zfill(2)
                 elif self.__graphInfos['time'] == 'year':
                     dateStr = str(dateTime.month).zfill(2)
-                elif self.__graphInfos['time'] == 'alltime':
+                elif self.__graphInfos['time'] == 'all':
                     dateStr = str(dateTime.year).zfill(2)
                 else:
                     return
@@ -167,13 +169,13 @@ class Graph (Gtk.DrawingArea):
         # draw light body
         ctx.line_to(coords[-1][0], areaBodyBottom)
         ctx.line_to(coords[0][0], areaBodyBottom)
-        ctx.set_source_rgb(0.73, 0.87, 0.98)
+        ctx.set_source_rgba(0.73, 0.87, 0.98)
         ctx.fill()
 
         # draw head bold line
         ctx.append_path(path)
         ctx.set_line_width(lineWidth)
-        ctx.set_source_rgb(0.26, 0.65, 0.96)
+        ctx.set_source_rgba(0.26, 0.65, 0.96)
         ctx.stroke()
 
         # draw prices
@@ -209,7 +211,7 @@ class Graph (Gtk.DrawingArea):
             timeDataType = _('Day')
         elif (self.__graphInfos['time'] == 'year'):
             timeDataType = _('Month')
-        elif (self.__graphInfos['time'] == 'alltime'):
+        elif (self.__graphInfos['time'] == 'all'):
             timeDataType = _('Year')
         else:
             return
@@ -219,4 +221,4 @@ class Graph (Gtk.DrawingArea):
 
         # draw prices label
         ctx.move_to(self.__textBorderSpace, self.__textBorderSpace)
-        ctx.show_text(_('Price') + ' (' + self.__quoteCurrency.symbol + ')')
+        ctx.show_text(_('Price') + ' (' + self.__quote.symbol + ')')

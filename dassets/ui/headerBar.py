@@ -18,276 +18,203 @@
 """
 
 import gi
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+gi.require_version('Gtk', '4.0')
+from gi.repository import Gtk, Gio
 from dassets.env import *
 from dassets.ui.settingsWindow import SettingsWindow
 
-class HeaderBar (Gtk.HeaderBar):
+@Gtk.Template(filename = DATA_DIR + '/ui/quoteRowTemplate.ui')
+class QuoteRowTemplate (Gtk.ListBoxRow):
+    __gtype_name__ = 'QuoteRowTemplate'
+    nameUiObj = Gtk.Template.Child('quoteName')
+    symbolUiObj = Gtk.Template.Child('quoteSymbol')
 
-    def __init__ (self, mainWindow, defaultQuoteCurrencySymbol):
+class HeaderBar ():
+
+    def __init__ (self, mainWindow, defaultQuote):
         """
             Init HeaderBar
         """
-        Gtk.HeaderBar.__init__(self)
         self.__mainWindow = mainWindow
-        self.set_show_close_button(True)
-        self.set_title('Digital Assets')
-
-        self.__quoteCurrencies =  self.__mainWindow.currencies
-        self.actualQuoteCurrencySymbol = defaultQuoteCurrencySymbol
-        # default sort method
+        self.__builder = self.__mainWindow.builder
+        self.__quotes =  self.__mainWindow.currencies
+        self.__uiObj = self.__builder.get_object('mainHeaderBar')
+        self.actualQuoteSymbol = defaultQuote.symbol
         self.actualSortMethodName = 'rank'
-        self.__createMenu()
-        self.__createQuoteCurrencySwitch()
-        self.__createSearchEntry()
-        self.__createSortMethodSwitch()
 
-    def showSettingsDialog (self, obj = None, data = None):
-        settingsDialog = SettingsWindow(self.__mainWindow)
+        self.__searchButtonUiObj = self.__builder.get_object('searchButton')
+        self.__quoteButtonNameUiObj = self.__builder.get_object('quoteButtonName')
+        self.__quoteButtonSymbolUiObj = self.__builder.get_object('quoteButtonSymbol')
 
-    def showAboutDialog (self, obj = None, data = None):
-        aboutDialog = Gtk.AboutDialog(
-            authors = ['François Grabenstaetter <francoisgrabenstaetter@gmail.com>'],
-            license_type = Gtk.License.GPL_3_0_ONLY,
-            version = PRGM_VERSION,
-            comments = _('Cryptocurrencies prices and statistics') + '\nBTC:  bc1q4vupl5zwxctn7lwacqdqp4u07gfwj2jsy7ums0 \nETH:  0xE7F52826f22B0F48BD045b4f9B61a219A64cb5f8',
-            website = 'https://gitlab.gnome.org/fgrabenstaetter/digital-assets',
-            website_label = 'GitLab',
-            copyright = _('Crypto market cap & pricing data provided by Nomics') + '\nhttps://nomics.com'
-        )
-        aboutDialog.set_modal(True)
-        aboutDialog.set_transient_for(self.__mainWindow)
-        aboutDialog.show()
+        self.__initSearch()
+        self.__initSort()
+        self.__initMenu()
+        self.__initQuotes()
+        self.__changeQuoteButtonText(defaultQuote)
 
+    def startSearch (self):
+        self.__searchButtonUiObj.set_active(True)
+
+    def stopSearch (self):
+        self.__searchButtonUiObj.set_active(False)
+
+    def toggleSearch (self):
+        active = self.__searchButtonUiObj.get_active()
+        self.__searchButtonUiObj.set_active(not active)
 
     ###########
     # PRIVATE #
     ###########
 
-    def __createMenu (self):
+    def __changeQuoteButtonText (self, quote):
         """
-            Create and add menu widgets to the HeaderBar
+            Change quote button name and symbol labels
         """
-        menuButton = Gtk.ToggleButton()
-        image = Gtk.Image().new_from_icon_name('open-menu-symbolic', 1)
-        menuButton.add(image)
-        self.pack_end(menuButton)
+        self.__quoteButtonNameUiObj.set_text(quote.name)
+        self.__quoteButtonSymbolUiObj.set_text(quote.symbol)
 
-        menuPopover = Gtk.Popover(relative_to = menuButton, border_width = 6)
-        menupopoverCurrenciesBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-        menuPopover.add(menupopoverCurrenciesBox)
-
-        def menuPopoverClosedEvent (obj = None, data = None):
-            menuButton.set_active(False)
-
-        def menuButtonToggledEvent (obj = None, data = None):
-            if (menuButton.get_active() is True):
-                menuPopover.popup()
-
-        menuPopover.connect('closed', menuPopoverClosedEvent)
-        menuButton.connect('toggled', menuButtonToggledEvent)
-
-        menuPopoverButtonSettings = Gtk.ModelButton(text = _('Settings'), xalign = 0)
-        menuPopoverButtonSettings.connect('clicked', self.showSettingsDialog)
-        menuPopoverButtonAbout = Gtk.ModelButton(text = _('About'), xalign = 0)
-        menuPopoverButtonAbout.connect('clicked', self.showAboutDialog)
-
-        menupopoverCurrenciesBox.add(menuPopoverButtonSettings)
-        menupopoverCurrenciesBox.add(menuPopoverButtonAbout)
-        menupopoverCurrenciesBox.show_all()
-
-    def __createQuoteCurrencySwitch (self):
-        """
-            Create and add quote currency switch widgets to the HeaderBar
-        """
-        actualQuoteCurrency = self.__quoteCurrencies[self.actualQuoteCurrencySymbol]
-        buttonBox = Gtk.Box(spacing = 10)
-        switchButtonLabelName = Gtk.Label()
-        switchButtonLabelName.set_markup('<b>' + actualQuoteCurrency.name + '</b>')
-        switchButtonLabelSymbol = Gtk.Label.new(actualQuoteCurrency.symbol)
-
-        buttonBox.add(switchButtonLabelName)
-        buttonBox.add(switchButtonLabelSymbol)
-
-        switchButton = Gtk.ToggleButton()
-        switchButton.curSymbol = actualQuoteCurrency.symbol
-        switchButton.add(buttonBox)
-        self.pack_start(switchButton)
-
-        # pop-over
-        popover = Gtk.Popover(relative_to = switchButton, border_width = 6)
-        popoverCurrenciesBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-
-        popoverScrolledWindow = Gtk.ScrolledWindow()
-        popoverScrolledWindow.set_min_content_height(200)
-        popoverScrolledWindow.set_max_content_height(200)
-        popoverScrolledWindow.set_min_content_width(180)
-        popoverScrolledWindow.set_max_content_width(180)
-        popoverScrolledWindow.add(popoverCurrenciesBox)
-
-        def popoverClosedEvent (obj = None, data = None):
-            switchButton.set_active(False)
-
-        def buttonToggledEvent (obj = None, data = None):
-            if switchButton.get_active() is True:
-                popover.popup()
-                # clear search entry
-                searchEntry.set_text('')
-
-                # reload buttons
-                otherCurrencies = []
-                for cur in self.__getQuoteCurrenciesSorted():
-                    if cur.symbol != self.actualQuoteCurrencySymbol:
-                        otherCurrencies.append(cur)
-
-                def assignStr (button):
-                    if isinstance(button, Gtk.SearchEntry):
-                        return
-
-                    assert len(otherCurrencies) > 0
-                    button.labelName.set_markup('<b>' + otherCurrencies[0].name + '</b>')
-                    button.labelSymbol.set_label(otherCurrencies[0].symbol)
-                    button.curName = otherCurrencies[0].name
-                    button.curSymbol = otherCurrencies[0].symbol
-                    del otherCurrencies[0]
-
-                popoverCurrenciesBox.foreach(assignStr)
-
-        popover.connect('closed', popoverClosedEvent)
-        switchButton.connect('toggled', buttonToggledEvent)
-
-        def searchEntrySearchEvent (obj, data = None):
-            text = obj.get_text().lower()
-            for child in popoverCurrenciesBox.get_children():
-                if child is not obj and text not in child.curName.lower() and text not in child.curSymbol.lower():
-                    child.hide()
-                else:
-                    child.show()
-
-        # add search entry
-        searchEntry = Gtk.SearchEntry(margin_bottom = 10)
-        searchEntry.connect('search-changed', searchEntrySearchEvent)
-
-        # main box
-        popoverBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-        popoverBox.add(searchEntry)
-        popoverBox.add(popoverScrolledWindow)
-        popover.add(popoverBox)
-
-        def changeQuoteCurrency (obj, data = None):
-            self.actualQuoteCurrencySymbol = obj.curSymbol
-            popover.popdown()
-            switchButtonLabelName.set_markup('<b>' + obj.curName + '</b>')
-            switchButtonLabelSymbol.set_text(obj.curSymbol)
-            # sort again currencies
-            self.__mainWindow.currencySwitcher.invalidate_sort()
-            # reload currencyView
-            self.__mainWindow.currencyView.reload()
-
-        # create currencies buttons
-        popoverButtons = []
-        for cur in self.__getQuoteCurrenciesSorted():
-            if cur.symbol != self.actualQuoteCurrencySymbol:
-                button = Gtk.ModelButton(xalign = 0)
-                button.connect('clicked', changeQuoteCurrency)
-                button.labelName = Gtk.Label(wrap = True, xalign = 0)
-                button.labelSymbol = Gtk.Label(name = 'quoteCurrencyPopoverSymbol')
-
-                buttonBox = button.get_children()[0]
-                buttonBox.pack_start(button.labelName, False, False, 0)
-                buttonBox.pack_end(button.labelSymbol, False, False, 0)
-                popoverCurrenciesBox.add(button)
-
-        popoverBox.show_all()
-
-    def __getQuoteCurrenciesSorted (self):
+    def __sortedQuotes (self):
         """
             Return a sorted list of quote currencies
         """
-        if self.__quoteCurrencies['BTC'].rank is not None:
+        if self.__quotes['BTC'].rank is not None:
             # sort by rank
-            return sorted(list(self.__quoteCurrencies.values()), key = lambda cur: cur.rank if cur.rank is not None else 9999)
+            return sorted(list(self.__quotes.values()), key = lambda cur: cur.rank if cur.rank is not None else 9999)
         else:
             # sort by name
-            return sorted(list(self.__quoteCurrencies.values()), key = lambda cur: cur.name)
+            return sorted(list(self.__quotes.values()), key = lambda cur: cur.name)
 
-    def __createSearchEntry (self):
+    def __initSearch (self):
         """
-            Create and add search widgets to the HeaderBar
+            Init search button
         """
-        self.searchButton = Gtk.ToggleButton()
-        icon = Gtk.Image().new_from_icon_name('system-search-symbolic', 1)
-        self.searchButton.add(icon)
-        self.pack_start(self.searchButton)
+        def searchButtonToggledEvent (obj = None, data = None):
+            self.__mainWindow.currencySwitcher.changeSearchVisibility(self.__searchButtonUiObj.get_active())
 
-        def searchButtonClicked (obj = None, data = None):
-            if self.searchButton.get_active() is False:
-                with self.searchButton.handler_block(handler):
-                    self.__mainWindow.searchEntry.set_text('')
-                    self.searchButton.set_active(False)
-                self.__mainWindow.searchEntryRevealer.set_reveal_child(False)
-                self.__mainWindow.currencySwitcher.scrollToActualChild()
+        self.__searchButtonUiObj.connect('toggled', searchButtonToggledEvent)
+
+    def __initSort (self):
+        """
+            Init sort button and popover
+        """
+        sortPopoverUiObj = self.__builder.get_object('sortPopover')
+        sortButtonUiObj = self.__builder.get_object('sortButton')
+
+        def sortButtonClicked (obj = None, data = None):
+            sortPopoverUiObj.popup()
+        def sortPopoverClosedEvent (obj = None, data = None):
+            sortButtonUiObj.set_active(False)
+
+        def sortMethodClicked (obj, data = None):
+            if obj.get_active() is False:
+                return
+            self.actualSortMethodName = obj.methodName
+            sortPopoverUiObj.popdown()
+            self.__mainWindow.currencySwitcher.sort()
+
+        sortButtonUiObj.connect('clicked', sortButtonClicked)
+        sortPopoverUiObj.connect('closed', sortPopoverClosedEvent)
+
+        methods = ['rank', 'name', 'change', 'volume', 'ath']
+        for method in methods:
+            checkButtonUiObj = self.__builder.get_object(method + 'Button')
+            checkButtonUiObj.methodName = method
+            checkButtonUiObj.connect('toggled', sortMethodClicked)
+
+    def __initMenu (self):
+        """
+            Init menu button and popover
+        """
+        menuButtonUiObj = self.__builder.get_object('menuButton')
+        menuPopoverUiObj = self.__builder.get_object('menuPopover')
+
+        def menuButtonClicked (obj = None, data = None):
+            menuPopoverUiObj.popup()
+        def menuPopoverClosedEvent (obj = None, data = None):
+            menuButtonUiObj.set_active(False)
+
+        menuButtonUiObj.connect('clicked', menuButtonClicked)
+        menuPopoverUiObj.connect('closed', menuPopoverClosedEvent)
+
+    def __initQuotes (self):
+        """
+            Init quote button and popover
+        """
+
+        quoteButtonUiObj = self.__builder.get_object('quoteButton')
+        quotePopoverUiObj = self.__builder.get_object('quotePopover')
+        quoteSearchUiObj = self.__builder.get_object('quoteSearch')
+        quoteListUiObj = self.__builder.get_object('quoteList')
+
+        for quote in self.__sortedQuotes():
+            row = QuoteRowTemplate()
+            row.nameUiObj.set_text(quote.name)
+            row.symbolUiObj.set_text(quote.symbol)
+            row.quote = quote
+            quoteListUiObj.append(row)
+
+        def filterFunc (row):
+            """
+                Tell if row should be visible or not in the list box
+            """
+            searchText = quoteSearchUiObj.get_text().lower()
+            if (searchText not in row.quote.name.lower() and searchText not in row.quote.symbol.lower()) or row.quote.symbol == self.actualQuoteSymbol:
+                return False
+
+            return True
+
+        def sortFunc (row1, row2):
+            """
+                Sort between quotes row1 and row2
+            """
+            quote1 = row1.quote
+            quote2 = row2.quote
+
+            if quote1.rank is None:
+                return 1
+            elif quote2.rank is None:
+                return -1
+            elif quote1.rank < quote2.rank:
+                return -1
             else:
-                self.__mainWindow.searchEntryRevealer.set_reveal_child(True)
-                self.__mainWindow.searchEntry.grab_focus_without_selecting()
+                return 1
 
-        handler = self.searchButton.connect('clicked', searchButtonClicked)
+        quoteListUiObj.set_filter_func(filterFunc)
+        quoteListUiObj.set_sort_func(sortFunc)
 
-    def __createSortMethodSwitch (self):
-        """
-            Create and add currencies sort method switch widgets to the
-            HeaderBar
-        """
-        button = Gtk.ToggleButton()
-        buttonImage = Gtk.Image().new_from_icon_name('view-list-symbolic', 1)
-        button.add(buttonImage)
+        def quotePopoverClosedEvent (obj = None, data = None):
+            quoteButtonUiObj.set_active(False)
 
-        def buttonToggledEvent (obj = None, data = None):
-            if button.get_active() is True:
-                popover.popup()
+        def quoteButtonToggledEvent (obj = None, data = None):
+            if quoteButtonUiObj.get_active() is False:
+                return
+            quotePopoverUiObj.popup()
+            quoteSearchUiObj.set_text('')
+            quoteListUiObj.invalidate_sort()
+            quoteListUiObj.invalidate_filter()
 
-        # popover
-        popover = Gtk.Popover(relative_to = button, border_width = 6)
-        popoverCurrenciesBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+        def quoteSearchEvent (obj, data = None):
+            text = obj.get_text().lower()
+            quoteListUiObj.invalidate_filter()
 
-        def popoverClosedEvent (obj = None, data = None):
-            button.set_active(False)
+        def quoteSearchKeyPressEvent (ctrl, keyval, keycode, state):
+            if keyval == Gdk.KEY_Escape:
+                quotePopoverUiObj.popdown()
 
-        button.connect('toggled', buttonToggledEvent)
-        popover.connect('closed', popoverClosedEvent)
-        sortMethodNames = (
-            ('rank', _('Rank')),
-            ('name', _('Name')),
-            ('dayPriceChange', _('Change')),
-            ('volume', _('Volume')),
-            ('ath', 'ATH'))
+        def quoteListRowActivatedEvent (obj, row):
+            self.actualQuoteSymbol = row.quote.symbol
+            quoteButtonUiObj.set_active(False)
+            self.__changeQuoteButtonText(row.quote)
 
-        def rowClickedEvent (obj, data = None):
-            obj.radioButton.clicked()
-            self.actualSortMethodName = obj.name
-            popover.popdown()
-            self.__mainWindow.currencySwitcher.invalidate_sort()
+            self.__mainWindow.currencySwitcher.sort()
+            self.__mainWindow.currencyView.reload()
+            quotePopoverUiObj.popdown()
 
-        for name, str in sortMethodNames:
-            row = Gtk.ModelButton()
-            row.name = name
-            row.connect('clicked', rowClickedEvent)
+        quotePopoverUiObj.connect('closed', quotePopoverClosedEvent)
+        quoteButtonUiObj.connect('toggled', quoteButtonToggledEvent)
+        quoteSearchUiObj.connect('search-changed', quoteSearchEvent)
+        quoteListUiObj.connect('row-activated', quoteListRowActivatedEvent)
 
-            rowBox = row.get_children()[0]
-            label = Gtk.Label.new(str)
-            popoverCurrenciesBoxChildren = popoverCurrenciesBox.get_children()
-
-            if len(popoverCurrenciesBoxChildren) > 0:
-                radioButton = Gtk.RadioButton(group = popoverCurrenciesBoxChildren[0].radioButton)
-            else:
-                radioButton = Gtk.RadioButton()
-
-            rowBox.pack_start(label, False, False, 0)
-            rowBox.pack_end(radioButton, False, False, 0)
-            row.radioButton = radioButton
-            popoverCurrenciesBox.add(row)
-
-        popover.add(popoverCurrenciesBox)
-        popoverCurrenciesBox.show_all()
-        self.add(button)
+        controllerKey = Gtk.EventControllerKey()
+        quoteSearchUiObj.add_controller(controllerKey)
+        controllerKey.connect('key-pressed', quoteSearchKeyPressEvent)

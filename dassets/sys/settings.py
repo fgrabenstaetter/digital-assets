@@ -18,7 +18,7 @@
 """
 
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version('Gtk', '4.0')
 from gi.repository import Gio
 from dassets.env import *
 from dassets.sys import tools
@@ -66,11 +66,11 @@ class Settings (Gio.Settings):
         self.set_string('last-currency-symbol', currencySymbol)
 
 
-    def saveLastQuoteCurrencySymbol (self, quoteCurrencySymbol):
+    def saveLastQuoteSymbol (self, quoteSymbol):
         """
-            Save last quote currency symbol in GSettings
+            Save last quote symbol in GSettings
         """
-        self.set_string('last-quote-currency-symbol', quoteCurrencySymbol)
+        self.set_string('last-quote-symbol', quoteSymbol)
 
     def loadFavoriteCurrencies (self, currencies):
         """
@@ -110,8 +110,8 @@ class Settings (Gio.Settings):
         """
         return self.get_string('last-currency-symbol')
 
-    def loadLastQuoteCurrencySymbol (self):
+    def loadLastQuoteSymbol (self):
         """
-            Load last quote currency symbol from GSettings and return it
+            Load last quote symbol from GSettings and return it
         """
-        return self.get_string('last-quote-currency-symbol')
+        return self.get_string('last-quote-symbol')

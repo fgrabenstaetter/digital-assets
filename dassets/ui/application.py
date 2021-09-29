@@ -18,13 +18,14 @@
 """
 
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk, Gio, GLib, Gdk
-from dassets.ui.window import Window
 from dassets.env import *
 from dassets.sys import currencies
 from dassets.sys.currency import Currency
 from dassets.sys.settings import Settings
+from dassets.ui.window import Window
+from dassets.ui.settingsWindow import SettingsWindow
 import signal
 
 class Application (Gtk.Application):
@@ -35,20 +36,18 @@ class Application (Gtk.Application):
         """
         Gtk.Application.__init__(self)
         self.new(APP_ID, Gio.ApplicationFlags.FLAGS_NONE)
-        GLib.set_prgname(PRGM_NAME)
         GLib.set_application_name(PRGM_HNAME)
-
-        # load CSS
-        cssProvider = Gtk.CssProvider()
-        cssProvider.load_from_resource(PRGM_PATH + 'css/style.css')
-        Gtk.StyleContext().add_provider_for_screen(Gdk.Screen.get_default(), cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
         self.currencies = {}
         # add USD currency
         self.currencies['USD'] = Currency('Dollars', 'USD', 'USD', None)
         self.currencies['USD'].priceUSD = 1
         self.currencies['USD'].lastPriceUSD = 1
+        self.currencies['USD'].marketcapUSD = 1
+        self.currencies['USD'].dayVolumeUSD = 1
         self.currencies['USD'].lastDayPriceUSD = 1
+        self.currencies['USD'].lastDayMarketcapUSD = 1
+        self.currencies['USD'].lastDayVolumeUSD = 1
         self.currencies['USD'].athUSD = (1, None)
         self.currencies['USD'].rank = 0
 
@@ -60,10 +59,57 @@ class Application (Gtk.Application):
         self.__settings = Settings()
         self.__settings.loadLastCurrenciesRank(self.currencies)
         self.__settings.loadFavoriteCurrencies(self.currencies)
-        self.__mainWindow = Window(self)
 
         signal.signal(signal.SIGINT, self.quit)
         signal.signal(signal.SIGTERM, self.quit)
+
+        self.connect('startup', self.__startup)
+        self.connect('activate', self.__activate)
+        self.register() # emit 'startup'
+
+    def __startup (self, app = None):
+        # load CSS
+        cssProvider = Gtk.CssProvider()
+        cssProvider.load_from_resource(PRGM_PATH + 'css/mainWindow.css')
+        Gtk.StyleContext().add_provider_for_display(Gdk.Display.get_default(), cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+
+        # load UI
+        self.builder = Gtk.Builder.new_from_resource(PRGM_PATH + 'ui/mainWindow.ui')
+        self.run() # emit 'activate'
+
+    def __activate (self, app = None):
+        self.__initWindows()
+        self.__initActions()
+
+    def __initWindows (self):
+        self.__mainWindow = Window(self)
+        self.__settingsWindow = SettingsWindow(self.builder)
+
+        self.__aboutDialogUiObj = self.builder.get_object('aboutDialog')
+        self.__settingsWindowUiObj = self.builder.get_object('settingsWindow')
+
+        def settingsWindowKeyPressedEvent (ctrl, keyval, keycode, state):
+            if keyval == Gdk.KEY_Escape: # Escape
+                self.__settingsWindowUiObj.hide()
+
+        controllerKey = Gtk.EventControllerKey()
+        self.__settingsWindowUiObj.add_controller(controllerKey)
+        controllerKey.connect('key-pressed', settingsWindowKeyPressedEvent)
+
+    def actionSettingsEvent (self, action = None, data = None):
+        self.__settingsWindowUiObj.show()
+
+    def actionAboutEvent (self, action = None, data = None):
+        self.__aboutDialogUiObj.show()
+
+    def __initActions (self):
+        actionSettings = Gio.SimpleAction.new('settings')
+        actionSettings.connect('activate', self.actionSettingsEvent)
+        self.add_action(actionSettings)
+
+        actionAbout = Gio.SimpleAction.new('about')
+        actionAbout.connect('activate', self.actionAboutEvent)
+        self.add_action(actionAbout)
 
     def quit (self, sig = None, frame = None):
         """
@@ -72,5 +118,5 @@ class Application (Gtk.Application):
         self.__settings.saveLastCurrenciesRank(self.currencies)
         self.__settings.saveFavoriteCurrencies(self.currencies)
         self.__settings.saveLastCurrencySymbol(self.__mainWindow.getActualCurrency().symbol)
-        self.__settings.saveLastQuoteCurrencySymbol(self.__mainWindow.getActualQuoteCurrency().symbol)
-        Gtk.main_quit()
+        self.__settings.saveLastQuoteSymbol(self.__mainWindow.getActualQuote().symbol)
+        self.__mainWindow.close()

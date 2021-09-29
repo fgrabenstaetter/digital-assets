@@ -19,7 +19,7 @@
 """
 
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk, Gio
 import sys, gettext
 
@@ -31,4 +31,3 @@ from dassets.ui.application import Application
 resource = Gio.Resource.load('@DATA_DIR@' + '/@PRGM_NAME@.gresource')
 Gio.resources_register(resource)
 Application()
-Gtk.main()

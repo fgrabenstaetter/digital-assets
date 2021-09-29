@@ -18,7 +18,7 @@
 """
 
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk
 
 class Currency ():
@@ -35,59 +35,67 @@ class Currency ():
 
         self.priceUSD = None
         self.lastPriceUSD = None # useful to know if price has up or down since last price
-        self.lastDayPriceUSD = None
+
+        self.rank = None
+        self.marketcapUSD = None
         self.dayVolumeUSD = None
-        self.marketCapUSD = None
+
+        self.lastDayPriceUSD = None
+        self.lastDayMarketcapUSD = None
+        self.lastDayVolumeUSD = None
+
         self.athUSD = None # None or (price, date)
-        self.__lastCalculatedAth = None # None or (quoteCurrency, price, date)
+        self.__lastCalculatedAth = None # None or (quote, price, date)
 
         self.circulatingSupply = None
         self.maxSupply = None
-        self.rank = None
 
         # graph data is a list of (object datetime, float price)
-        self.dayGraphDataUSD = None
-        self.monthGraphDataUSD = None
-        self.yearGraphDataUSD = None
-        self.alltimeGraphDataUSD = None
+        self.dayCandlesUSD = None
+        self.monthCandlesUSD = None
+        self.yearCandlesUSD = None
+        self.allCandlesUSD = None
 
-    def calculateAth (self, quoteCurrency):
+    def calculateAth (self, quote):
         """
-            Calcululate the ATH ratio (between 0 and 1) and the ATH date for the self currency
-            compared to the quoteCurrency
-            @return tuple (ratio, date)
+            Calcululate the ATH price and date for the self currency
+            compared to the quote
+            @return tuple (ath, date)
         """
+        if quote.symbol == 'USD' and self.athUSD is not None:
+            return self.athUSD
 
         # function to calculate ATH only with USD quote currency
         def maxUSD ():
             max = None
-            for (dt, price) in self.alltimeGraphDataUSD:
+            for (dt, price) in self.allCandlesUSD:
                 if max is None or price > max[0]:
                     max = (price, dt)
             # convert max price to ratio and return
             return (max[0], max[1])
 
-        if self.alltimeGraphDataUSD is not None and quoteCurrency.symbol == 'USD':
+        if self.allCandlesUSD is not None and quote.symbol == 'USD':
             return maxUSD()
-        elif self.alltimeGraphDataUSD is None or quoteCurrency.alltimeGraphDataUSD is None or self.priceUSD is None or quoteCurrency.priceUSD is None:
-            return 0, None
+        elif self.allCandlesUSD is None or quote.allCandlesUSD is None or self.priceUSD is None or quote.priceUSD is None:
+            return None
 
-        actualPrice = self.priceUSD / quoteCurrency.priceUSD
+        actualPrice = self.priceUSD / quote.priceUSD
         athPrice = None
         athDate = None
-        if self.__lastCalculatedAth is None or self.__lastCalculatedAth[0] != quoteCurrency.symbol:
+
+        if self.__lastCalculatedAth is None or self.__lastCalculatedAth[0] != quote.symbol:
             i1, i2 = 0, 0
-            l1 = len(self.alltimeGraphDataUSD)
-            l2 = len(quoteCurrency.alltimeGraphDataUSD)
+            l1 = len(self.allCandlesUSD)
+            l2 = len(quote.allCandlesUSD)
 
             while i1 < l1 and i2 < l2:
-                d1 = self.alltimeGraphDataUSD[i1][0]
-                d2 = quoteCurrency.alltimeGraphDataUSD[i2][0]
+                d1 = self.allCandlesUSD[i1][0]
+                d2 = quote.allCandlesUSD[i2][0]
                 tdelta = d1 - d2
 
                 if tdelta.days == 0:
-                    p1 = self.alltimeGraphDataUSD[i1][1]
-                    p2 = quoteCurrency.alltimeGraphDataUSD[i2][1]
+                    p1 = self.allCandlesUSD[i1][1]
+                    p2 = quote.allCandlesUSD[i2][1]
                     price = p1 / p2
 
                     if athPrice is None or price > athPrice:
@@ -100,9 +108,9 @@ class Currency ():
                 else:
                     i2 += 1
 
-            self.__lastCalculatedAth = (quoteCurrency.symbol, athPrice, athDate)
+            self.__lastCalculatedAth = (quote.symbol, athPrice, athDate)
         else:
             athPrice = self.__lastCalculatedAth[1]
             athDate = self.__lastCalculatedAth[2]
 
-        return (actualPrice / athPrice), athDate
+        return athPrice, athDate

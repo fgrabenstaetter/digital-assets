@@ -1,0 +1,167 @@
+/*
+	AUTHOR: François Grabenstaetter
+	LICENSE: GPL 3.0
+*/
+
+/* general */
+
+.green {
+	color: #66BB6A;
+}
+
+.red {
+	color: #EF5350;
+}
+
+.grey {
+	color: currentColor;
+}
+
+.quote {
+	opacity: 0.8;
+}
+
+/* currency view */
+
+#errorBarText {
+	font-weight: bold;
+	font-size: 1.1em;
+}
+
+#currencyMain {
+	padding: 3em;
+}
+
+#currencyRank {
+	opacity: 0.6;
+	font-weight: bold;
+	font-size: 1.4em;
+}
+
+#currencyName {
+	font-size: 1.4em;
+	font-weight: 600;
+}
+
+#currencySymbol {
+	font-size: 1.2em;
+}
+
+#currencyPrice {
+	font-weight: 600;
+	font-size: 1.5em;
+}
+
+#currencyPriceQuote {
+	font-size: 1.4em;
+	margin-left: 0.8em;
+}
+
+#currencyPriceChangePercentage {
+	font-weight: bold;
+	font-size: 1.2em;
+	margin-left: 2em;
+}
+
+#currencyPriceChangeValue {
+	font-weight: 600;
+	font-size: 1.1em;
+	opacity: 0.6;
+}
+
+#currencyPriceIndicator {
+	font-size: 1.7em;
+	font-weight: bold;
+	margin-right: 0.6em;
+	margin-top: -0.1em;
+}
+
+#currencyBoxPrice {
+	margin-left: 3em;
+	padding-right: 3em;
+}
+
+.infoBox {
+	margin: 1em 2em;
+	font-size: 1.1em;
+}
+
+.infoTitle {
+	font-weight: bold;
+	font-size: 1.05em;
+	margin-bottom: 0.6em;
+}
+
+#currencyMarketcapChange, #currencyVolumeChange {
+	font-weight: 600;
+}
+
+#currencySupplyCirculating, #currencySupplyMax {
+	margin-right: 0.5em;
+	font-size: 0.8em;
+}
+
+#currencySupplyCirculatingQuote, #currencySupplyMaxQuote {
+	font-size: 0.8em;
+}
+
+#currencySupplyBar {
+	margin: -0.8em 0 0.6em 0;
+}
+
+#currencyAthChange {
+	font-weight: 600;
+}
+
+#day {
+	min-width: 60px;
+}
+
+/* currency switcher */
+
+#currencyRowTemplate {
+	padding: 0.8em;
+}
+
+#rowCurrencyName {
+	font-weight: bold;
+}
+
+#currencySearch {
+	padding: 0.4em;
+}
+
+/* header bar */
+
+#quoteRowTemplate {
+	padding: 0.4em 0.8em;
+}
+
+#rowQuoteName {
+	font-weight: bold;
+}
+
+#quoteButtonName {
+	font-weight: bold;
+	margin-right: 0.8em;
+}
+
+/* settings window */
+
+#settingsWindowMainBox {
+	padding: 1.6em;
+}
+
+#settingsApiKey {
+	margin-right: 2em;
+}
+
+#settingsApiKeyInfos {
+	padding: 1em 1em 0.4em 1em;
+}
+
+#settingsApiKeyInfosText {
+	color: alpha(currentColor, 0.7);
+	font-size: 0.9em;
+	margin-right: 2em;
+}

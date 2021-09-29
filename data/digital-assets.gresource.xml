@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/fr/fgrabenstaetter/digital-assets/">
-    <file compressed="true">css/style.css</file>
+    <file compressed="true">ui/mainWindow.ui</file>
+    <file compressed="true">css/mainWindow.css</file>
     <file compressed="true">img/XRP.svg</file>
     <file compressed="true">img/TUSD.svg</file>
     <file compressed="true">img/ETC.svg</file>

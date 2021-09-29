@@ -1,10 +1,4 @@
-# Install locale files
-install_subdir('locale',
-               install_dir: LOCALE_DIR,
-               strip_directory: true,
-               exclude_files: ['fr/LC_MESSAGES/' + meson.project_name() + '.po'])
-
-# Validate the desktop file
+# Optionally validate the desktop file
 desktop_file_validate = find_program('desktop-file-validate', required: false)
 if desktop_file_validate.found()
   test('Validating the desktop file',
@@ -12,17 +6,37 @@ if desktop_file_validate.found()
        args: join_paths(meson.current_source_dir(), meson.project_name() + '.desktop'))
 endif
 
-# Install the desktop file
-desktop_file_install = find_program('desktop-file-install')
-run_command(desktop_file_install, meson.project_name() + '.desktop')
-install_data(meson.project_name() + '.desktop',
-			 install_dir: join_paths(DATA_DIR, 'applications'))
+# Optionally validate the ui files
+ui_file_validate = find_program('gtk4-builder-tool', required: false)
+if ui_file_validate.found()
+  test('Validating the mainWindow UI file',
+       ui_file_validate,
+       args: ['validate', join_paths(meson.current_source_dir(), 'ui/mainWindow.ui')])
+  test('Validating the currencyRowTemplate UI file',
+       ui_file_validate,
+       args: ['validate', join_paths(meson.current_source_dir(), 'ui/currencyRowTemplate.ui')])
+  test('Validating the quoteRowTemplate UI file',
+       ui_file_validate,
+       args: ['validate', join_paths(meson.current_source_dir(), 'ui/quoteRowTemplate.ui')])
+endif
 
 # Validate the gschema file
 glib_compile_schemas = find_program('glib-compile-schemas')
 test('Validating the gschema file',
      glib_compile_schemas,
      args: ['--strict', '--dry-run', meson.current_source_dir()])
+
+# Install locale files
+install_subdir('locale',
+               install_dir: LOCALE_DIR,
+               strip_directory: true,
+               exclude_files: ['fr/LC_MESSAGES/' + meson.project_name() + '.po'])
+
+# Install the desktop file
+desktop_file_install = find_program('desktop-file-install')
+run_command(desktop_file_install, meson.project_name() + '.desktop')
+install_data(meson.project_name() + '.desktop',
+			 install_dir: join_paths(DATA_DIR, 'applications'))
 
 # Install the gschema file
 install_data(meson.project_name() + '.gschema.xml',
@@ -55,3 +69,8 @@ install_data(meson.project_name() + '.appdata.xml',
 # Install icons
 install_subdir('icons', install_dir: DATA_DIR)
 run_command('gtk-update-icon-cache', '-qtf', join_paths(DATA_DIR, 'icons/hicolor'))
+
+# Install UI templates file as I can't make it work if in the gresource.xml file
+install_data('ui/currencyRowTemplate.ui',
+             'ui/quoteRowTemplate.ui',
+             install_dir: join_paths(DATA_DIR, meson.project_name() + '/ui'))

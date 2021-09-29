@@ -18,8 +18,8 @@
 """
 
 import gi
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GdkPixbuf
+gi.require_version('Gtk', '4.0')
+from gi.repository import Gtk
 from dassets.sys import tools
 from dassets.ui.graph import Graph
 from dassets.env import *
@@ -31,418 +31,323 @@ class CurrencyView (Gtk.Box):
         """
             Init CurrencyView
         """
-        Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL, expand = True, border_width = 32)
+        Gtk.Box.__init__(self, orientation = Gtk.Orientation.VERTICAL)
         self.__mainWindow = mainWindow
-        self.__actualGraphTime = None
-        self.__create()
+        self.__actualGraphTime = 'day'
+        self.__builder = self.__mainWindow.builder
+        self.__uiObj = self.__builder.get_object('currencyMain')
+        self.__graph = Graph(self.__builder)
+        self.__discoverUiObjs()
+        self.__initUi()
+        self.reload()
 
-    def reload (self, animate = False):
+    def reload (self, otherCrypto = False):
         """
             Reload widgets values according to the actual currency and the
             actual quote currency
         """
         currency = self.__mainWindow.getActualCurrency()
-        quoteCurrency = self.__mainWindow.getActualQuoteCurrency()
+        quote = self.__mainWindow.getActualQuote()
 
-        if animate is True:
-            self.__revealer.destroy()
-            self.__revealer = None
-            self.__create()
+        if otherCrypto is True:
+            pass
 
-        # update window title
-        self.__mainWindow.headerBar.set_title(currency.name + ' (' + currency.symbol + ')')
+        self.__mainWindow.changeTitle(currency.name + ' (' + currency.symbol + ')')
 
-        # top (header)
-        pixbuf = GdkPixbuf.Pixbuf().new_from_resource_at_scale(PRGM_PATH + 'img/' + currency.symbol + '.svg', 100, 100, True)
-        self.__image.set_from_pixbuf(pixbuf)
+        self.__currencyLogoUiObj.set_from_resource(PRGM_PATH + 'img/' + currency.symbol + '.svg')
+        self.__currencyNameUiObj.set_text(currency.name)
+        self.__currencySymbolUiObj.set_text(currency.symbol)
 
-        # name and symbol
-        self.__nameLabel.set_text(currency.name)
-        self.__symbolLabel.set_text(currency.symbol)
+        # bottom actions
+        self.__currencyWebsiteUiObj.set_uri(currency.websiteURL)
+        self.__favoriteIsReady = False # to not change currency.favorite when activate
+        self.__currencyFavoriteButtonUiObj.set_active(currency.favorite)
+        self.__favoriteIsReady = True
+        self.__favoriteChanged()
+
+        self.__currencyPriceQuoteUiObj.set_text(quote.symbol)
+
+        # rank
+        if currency.rank is None:
+            rankStr = '# ?'
+        else:
+            rankStr = '# ' + str(currency.rank)
+        self.__currencyRankUiObj.set_text(rankStr)
+
 
         # price
-        if currency.priceUSD is None or quoteCurrency.priceUSD is None:
-            priceText = '. . .'
-            self.__priceUpDownLabel.set_text('')
+        if not currency.priceUSD or not quote.priceUSD:
+            self.__currencyPriceUiObj.set_text('. . .')
+            self.__currencyPriceIndicatorUiObj.set_text('')
         else:
-            if currency.lastPriceUSD is not None and quoteCurrency.lastPriceUSD is not None:
-                actualPrice = currency.priceUSD / quoteCurrency.priceUSD
-                lastPrice = currency.lastPriceUSD / quoteCurrency.lastPriceUSD
+            if self.__currencyInfosRevealerUiObj.get_child_revealed() is False:
+                self.__currencyInfosRevealerUiObj.set_reveal_child(True)
+
+            nbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(currency.priceUSD, quote.priceUSD)
+            priceRounded = round(currency.priceUSD / quote.priceUSD, nbDigitsAfterDecimalPoint)
+            priceText = tools.beautifyNumber(priceRounded)
+            self.__currencyPriceUiObj.set_text(priceText)
+
+            # price indicator
+            if currency.lastPriceUSD is not None and quote.lastPriceUSD is not None:
+                actualPrice = currency.priceUSD / quote.priceUSD
+                lastPrice = currency.lastPriceUSD / quote.lastPriceUSD
 
                 if actualPrice < lastPrice:
-                    self.__priceUpDownLabel.set_text('↓')
-                    self.__priceUpDownLabel.set_name('currencyPriceDown')
+                    self.__currencyPriceIndicatorUiObj.set_text('↓')
+                    self.__currencyPriceIndicatorUiObj.set_css_classes(['red'])
                 elif actualPrice > lastPrice:
-                    self.__priceUpDownLabel.set_text('↑')
-                    self.__priceUpDownLabel.set_name('currencyPriceUp')
+                    self.__currencyPriceIndicatorUiObj.set_text('↑')
+                    self.__currencyPriceIndicatorUiObj.set_css_classes(['green'])
                 else:
-                    self.__priceUpDownLabel.set_text('')
+                    self.__currencyPriceIndicatorUiObj.set_text('')
             else:
-                self.__priceUpDownLabel.set_text('')
+                self.__currencyPriceIndicatorUiObj.set_text('')
 
-            nbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(currency.priceUSD, quoteCurrency.priceUSD)
-            priceRounded = round(currency.priceUSD / quoteCurrency.priceUSD, nbDigitsAfterDecimalPoint)
-            priceText = tools.beautifyNumber(priceRounded)
+        # day price change
 
-        self.__priceLabel.set_text(priceText)
-        self.__quoteCurrencySymbolLabel.set_text(quoteCurrency.symbol)
+        # change value
+        if currency.lastDayPriceUSD is None or quote.lastDayPriceUSD is None or currency.priceUSD is None or quote.priceUSD is None:
+            self.__currencyPriceChangeValueUiObj.set_text('')
+        else:
+            nbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(currency.priceUSD, quote.priceUSD)
+            dayPriceChangeValue = round(currency.priceUSD / quote.priceUSD - currency.lastDayPriceUSD / quote.lastDayPriceUSD, nbDigitsAfterDecimalPoint)
+            dayPriceChangeValueText = tools.beautifyNumber(abs(dayPriceChangeValue))
+            self.__currencyPriceChangeValueUiObj.set_text('(' + dayPriceChangeValueText + ')')
+        # change percentage
+        self.__setChangePercentage(self.__currencyPriceChangePercentageUiObj, currency.priceUSD, currency.lastDayPriceUSD, quote.priceUSD, quote.lastDayPriceUSD)
 
-        # actions box
-        self.__websiteButton.set_uri(currency.websiteURL)
+        # marketcap
+        self.__currencyMarketcapQuoteUiObj.set_text(quote.symbol)
+        if currency.marketcapUSD is None or quote.priceUSD is None:
+            self.__currencyMarketcapValueUiObj.set_text(_('Undefined'))
+        else:
+            marketcapRounded = round(currency.marketcapUSD / quote.priceUSD)
+            self.__currencyMarketcapValueUiObj.set_text(tools.beautifyNumber(marketcapRounded))
 
-        if currency.favorite is True:
-            with self.__favoriteButton.handler_block(self.__favoriteButton.handlerID):
-                self.__favoriteButton.set_active(True)
-                self.__favoriteButtonImage.set_from_icon_name('starred-symbolic', 1)
+        # change
+        self.__setChangePercentage(self.__currencyMarketcapChangeUiObj, currency.marketcapUSD, currency.lastDayMarketcapUSD, quote.marketcapUSD, quote.lastDayMarketcapUSD)
 
-        if currency.priceUSD is not None:
-            if self.__infosBoxRevealer.get_child_revealed() is False:
-                self.__infosBoxRevealer.set_reveal_child(True)
+        # day volume
+        self.__currencyVolumeQuoteUiObj.set_text(quote.symbol)
+        if currency.dayVolumeUSD is None or quote.priceUSD is None:
+            self.__currencyVolumeValueUiObj.set_text(_('Undefined'))
+        else:
+            volumeRounded = round(currency.dayVolumeUSD / quote.priceUSD)
+            self.__currencyVolumeValueUiObj.set_text(tools.beautifyNumber(volumeRounded))
 
-            if self.__spinnerInfos is not None:
-                self.__spinnerInfos.set_size_request(60, 60)
+        # change
 
-            # general informations (day variation, day volume)
+        if currency == quote:
+            # workaround to fix the 0% change if same currency/quote
+            quoteVal = 1
+            quoteLastVal = 1
+        else:
+            quoteVal = quote.dayVolumeUSD
+            quoteLastVal = quote.lastDayVolumeUSD
 
-            # last day price
-            if currency.lastDayPriceUSD is None or currency.priceUSD is None or quoteCurrency.lastDayPriceUSD is None or quoteCurrency.priceUSD is None:
-                self.__dayPriceChangeLabel.set_text(_('Undefined'))
-            else:
-                dayPriceChange = currency.lastDayPriceUSD / quoteCurrency.lastDayPriceUSD
-                dayPriceChange = round(((currency.priceUSD / quoteCurrency.priceUSD) / dayPriceChange) * 100 - 100, 1)
-                dayPriceChangeStr = ''
-                if dayPriceChange > 0:
-                    self.__dayPriceChangeLabel.set_name('priceGreen')
-                    dayPriceChangeStr = '+ ' + str(abs(dayPriceChange)) + ' %'
-                elif dayPriceChange < 0:
-                    self.__dayPriceChangeLabel.set_name('priceRed')
-                    dayPriceChangeStr = '- ' + str(abs(dayPriceChange)) + ' %'
-                else:
-                    self.__dayPriceChangeLabel.set_name('priceGrey')
-                    dayPriceChangeStr = '0 %'
-                self.__dayPriceChangeLabel.set_text(dayPriceChangeStr)
+        self.__setChangePercentage(self.__currencyVolumeChangeUiObj, currency.dayVolumeUSD, currency.lastDayVolumeUSD, quoteVal, quoteLastVal)
 
-            # marketcap
-            if currency.marketCapUSD is None or quoteCurrency.priceUSD is None:
-                self.__marketCapLabel.set_text(_('Undefined'))
-            else:
-                marketCapRounded = round(currency.marketCapUSD / quoteCurrency.priceUSD)
-                self.__marketCapLabel.set_text(tools.beautifyNumber(marketCapRounded))
-                self.__marketCapQuoteCurrencySymbolLabel.set_text(quoteCurrency.symbol)
+        # supply
 
-            # day volume
-            if currency.dayVolumeUSD is None or quoteCurrency.priceUSD is None:
-                self.__volumeLabel.set_text(_('Undefined'))
-            else:
-                volumeRounded = round(currency.dayVolumeUSD / quoteCurrency.priceUSD)
-                self.__volumeLabel.set_text(tools.beautifyNumber(volumeRounded))
-                self.__volumeQuoteCurrencySymbolLabel.set_text(quoteCurrency.symbol)
+        # circulating supply
+        self.__currencySupplyCirculatingQuoteUiObj.set_text(currency.symbol)
+        if currency.circulatingSupply is None:
+            self.__currencySupplyCirculatingUiObj.set_text(_('Undefined'))
+        else:
+            circulatingSupplyRounded = round(currency.circulatingSupply)
+            self.__currencySupplyCirculatingUiObj.set_text(tools.beautifyNumber(circulatingSupplyRounded))
 
-            # ATH (actual % relative to ATH)
-            if quoteCurrency.symbol == 'USD' and currency.athUSD is not None and currency.priceUSD is not None:
-                if self.__spinnerATH.get_visible() is True:
-                    self.__spinnerATH.hide()
-                    self.__athLabel.show()
+        # max supply
+        self.__currencySupplyMaxQuoteUiObj.set_text(currency.symbol)
+        if currency.maxSupply is None:
+            self.__currencySupplyMaxUiObj.set_text(_('Undefined'))
+        else:
+            maxSupplyRounded = round(currency.maxSupply)
+            self.__currencySupplyMaxUiObj.set_text(tools.beautifyNumber(maxSupplyRounded))
 
-                athPercentage = round((currency.priceUSD / currency.athUSD[0]) * 100, 1)
-                self.__athLabel.set_text(str(athPercentage) + ' %')
+        # progress bar
+        barFraction = 0
+        fractionText = _('Unlimited')
+        if currency.circulatingSupply is not None and currency.maxSupply is not None:
+            barFraction = currency.circulatingSupply / currency.maxSupply
+            fractionText = str(round(barFraction * 100, 1)) + ' %'
+        self.__currencySupplyBarUiObj.set_fraction(barFraction)
+        self.__currencySupplyBarUiObj.set_text(fractionText)
 
-                athPrice = currency.athUSD[0]
-                bestDecimalDigitsNb = tools.bestDigitsNumberAfterDecimalPoint(athPrice, 1)
-                dtStr = str(tools.beautifyNumber(round(athPrice, bestDecimalDigitsNb))) + ' ' + quoteCurrency.symbol + ' - '
-                dtStr += currency.athUSD[1].strftime('%x')
-                self.__athLabel.set_tooltip_text(dtStr)
+        # ATH
 
-            elif currency.alltimeGraphDataUSD is not None and currency.priceUSD is not None and quoteCurrency.priceUSD is not None and (quoteCurrency.alltimeGraphDataUSD is not None or quoteCurrency.symbol == 'USD'):
-                self.__spinnerATH.hide()
-                self.__athLabel.show()
-                ath = currency.calculateAth(quoteCurrency)
-                athPercentage = round(ath[0] * 100, 1)
-                self.__athLabel.set_text(str(athPercentage) + ' %')
+        self.__currencyAthQuoteUiObj.set_text(quote.symbol)
+        ath = currency.calculateAth(quote)
 
-                athPrice = (currency.priceUSD / quoteCurrency.priceUSD) / ath[0]
-                bestDecimalDigitsNb = tools.bestDigitsNumberAfterDecimalPoint(athPrice, 1)
-                dtStr = str(tools.beautifyNumber(round(athPrice, bestDecimalDigitsNb))) + ' ' + quoteCurrency.symbol + ' - '
-                dtStr += ath[1].strftime('%x')
-                self.__athLabel.set_tooltip_text(dtStr)
-            else:
-                self.__spinnerATH.show()
-                self.__athLabel.hide()
+        if ath is None or currency.priceUSD is None or currency.athUSD is None:
+            if self.__mainWindow.getCurrencyBySymbol('BTC').allCandlesUSD is not None:
+                self.__currencyAthValueUiObj.set_text(_('Undefined'))
+                self.__currencyAthChangeUiObj.set_text('? %')
+        else:
+            actualPrice = currency.priceUSD / quote.priceUSD
+            athPercentage = round(actualPrice / ath[0] * 100, 1)
+            bestDecimalDigitsNb = tools.bestDigitsNumberAfterDecimalPoint(currency.priceUSD, quote.priceUSD)
+            athPriceText = tools.beautifyNumber(round(ath[0], bestDecimalDigitsNb))
 
-            # rank
-            if currency.rank is None:
-                self.__rankLabel.set_text(_('Undefined'))
-            else:
-                self.__rankLabel.set_text(str(currency.rank))
+            self.__currencyAthValueUiObj.set_text(athPriceText)
+            self.__currencyAthChangeUiObj.set_text(str(athPercentage) + ' %')
 
-            # circulating supply
-            if currency.circulatingSupply is None:
-                self.__circulatingSupplyLabel.set_text(_('Undefined'))
-            else:
-                circulatingSupplyRounded = round(currency.circulatingSupply)
-                self.__circulatingSupplyLabel.set_text(tools.beautifyNumber(circulatingSupplyRounded))
-                self.__circulatingSupplyQuoteCurrencySymbolLabel.set_text(currency.symbol)
+            # tooltip
+            tooltipStr = ath[1].strftime('%x')
+            self.__currencyAthValueUiObj.set_tooltip_text(tooltipStr)
 
-            # max supply
-            if currency.maxSupply is None:
-                self.__maxSupplyLabel.set_text(_('Undefined'))
-            else:
-                maxSupplyRounded = tools.beautifyNumber(round(currency.maxSupply))
-                self.__maxSupplyLabel.set_text(str(maxSupplyRounded))
-                self.__maxSupplyQuoteCurrencySymbolLabel.set_text(currency.symbol)
+        # candles graph
 
-            # day graph prices is the first loaded
-            if currency.dayGraphDataUSD is not None:
-                self.__spinnerInfos.destroy()
+        # day graph prices is the first loaded
+        if currency.dayCandlesUSD is not None and self.__currencyGraphRevealerUiObj.get_child_revealed() is False:
+            self.__currencySpinnerUiObj.hide()
+            self.__currencyGraphRevealerUiObj.set_reveal_child(True)
 
-                if self.__graphBoxRevealer.get_child_revealed() is False:
-                    self.__graphBoxRevealer.set_reveal_child(True)
+        # change graphSwitcher buttons sensitivity if needed
+        periodButton = self.__currencyGraphButtonsUiObj.get_first_child()
+        while periodButton is not None:
+            candles = getattr(currency, periodButton.get_name() + 'CandlesUSD')
 
-                # change graphSwitcher buttons sensitivity if needed
-                for child in self.__graphSwitcher.get_children():
-                    childGraphData = getattr(currency, child.name + 'GraphDataUSD')
+            if candles is not None and periodButton.get_sensitive() is False:
+                periodButton.set_sensitive(True)
+                periodButton.get_first_child().get_first_child().hide()
+            elif candles is None and periodButton.get_sensitive() is True:
+                periodButton.set_sensitive(False)
 
-                    if child.get_sensitive() is False and childGraphData is not None:
-                        child.set_sensitive(True)
-                        child.spinner.destroy()
-                    elif child.get_sensitive() is True and childGraphData is None:
-                        child.set_sensitive(False)
+            if periodButton.get_name() == self.__actualGraphTime:
+                self.__graphReload()
 
-                # graph set value
-                if self.__actualGraphTime is None:
-                    self.__graphSwitcher.get_children()[0].set_active(True)
-                else:
-                    for child in self.__graphSwitcher.get_children():
-                        if child.name == self.__actualGraphTime:
-                            child.set_active(True)
-                            break
-
-        if self.__revealer is not None:
-            self.__revealer.set_reveal_child(True)
+            periodButton = periodButton.get_next_sibling()
 
     ###########
     # PRIVATE #
     ###########
 
-    def __create (self):
+    def __discoverUiObjs (self):
         """
-            Create widgets
+            Put each UI currency view object with an ID into a variable
         """
-        # widgets
-        self.__image = Gtk.Image()
-        self.__nameLabel = Gtk.Label(name = 'currencyName', xalign = 0)
-        self.__symbolLabel = Gtk.Label(name = 'currencySymbol', xalign = 0)
-        self.__priceUpDownLabel = Gtk.Label()
-        self.__priceLabel = Gtk.Label(name = 'currencyPrice')
-        self.__quoteCurrencySymbolLabel = Gtk.Label()
+        # main infos
+        self.__currencySpinnerUiObj = self.__builder.get_object('currencySpinner')
+        self.__currencyInfosRevealerUiObj = self.__builder.get_object('currencyInfosRevealer')
 
-        self.__dayPriceChangeNameLabel = Gtk.Label(label = _('Change'), name = 'infoTitle')
-        self.__dayPriceChangeLabel = Gtk.Label()
+        self.__currencyRankUiObj = self.__builder.get_object('currencyRank')
+        self.__currencyLogoUiObj = self.__builder.get_object('currencyLogo')
+        self.__currencyNameUiObj = self.__builder.get_object('currencyName')
+        self.__currencySymbolUiObj = self.__builder.get_object('currencySymbol')
 
-        self.__marketCapNameLabel = Gtk.Label(label = _('Market Cap'), name = 'infoTitle')
-        self.__marketCapLabel = Gtk.Label()
-        self.__marketCapQuoteCurrencySymbolLabel = Gtk.Label(name = 'quote')
+        self.__currencyPriceIndicatorUiObj = self.__builder.get_object('currencyPriceIndicator')
+        self.__currencyPriceUiObj = self.__builder.get_object('currencyPrice')
+        self.__currencyPriceQuoteUiObj = self.__builder.get_object('currencyPriceQuote')
+        self.__currencyPriceChangePercentageUiObj = self.__builder.get_object('currencyPriceChangePercentage')
+        self.__currencyPriceChangeValueUiObj = self.__builder.get_object('currencyPriceChangeValue')
 
-        self.__volumeNameLabel = Gtk.Label(label = _('Volume'), name = 'infoTitle')
-        self.__volumeLabel = Gtk.Label()
-        self.__volumeQuoteCurrencySymbolLabel = Gtk.Label(name = 'quote')
+        # market infos
+        self.__currencyMarketcapTitleUiObj = self.__builder.get_object('currencyMarketcapTitle')
+        self.__currencyMarketcapValueUiObj = self.__builder.get_object('currencyMarketcapValue')
+        self.__currencyMarketcapQuoteUiObj = self.__builder.get_object('currencyMarketcapQuote')
+        self.__currencyMarketcapChangeUiObj = self.__builder.get_object('currencyMarketcapChange')
 
-        self.__athNameLabel = Gtk.Label(label = 'ATH', name = 'infoTitle')
-        self.__athLabel = Gtk.Label(visible = None)
+        self.__currencyVolumeTitleUiObj = self.__builder.get_object('currencyVolumeTitle')
+        self.__currencyVolumeValueUiObj = self.__builder.get_object('currencyVolumeValue')
+        self.__currencyVolumeQuoteUiObj = self.__builder.get_object('currencyVolumeQuote')
+        self.__currencyVolumeChangeUiObj = self.__builder.get_object('currencyVolumeChange')
 
-        self.__rankNameLabel = Gtk.Label(label = _('Rank'), name = 'infoTitle')
-        self.__rankLabel = Gtk.Label()
+        self.__currencySupplyCirculatingUiObj = self.__builder.get_object('currencySupplyCirculating')
+        self.__currencySupplyCirculatingQuoteUiObj = self.__builder.get_object('currencySupplyCirculatingQuote')
+        self.__currencySupplyMaxUiObj = self.__builder.get_object('currencySupplyMax')
+        self.__currencySupplyMaxQuoteUiObj = self.__builder.get_object('currencySupplyMaxQuote')
+        self.__currencySupplyBarUiObj = self.__builder.get_object('currencySupplyBar')
 
-        self.__circulatingSupplyNameLabel = Gtk.Label(label = _('Circulating Supply'), name = 'infoTitle')
-        self.__circulatingSupplyLabel = Gtk.Label()
-        self.__circulatingSupplyQuoteCurrencySymbolLabel = Gtk.Label(name = 'quote')
-
-        self.__maxSupplyNameLabel = Gtk.Label(label = _('Max Supply'), name = 'infoTitle')
-        self.__maxSupplyLabel = Gtk.Label()
-        self.__maxSupplyQuoteCurrencySymbolLabel = Gtk.Label(name = 'quote')
+        self.__currencyAthValueUiObj = self.__builder.get_object('currencyAthValue')
+        self.__currencyAthQuoteUiObj = self.__builder.get_object('currencyAthQuote')
+        self.__currencyAthChangeUiObj = self.__builder.get_object('currencyAthChange')
 
         # graph
-        self.__graph = Graph()
+        self.__currencyGraphRevealerUiObj = self.__builder.get_object('currencyGraphRevealer')
+        self.__currencyGraphButtonsUiObj = self.__builder.get_object('currencyGraphButtons')
+        self.__currencyGraphDrawingAreaUiObj = self.__builder.get_object('currencyGraphDrawingArea')
 
-        # website link and favorite button
-        self.__websiteButton = Gtk.LinkButton(label = _('Website'), name = 'linkButton')
+        # actions
+        self.__currencyWebsiteUiObj = self.__builder.get_object('currencyWebsite')
+        self.__currencyFavoriteButtonUiObj = self.__builder.get_object('currencyFavoriteButton')
+        self.__currencyFavoriteImageUiObj = self.__builder.get_object('currencyFavoriteImage')
 
-        self.__favoriteButtonImage = Gtk.Image().new_from_icon_name('non-starred-symbolic', 1)
-        self.__favoriteButton = Gtk.ToggleButton(valign = Gtk.Align.CENTER)
-        self.__favoriteButton.add(self.__favoriteButtonImage)
-        self.__favoriteButton.handlerID = self.__favoriteButton.connect('toggled', self.__favoriteButtonToggledEvent)
+    def __initUi (self):
+        """
+            Connect widgets with signal and other inits
+        """
+        # period buttons
+        periodButton = self.__currencyGraphButtonsUiObj.get_first_child()
+        while periodButton is not None:
+            periodButton.connect('toggled', self.__graphSwitcherButtonToggledEvent)
+            periodButton = periodButton.get_next_sibling()
 
-        # spinners
-        self.__spinnerATH = Gtk.Spinner(active = True)
-        self.__spinnerInfos = Gtk.Spinner(active = True)
-        self.__spinnerInfos.set_size_request(100, 100)
+        # favorite button
+        self.__currencyFavoriteButtonUiObj.connect('toggled', self.__favoriteButtonToggledEvent)
 
-        # containers
-
-        # top box
-        titleRightBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, valign = Gtk.Align.CENTER, spacing = 10)
-        titleRightBox.add(self.__nameLabel)
-        titleRightBox.add(self.__symbolLabel)
-
-        titleBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 40)
-        titleBox.add(self.__image)
-        titleBox.add(titleRightBox)
-
-        priceBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 10, name = 'priceBox')
-        priceBox.add(self.__priceUpDownLabel)
-        priceBox.add(self.__priceLabel)
-        priceBox.add(self.__quoteCurrencySymbolLabel)
-
-        topBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 100, border_width = 20)
-        topBox.add(titleBox);
-        topBox.add(priceBox)
-
-        # general informations box
-        dayPriceChangeBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10, halign = Gtk.Align.CENTER)
-        dayPriceChangeBox.add(self.__dayPriceChangeNameLabel)
-        dayPriceChangeBox.add(self.__dayPriceChangeLabel)
-
-        marketCapValueBox = Gtk.Box(spacing = 10, halign = Gtk.Align.CENTER)
-        marketCapValueBox.add(self.__marketCapLabel)
-        marketCapValueBox.add(self.__marketCapQuoteCurrencySymbolLabel)
-        marketCapBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10)
-        marketCapBox.add(self.__marketCapNameLabel)
-        marketCapBox.add(marketCapValueBox)
-
-        volumeValueBox = Gtk.Box(spacing = 10, halign = Gtk.Align.CENTER)
-        volumeValueBox.add(self.__volumeLabel)
-        volumeValueBox.add(self.__volumeQuoteCurrencySymbolLabel)
-        volumeBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10)
-        volumeBox.add(self.__volumeNameLabel)
-        volumeBox.add(volumeValueBox)
-
-        athBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10, halign = Gtk.Align.CENTER)
-        athBox.add(self.__athNameLabel)
-        athBox.add(self.__athLabel)
-        athBox.add(self.__spinnerATH)
-
-        generalInfosBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 60)
-        generalInfosBox.add(dayPriceChangeBox)
-        generalInfosBox.add(marketCapBox)
-        generalInfosBox.add(volumeBox)
-        generalInfosBox.add(athBox)
-
-        # supply infos box (and rank)
-        rankBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10, halign = Gtk.Align.CENTER)
-        rankBox.add(self.__rankNameLabel)
-        rankBox.add(self.__rankLabel)
-
-        circulatingSupplyValueBox = Gtk.Box(spacing = 10, halign = Gtk.Align.CENTER)
-        circulatingSupplyValueBox.add(self.__circulatingSupplyLabel)
-        circulatingSupplyValueBox.add(self.__circulatingSupplyQuoteCurrencySymbolLabel)
-        circulatingSupplyBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10)
-        circulatingSupplyBox.add(self.__circulatingSupplyNameLabel)
-        circulatingSupplyBox.add(circulatingSupplyValueBox)
-
-        maxSupplyValueBox = Gtk.Box(spacing = 10, halign = Gtk.Align.CENTER)
-        maxSupplyValueBox.add(self.__maxSupplyLabel)
-        maxSupplyValueBox.add(self.__maxSupplyQuoteCurrencySymbolLabel)
-        maxSupplyBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 10)
-        maxSupplyBox.add(self.__maxSupplyNameLabel)
-        maxSupplyBox.add(maxSupplyValueBox)
-
-        supplyInfosBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 60)
-        supplyInfosBox.add(rankBox)
-        supplyInfosBox.add(circulatingSupplyBox)
-        supplyInfosBox.add(maxSupplyBox)
-
-        # actions box
-        actionsBox = Gtk.Box(halign = Gtk.Align.CENTER, spacing = 40)
-        actionsBox.add(self.__websiteButton)
-        actionsBox.add(self.__favoriteButton)
-
-        # graph box
-        self.__graphSwitcher = Gtk.StackSwitcher(halign = Gtk.Align.CENTER)
-
-        for name, str in (('day', _('Day')),
-                          ('month', _('Month')),
-                          ('year', _('Year')),
-                          ('alltime', _('All'))):
-            button = Gtk.ToggleButton(sensitive = False)
-            button.name = name
-            button.handlerID = button.connect('toggled', self.__graphSwitcherButtonToggledEvent)
-
-            buttonBox = Gtk.Box(spacing = 8, border_width = 4, halign = Gtk.Align.CENTER)
-            buttonLabel = Gtk.Label.new(str)
-            buttonSpinner = Gtk.Spinner(active = True)
-            button.spinner = buttonSpinner
-
-            buttonBox.add(buttonLabel)
-            buttonBox.add(buttonSpinner)
-            button.add(buttonBox)
-
-            button.set_size_request(100, -1)
-            self.__graphSwitcher.add(button)
-
-        graphBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, halign = Gtk.Align.CENTER, spacing = 30, name = 'graphBox')
-        graphBox.add(self.__graphSwitcher)
-        graphBox.add(self.__graph)
-
-        # main containers
-        infosBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, halign = Gtk.Align.CENTER, name = 'infosBox')
-        infosBox.add(generalInfosBox)
-        infosBox.add(supplyInfosBox)
-
-        self.__infosBoxRevealer = Gtk.Revealer()
-        self.__infosBoxRevealer.add(infosBox)
-        self.__graphBoxRevealer = Gtk.Revealer()
-        self.__graphBoxRevealer.add(graphBox)
-
-        bottomBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, halign = Gtk.Align.CENTER, spacing = 30)
-        bottomBox.add(self.__infosBoxRevealer)
-        bottomBox.add(self.__spinnerInfos)
-        bottomBox.add(self.__graphBoxRevealer)
-
-        mainBox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, halign = Gtk.Align.CENTER, spacing = 40, border_width = 10, name = 'mainBox')
-        mainBox.add(topBox)
-        mainBox.add(bottomBox)
-        mainBox.add(actionsBox)
-
-        self.__revealer = Gtk.Revealer(transition_type = Gtk.RevealerTransitionType.CROSSFADE)
-        self.__revealer.add(mainBox)
-
-        self.add(self.__revealer)
-        self.show_all()
+    def __favoriteChanged (self):
+        """
+            Change favorite icon in view and switcher
+        """
+        currency = self.__mainWindow.getActualCurrency()
+        if currency.favorite is True:
+            self.__currencyFavoriteImageUiObj.set_from_icon_name('starred-symbolic')
+            self.__mainWindow.currencySwitcher.setCurrentFavorite(True)
+        else:
+            self.__currencyFavoriteImageUiObj.set_from_icon_name('non-starred-symbolic')
+            self.__mainWindow.currencySwitcher.setCurrentFavorite(False)
 
     def __favoriteButtonToggledEvent (self, obj = None, data = None):
         """
             When click on favorite button, make currency favorite or remove it
             from favorites
         """
+        if not self.__favoriteIsReady:
+            return
+
         currency = self.__mainWindow.getActualCurrency()
         currency.favorite = not currency.favorite
-
-        if currency.favorite is True:
-            self.__favoriteButtonImage.set_from_icon_name('starred-symbolic', 1)
-            self.__mainWindow.currencySwitcher.actualRow.favoriteImageRevealer.set_reveal_child(True)
-        else:
-            self.__favoriteButtonImage.set_from_icon_name('non-starred-symbolic', 1)
-            self.__mainWindow.currencySwitcher.actualRow.favoriteImageRevealer.set_reveal_child(False)
-
-        self.__mainWindow.currencySwitcher.invalidate_sort()
+        self.__favoriteChanged()
+        self.__mainWindow.currencySwitcher.sort()
 
     def __graphSwitcherButtonToggledEvent (self, obj, data = None):
         """
-            Change the graph period (day / month / year / all time) when click
+            Change the graph period (day / month / year / all) when click
             on button
         """
-        if obj.get_active() is False and self.__actualGraphTime == obj.name:
-            with obj.handler_block(obj.handlerID):
-                obj.set_active(True)
-        else:
-            for child in self.__graphSwitcher.get_children():
-                if child is not obj and child.get_active() is True:
-                    with child.handler_block(child.handlerID):
-                        child.set_active(False)
+        if obj.get_active() is False or self.__actualGraphTime == obj.get_name():
+            return
+        self.__actualGraphTime = obj.get_name()
+        self.__graphReload()
 
-        self.__actualGraphTime = obj.name
+    def __graphReload (self):
+        """
+            Reload graph data with actualGraphTime
+        """
         currency = self.__mainWindow.getActualCurrency()
-        quoteCurrency = self.__mainWindow.getActualQuoteCurrency()
-        nbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(currency.priceUSD, quoteCurrency.priceUSD)
+        quote = self.__mainWindow.getActualQuote()
+        self.__graph.setGraph(currency, quote, self.__actualGraphTime)
 
-        self.__graph.setGraph(getattr(currency, obj.name + 'GraphDataUSD'), obj.name, quoteCurrency, nbDigitsAfterDecimalPoint)
+    def __setChangePercentage (self, uiObj, currencyVal, currencyLastVal, quoteVal, quoteLastVal):
+        if currencyVal is None or currencyLastVal is None or quoteVal is None or quoteLastVal is None:
+            uiObj.set_text('? %')
+            uiObj.set_css_classes([])
+        else:
+            val = currencyVal / quoteVal
+            lastVal = currencyLastVal / quoteLastVal
+            change = round(val / lastVal * 100 - 100, 1)
+
+            if change > 0:
+                changeCss = 'green'
+                changeStr = '+ ' + str(abs(change)) + ' %'
+            elif change < 0:
+                changeCss = 'red'
+                changeStr = '- ' + str(abs(change)) + ' %'
+            else:
+                changeCss = 'grey'
+                changeStr = '0 %'
+
+            uiObj.set_css_classes([changeCss])
+            uiObj.set_text(changeStr)

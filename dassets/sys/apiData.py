@@ -59,20 +59,20 @@ class APIData ():
         """
         bitcoin = self.__mainWindow.currencies['BTC']
         # only one request per loop tick
-        # reload only once month, year and alltime graphs (when the app start)
+        # reload only once month, year and all graphs (when the app start)
 
         if bitcoin.priceUSD is None or self.__loopCounter >= self.__loopAskInfosLast + self.__loopAskInfosInterval:
             if self.__reloadInfos() is not False:
                 self.__loopAskInfosLast += self.__loopAskInfosInterval
-        elif bitcoin.dayGraphDataUSD is None or self.__loopCounter >= self.__loopAskDayCandlesLast + self.__loopAskDayCandlesInterval:
+        elif bitcoin.dayCandlesUSD is None or self.__loopCounter >= self.__loopAskDayCandlesLast + self.__loopAskDayCandlesInterval:
             if self.__reloadCandles('day') is not False:
                 self.__loopAskDayCandlesLast += self.__loopAskDayCandlesInterval
-        elif bitcoin.monthGraphDataUSD is None:
+        elif bitcoin.monthCandlesUSD is None:
             self.__reloadCandles('month')
-        elif bitcoin.yearGraphDataUSD is None:
+        elif bitcoin.yearCandlesUSD is None:
             self.__reloadCandles('year')
-        elif bitcoin.alltimeGraphDataUSD is None:
-            self.__reloadCandles('alltime')
+        elif bitcoin.allCandlesUSD is None:
+            self.__reloadCandles('all')
 
         self.__setRequest('resortCurrencySwitcher')
         self.__setRequest('reloadCurrencyView')
@@ -113,35 +113,29 @@ class APIData ():
 
                 if self.__tooManyRequestsCounter >= self.__tooManyRequestsMaxAlert:
                     errorText = _('Too many requests with current Nomics API key, please take a new one')
-                    self.__mainWindow.networkErrorLabel.set_label(errorText)
-                    self.__mainWindow.networkErrorBarRevealer.set_reveal_child(True)
-                    self.__mainWindow.networkErrorBarSettingsButton.show()
+                    self.__mainWindow.showError(errorText, True)
                 else:
-                    self.__mainWindow.networkErrorBarRevealer.set_reveal_child(False)
+                    self.__mainWindow.hideError()
             else:
                 self.__tooManyRequestsCounter = 0
 
                 if err.code == 401:
                     errorText = _('Unauthorized access to Nomics API, please verify your key')
-                    self.__mainWindow.networkErrorBarSettingsButton.show()
+                    self.__mainWindow.showError(errorText, True)
                 else:
                     errorText = _('HTTP error occurred') + ' (' + str(err.code) + ' - ' + str(err.reason) + ')'
-                    self.__mainWindow.networkErrorBarSettingsButton.hide()
-
-                self.__mainWindow.networkErrorLabel.set_label(errorText)
-                self.__mainWindow.networkErrorBarRevealer.set_reveal_child(True)
+                    self.__mainWindow.showError(errorText)
 
             return False
+
         except urllib.error.URLError as err:
             errorText = _('There is a network problem, please verify your connection')
-            self.__mainWindow.networkErrorBarSettingsButton.hide()
-            self.__mainWindow.networkErrorLabel.set_label(errorText)
-            self.__mainWindow.networkErrorBarRevealer.set_reveal_child(True)
+            self.__mainWindow.showError(errorText)
             return False
 
         # to show for 4sec minimum the too many requests error message
         if self.__tooManyRequestsCounter < self.__tooManyRequestsMaxAlert:
-            self.__mainWindow.networkErrorBarRevealer.set_reveal_child(False)
+            self.__mainWindow.hideError()
         self.__tooManyRequestsCounter = 0
 
         try:
@@ -170,21 +164,15 @@ class APIData ():
             symbol = self.__nomicsIDToSymbol[nomicsID]
             currency = self.__mainWindow.currencies[symbol]
 
-            price = None
             if 'price' in row:
                 price = float(row['price'])
-                if price != currency.priceUSD:
-                    currency.lastPriceUSD = currency.priceUSD
-                currency.priceUSD = price
-
-            if '1d' in row:
-                if price is not None and 'price_change' in row['1d']:
-                    currency.lastDayPriceUSD = price - float(row['1d']['price_change'])
-                if 'volume' in row['1d']:
-                    currency.dayVolumeUSD = float(row['1d']['volume'])
+                if price != 0:
+                    if price != currency.priceUSD:
+                        currency.lastPriceUSD = currency.priceUSD
+                    currency.priceUSD = price
 
             if 'market_cap' in row:
-                currency.marketCapUSD = float(row['market_cap'])
+                currency.marketcapUSD = float(row['market_cap'])
 
             if 'rank' in row:
                 currency.rank = int(row['rank'])
@@ -198,10 +186,27 @@ class APIData ():
             if 'high' in row and 'high_timestamp' in row:
                 currency.athUSD = (float(row['high']), tools.utcToLocal(datetime.datetime.strptime(row['high_timestamp'], '%Y-%m-%dT%H:%M:%SZ')))
 
+            # day infos
+            if '1d' in row:
+                if 'volume' in row['1d']:
+                    currency.dayVolumeUSD = float(row['1d']['volume'])
+
+                # last day
+                if currency.priceUSD is not None and 'price_change' in row['1d']:
+                    dayPriceChangeUSD = float(row['1d']['price_change'])
+                    currency.lastDayPriceUSD = currency.priceUSD - dayPriceChangeUSD
+                if currency.marketcapUSD is not None and 'market_cap_change' in row['1d']:
+                    dayMarketcapChangeUSD = float(row['1d']['market_cap_change'])
+                    currency.lastDayMarketcapUSD = currency.marketcapUSD - dayMarketcapChangeUSD
+
+                if currency.dayVolumeUSD is not None and 'volume_change' in row['1d']:
+                    dayVolumeChangeUSD = float(row['1d']['volume_change'])
+                    currency.lastDayVolumeUSD = currency.dayVolumeUSD - dayVolumeChangeUSD
+
     def __reloadCandles (self, graphName):
         """
             Reload graphs data (timestamps and prices)
-            graphName is one of 'day', 'month', 'year', 'alltime'
+            graphName is one of 'day', 'month', 'year', 'all'
         """
         nomicsIDs = ','.join(self.__nomicsIDToSymbol.keys())
         candlesStartTime = None
@@ -212,7 +217,7 @@ class APIData ():
             candlesStartTime = datetime.datetime.today() - datetime.timedelta(days = 30)
         elif graphName == 'year':
             candlesStartTime = datetime.datetime.today() - datetime.timedelta(days = 365)
-        elif graphName == 'alltime':
+        elif graphName == 'all':
             candlesStartTime = datetime.datetime(2010, 1, 1)
 
         candlesStartTimeStr = tools.datetimeToStr(candlesStartTime)
@@ -243,4 +248,4 @@ class APIData ():
                 dateTime = tools.utcToLocal(datetime.datetime.strptime(value, '%Y-%m-%dT%H:%M:%SZ'))
                 candles.append((dateTime, float(row['prices'][index])))
 
-            setattr(currency, graphName + 'GraphDataUSD', candles)
+            setattr(currency, graphName + 'CandlesUSD', candles)
