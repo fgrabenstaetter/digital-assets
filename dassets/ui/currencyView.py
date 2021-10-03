@@ -54,7 +54,7 @@ class CurrencyView (Gtk.Box):
 
         self.__mainWindow.changeTitle(currency.name + ' (' + currency.symbol + ')')
 
-        self.__currencyLogoUiObj.set_from_resource(PRGM_PATH + 'img/' + currency.symbol + '.svg')
+        self.__currencyLogoUiObj.set_from_resource(PRGM_PATH + 'img/' + currency.symbol + '.png')
         self.__currencyNameUiObj.set_text(currency.name)
         self.__currencySymbolUiObj.set_text(currency.symbol)
 

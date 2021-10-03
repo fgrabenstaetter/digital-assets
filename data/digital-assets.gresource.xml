@@ -1,92 +1,92 @@
 <gresources>
   <gresource prefix="/fr/fgrabenstaetter/digital-assets/">
-    <file compressed="true">ui/mainWindow.ui</file>
-    <file compressed="true">css/mainWindow.css</file>
-    <file compressed="true">img/XRP.svg</file>
-    <file compressed="true">img/TUSD.svg</file>
-    <file compressed="true">img/ETC.svg</file>
-    <file compressed="true">img/XTZ.svg</file>
-    <file compressed="true">img/PAX.svg</file>
-    <file compressed="true">img/DOGE.svg</file>
-    <file compressed="true">img/XMR.svg</file>
-    <file compressed="true">img/RVN.svg</file>
-    <file compressed="true">img/QTUM.svg</file>
-    <file compressed="true">img/TRX.svg</file>
-    <file compressed="true">img/BTC.svg</file>
-    <file compressed="true">img/HOT.svg</file>
-    <file compressed="true">img/ATOM.svg</file>
-    <file compressed="true">img/BCH.svg</file>
-    <file compressed="true">img/EOS.svg</file>
-    <file compressed="true">img/NEO.svg</file>
-    <file compressed="true">img/IOST.svg</file>
-    <file compressed="true">img/MIOTA.svg</file>
-    <file compressed="true">img/XLM.svg</file>
-    <file compressed="true">img/ONT.svg</file>
-    <file compressed="true">img/DCR.svg</file>
-    <file compressed="true">img/ZRX.svg</file>
-    <file compressed="true">img/BAT.svg</file>
-    <file compressed="true">img/DGB.svg</file>
-    <file compressed="true">img/XEM.svg</file>
-    <file compressed="true">img/USDT.svg</file>
-    <file compressed="true">img/ETH.svg</file>
-    <file compressed="true">img/MKR.svg</file>
-    <file compressed="true">img/ZEC.svg</file>
-    <file compressed="true">img/LINK.svg</file>
-    <file compressed="true">img/ADA.svg</file>
-    <file compressed="true">img/VET.svg</file>
-    <file compressed="true">img/NANO.svg</file>
-    <file compressed="true">img/SC.svg</file>
-    <file compressed="true">img/LTC.svg</file>
-    <file compressed="true">img/DASH.svg</file>
-    <file compressed="true">img/WAVES.svg</file>
-    <file compressed="true">img/ZIL.svg</file>
-    <file compressed="true">img/OMG.svg</file>
-    <file compressed="true">img/BNB.svg</file>
-    <file compressed="true">img/BSV.svg</file>
-    <file compressed="true">img/THETA.svg</file>
-    <file compressed="true">img/ICX.svg</file>
-    <file compressed="true">img/USDC.svg</file>
-    <file compressed="true">img/DOT.svg</file>
-    <file compressed="true">img/SOL.svg</file>
-    <file compressed="true">img/UNI.svg</file>
-    <file compressed="true">img/LUNA.svg</file>
-    <file compressed="true">img/BUSD.svg</file>
-    <file compressed="true">img/MATIC.svg</file>
-    <file compressed="true">img/ICP.svg</file>
-    <file compressed="true">img/AVAX.svg</file>
-    <file compressed="true">img/FIL.svg</file>
-    <file compressed="true">img/DAI.svg</file>
-    <file compressed="true">img/AAVE.svg</file>
-    <file compressed="true">img/CAKE.svg</file>
-    <file compressed="true">img/GRT.svg</file>
-    <file compressed="true">img/AXS.svg</file>
-    <file compressed="true">img/KLAY.svg</file>
-    <file compressed="true">img/CRO.svg</file>
-    <file compressed="true">img/ALGO.svg</file>
-    <file compressed="true">img/SHIB.svg</file>
-    <file compressed="true">img/EGLD.svg</file>
-    <file compressed="true">img/LEO.svg</file>
-    <file compressed="true">img/BTT.svg</file>
-    <file compressed="true">img/KSM.svg</file>
-    <file compressed="true">img/AMP.svg</file>
-    <file compressed="true">img/QNT.svg</file>
-    <file compressed="true">img/RUNE.svg</file>
-    <file compressed="true">img/UST.svg</file>
-    <file compressed="true">img/NEAR.svg</file>
-    <file compressed="true">img/HT.svg</file>
-    <file compressed="true">img/CEL.svg</file>
-    <file compressed="true">img/SUSHI.svg</file>
-    <file compressed="true">img/COMP.svg</file>
-    <file compressed="true">img/HNT.svg</file>
-    <file compressed="true">img/CHZ.svg</file>
-    <file compressed="true">img/ENJ.svg</file>
-    <file compressed="true">img/FTM.svg</file>
-    <file compressed="true">img/SNX.svg</file>
-    <file compressed="true">img/KCS.svg</file>
-    <file compressed="true">img/NEXO.svg</file>
-    <file compressed="true">img/ZEN.svg</file>
-    <file compressed="true">img/CHSB.svg</file>
-    <file compressed="true">img/MANA.svg</file>
-    <file compressed="true">img/YFI.svg</file>
+    <file>ui/mainWindow.ui</file>
+    <file>css/mainWindow.css</file>
+    <file>img/XRP.png</file>
+    <file>img/TUSD.png</file>
+    <file>img/ETC.png</file>
+    <file>img/XTZ.png</file>
+    <file>img/PAX.png</file>
+    <file>img/DOGE.png</file>
+    <file>img/XMR.png</file>
+    <file>img/RVN.png</file>
+    <file>img/QTUM.png</file>
+    <file>img/TRX.png</file>
+    <file>img/BTC.png</file>
+    <file>img/HOT.png</file>
+    <file>img/ATOM.png</file>
+    <file>img/BCH.png</file>
+    <file>img/EOS.png</file>
+    <file>img/NEO.png</file>
+    <file>img/IOST.png</file>
+    <file>img/MIOTA.png</file>
+    <file>img/XLM.png</file>
+    <file>img/ONT.png</file>
+    <file>img/DCR.png</file>
+    <file>img/ZRX.png</file>
+    <file>img/BAT.png</file>
+    <file>img/DGB.png</file>
+    <file>img/XEM.png</file>
+    <file>img/USDT.png</file>
+    <file>img/ETH.png</file>
+    <file>img/MKR.png</file>
+    <file>img/ZEC.png</file>
+    <file>img/LINK.png</file>
+    <file>img/ADA.png</file>
+    <file>img/VET.png</file>
+    <file>img/NANO.png</file>
+    <file>img/SC.png</file>
+    <file>img/LTC.png</file>
+    <file>img/DASH.png</file>
+    <file>img/WAVES.png</file>
+    <file>img/ZIL.png</file>
+    <file>img/OMG.png</file>
+    <file>img/BNB.png</file>
+    <file>img/BSV.png</file>
+    <file>img/THETA.png</file>
+    <file>img/ICX.png</file>
+    <file>img/USDC.png</file>
+    <file>img/DOT.png</file>
+    <file>img/SOL.png</file>
+    <file>img/UNI.png</file>
+    <file>img/LUNA.png</file>
+    <file>img/BUSD.png</file>
+    <file>img/MATIC.png</file>
+    <file>img/ICP.png</file>
+    <file>img/AVAX.png</file>
+    <file>img/FIL.png</file>
+    <file>img/DAI.png</file>
+    <file>img/AAVE.png</file>
+    <file>img/CAKE.png</file>
+    <file>img/GRT.png</file>
+    <file>img/AXS.png</file>
+    <file>img/KLAY.png</file>
+    <file>img/CRO.png</file>
+    <file>img/ALGO.png</file>
+    <file>img/SHIB.png</file>
+    <file>img/EGLD.png</file>
+    <file>img/LEO.png</file>
+    <file>img/BTT.png</file>
+    <file>img/KSM.png</file>
+    <file>img/AMP.png</file>
+    <file>img/QNT.png</file>
+    <file>img/RUNE.png</file>
+    <file>img/UST.png</file>
+    <file>img/NEAR.png</file>
+    <file>img/HT.png</file>
+    <file>img/CEL.png</file>
+    <file>img/SUSHI.png</file>
+    <file>img/COMP.png</file>
+    <file>img/HNT.png</file>
+    <file>img/CHZ.png</file>
+    <file>img/ENJ.png</file>
+    <file>img/FTM.png</file>
+    <file>img/SNX.png</file>
+    <file>img/KCS.png</file>
+    <file>img/NEXO.png</file>
+    <file>img/ZEN.png</file>
+    <file>img/CHSB.png</file>
+    <file>img/MANA.png</file>
+    <file>img/YFI.png</file>
   </gresource>
 </gresources>

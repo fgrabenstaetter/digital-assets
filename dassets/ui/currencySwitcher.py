@@ -107,7 +107,7 @@ class CurrencySwitcher ():
         row = CurrencyRowTemplate()
         row.nameUiObj.set_text(currency.name)
         row.symbolUiObj.set_text(currency.symbol)
-        row.logoUiObj.set_from_resource(PRGM_PATH + 'img/' + currency.symbol + '.svg')
+        row.logoUiObj.set_from_resource(PRGM_PATH + 'img/' + currency.symbol + '.png')
 
         if currency.favorite:
             row.favoriteRevealerUiObj.set_reveal_child(True)
