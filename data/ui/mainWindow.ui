@@ -12,6 +12,12 @@
               <object class="GtkToggleButton" id="quoteButton">
                 <child>
                   <object class="GtkBox">
+                    <property name="spacing">10</property>
+                    <child>
+                      <object class="GtkImage" id="quoteButtonLogo">
+                        <property name="pixel-size">20</property>
+                      </object>
+                    </child>
                     <child>
                       <object class="GtkLabel" id="quoteButtonName">
                         <property name="name">quoteButtonName</property>
@@ -39,8 +45,8 @@
                     <child>
                       <object class="GtkScrolledWindow">
                         <property name="propagate-natural-height">true</property>
-                        <property name="min-content-height">220</property>
-                        <property name="max-content-height">220</property>
+                        <property name="min-content-height">200</property>
+                        <property name="max-content-height">200</property>
                         <child>
                           <object class="GtkListBox" id="quoteList">
                           </object>

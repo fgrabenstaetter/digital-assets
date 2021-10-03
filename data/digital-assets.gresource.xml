@@ -2,6 +2,7 @@
   <gresource prefix="/fr/fgrabenstaetter/digital-assets/">
     <file>ui/mainWindow.ui</file>
     <file>css/mainWindow.css</file>
+    <file>img/USD.png</file>
     <file>img/XRP.png</file>
     <file>img/TUSD.png</file>
     <file>img/ETC.png</file>

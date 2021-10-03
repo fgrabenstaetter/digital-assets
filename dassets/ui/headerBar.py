@@ -19,13 +19,14 @@
 
 import gi
 gi.require_version('Gtk', '4.0')
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk, Gdk, Gio
 from dassets.env import *
 from dassets.ui.settingsWindow import SettingsWindow
 
 @Gtk.Template(filename = DATA_DIR + '/ui/quoteRowTemplate.ui')
 class QuoteRowTemplate (Gtk.ListBoxRow):
     __gtype_name__ = 'QuoteRowTemplate'
+    logoUiObj = Gtk.Template.Child('quoteLogo')
     nameUiObj = Gtk.Template.Child('quoteName')
     symbolUiObj = Gtk.Template.Child('quoteSymbol')
 
@@ -43,6 +44,7 @@ class HeaderBar ():
         self.actualSortMethodName = 'rank'
 
         self.__searchButtonUiObj = self.__builder.get_object('searchButton')
+        self.__quoteButtonLogoUiObj = self.__builder.get_object('quoteButtonLogo')
         self.__quoteButtonNameUiObj = self.__builder.get_object('quoteButtonName')
         self.__quoteButtonSymbolUiObj = self.__builder.get_object('quoteButtonSymbol')
 
@@ -70,6 +72,7 @@ class HeaderBar ():
         """
             Change quote button name and symbol labels
         """
+        self.__quoteButtonLogoUiObj.set_from_resource(PRGM_PATH + 'img/' + quote.symbol + '.png')
         self.__quoteButtonNameUiObj.set_text(quote.name)
         self.__quoteButtonSymbolUiObj.set_text(quote.symbol)
 
@@ -148,6 +151,7 @@ class HeaderBar ():
 
         for quote in self.__sortedQuotes():
             row = QuoteRowTemplate()
+            row.logoUiObj.set_from_resource(PRGM_PATH + 'img/' + quote.symbol + '.png')
             row.nameUiObj.set_text(quote.name)
             row.symbolUiObj.set_text(quote.symbol)
             row.quote = quote

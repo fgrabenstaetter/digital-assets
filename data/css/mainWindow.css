@@ -134,7 +134,7 @@
 /* header bar */
 
 #quoteRowTemplate {
-	padding: 0.4em 0.8em;
+	padding: 0.5em 0.8em 0.5em 0.4em;
 }
 
 #rowQuoteName {
@@ -143,7 +143,6 @@
 
 #quoteButtonName {
 	font-weight: bold;
-	margin-right: 0.8em;
 }
 
 /* settings window */

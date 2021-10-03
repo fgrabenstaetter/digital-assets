@@ -3,11 +3,18 @@
     <property name="name">quoteRowTemplate</property>
     <child>
       <object class="GtkBox">
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkImage" id="quoteLogo">
+            <property name="pixel-size">20</property>
+          </object>
+        </child>
         <child>
           <object class="GtkLabel" id="quoteName">
             <property name="name">rowQuoteName</property>
             <property name="hexpand">true</property>
             <property name="xalign">0</property>
+            <property name="wrap">true</property>
           </object>
         </child>
         <child>
