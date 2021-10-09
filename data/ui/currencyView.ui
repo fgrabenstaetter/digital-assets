@@ -235,7 +235,6 @@
                         <property name="spacing">10</property>
                         <child>
                           <object class="GtkLabel" id="currencyAthValue">
-                            <property name="label">. . .</property>
                           </object>
                         </child>
                         <child>

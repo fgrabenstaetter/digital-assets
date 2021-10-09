@@ -239,6 +239,5 @@ class NomicsAPI ():
                 candles.append((dateTime, float(row['prices'][index])))
 
             setattr(currency, graphName + 'CandlesUSD', candles)
-            currency.candlesLastUpdate = time.time()
 
         GLib.idle_add(self.__requestApplicationUpdate)

@@ -43,7 +43,6 @@ class Currency ():
         self.circulatingSupply = None
         self.maxSupply = None
 
-        self.candlesLastUpdate = 0
         # graph data is a list of (object datetime, float price)
         self.dayCandlesUSD = None
         self.monthCandlesUSD = None
@@ -55,7 +54,7 @@ class Currency ():
             Calcululate the ATH price and date for this currency and quote
             @return tuple (ath, date)
         """
-        if quote.symbol == 'USD' and self.athUSD is not None:
+        if quote.symbol == 'USD' and self.athUSD:
             return self.athUSD
 
         # function to calculate ATH only with USD quote currency
@@ -67,9 +66,9 @@ class Currency ():
             # convert max price to ratio and return
             return (max[0], max[1])
 
-        if self.allCandlesUSD is not None and quote.symbol == 'USD':
+        if self.allCandlesUSD and quote.symbol == 'USD':
             return maxUSD()
-        elif self.allCandlesUSD is None or quote.allCandlesUSD is None or self.priceUSD is None or quote.priceUSD is None:
+        elif not self.allCandlesUSD or not quote.allCandlesUSD or not self.priceUSD or not quote.priceUSD:
             return None
 
         actualPrice = self.priceUSD / quote.priceUSD

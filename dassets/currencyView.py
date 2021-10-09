@@ -35,7 +35,6 @@ class CurrencyView ():
 
         self.__actualGraphTime = 'day'
         self.__graph = Graph(self.__builder)
-        self.__graphLastUpdate = 0
 
         self.__discoverNodes()
         self.__initUi()
@@ -175,9 +174,12 @@ class CurrencyView ():
 
         if not ath or not currency.priceUSD or not currency.athUSD:
             if self.__app.currencies['BTC'].allCandlesUSD:
-                # candles loaded but is None
+                # all candles loaded but ATH is None
                 self.__currencyAthValueNode.set_text(_('Undefined'))
                 self.__currencyAthChangeNode.set_text('? %')
+            else: # candles not loaded for now
+                self.__currencyAthValueNode.set_text('. . .')
+                self.__currencyAthChangeNode.set_text('')
         else:
             actualPrice = currency.priceUSD / quote.priceUSD
             athPercentage = round(actualPrice / ath[0] * 100, 1)
@@ -200,20 +202,17 @@ class CurrencyView ():
 
         # change graphSwitcher buttons sensitivity if needed
         periodButton = self.__currencyGraphButtonsNode.get_first_child()
+
         while periodButton:
             candles = getattr(currency, periodButton.get_name() + 'CandlesUSD')
-
             if candles and not periodButton.get_sensitive():
                 periodButton.set_sensitive(True)
                 periodButton.get_first_child().get_first_child().hide() # hide spinner
             elif not candles and periodButton.get_sensitive():
                 periodButton.set_sensitive(False)
-
             periodButton = periodButton.get_next_sibling()
 
-        if currency.candlesLastUpdate != self.__graphLastUpdate:
-            self.__graphLastUpdate = currency.candlesLastUpdate
-            self.__graphReload()
+        self.__graphReload()
 
     ###########
     # PRIVATE #
