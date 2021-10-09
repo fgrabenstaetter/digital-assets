@@ -1,0 +1,148 @@
+<interface>
+  <object class="GtkHeaderBar" id="headerBar">
+    <child>
+      <object class="GtkToggleButton" id="searchButton">
+        <child>
+          <object class="GtkImage">
+            <property name="icon-name">search-symbolic</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <child>
+          <object class="GtkToggleButton" id="sortButton">
+            <child>
+              <object class="GtkImage">
+                <property name="icon-name">view-list-symbolic</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkPopover" id="sortPopover">
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkCheckButton" id="rankButton">
+                    <property name="label" translatable="yes">Rank</property>
+                    <property name="active">true</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="nameButton">
+                    <property name="label" translatable="yes">Name</property>
+                    <property name="group">rankButton</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="changeButton">
+                    <property name="label" translatable="yes">Change</property>
+                    <property name="group">rankButton</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="volumeButton">
+                    <property name="label" translatable="yes">Volume</property>
+                    <property name="group">rankButton</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="athButton">
+                    <property name="label" translatable="yes">ATH</property>
+                    <property name="group">rankButton</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <child>
+          <object class="GtkToggleButton" id="quoteButton">
+            <child>
+              <object class="GtkBox">
+                <property name="spacing">10</property>
+                <child>
+                  <object class="GtkImage" id="quoteButtonLogo">
+                    <property name="pixel-size">20</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="quoteButtonName">
+                    <property name="name">quoteButtonName</property>
+                    <property name="label"></property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="quoteButtonSymbol">
+                    <property name="label"></property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkPopover" id="quotePopover">
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkSearchEntry" id="quoteSearch">
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow">
+                    <property name="propagate-natural-height">true</property>
+                    <property name="min-content-height">200</property>
+                    <property name="max-content-height">200</property>
+                    <child>
+                      <object class="GtkListBox" id="quoteList">
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child type="end">
+      <object class="GtkBox">
+        <child>
+          <object class="GtkToggleButton" id="menuButton">
+            <child>
+              <object class="GtkImage">
+                <property name="icon-name">open-menu-symbolic</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkPopoverMenu" id="menuPopover">
+            <property name="menu-model">menu</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <menu id="menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Settings</attribute>
+        <attribute name="action">app.settings</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">About</attribute>
+        <attribute name="action">app.about</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

@@ -1,7 +1,17 @@
 <gresources>
   <gresource prefix="/fr/fgrabenstaetter/digital-assets/">
-    <file>ui/mainWindow.ui</file>
-    <file>css/mainWindow.css</file>
+  <!-- don't put UI template files here otherwise they will not be able to work in code -->
+    <file>ui/application.ui</file>
+    <file>ui/headerBar.ui</file>
+    <file>ui/currencyView.ui</file>
+    <file>ui/settingsWindow.ui</file>
+
+    <file>css/global.css</file>
+    <file>css/headerBar.css</file>
+    <file>css/currencySwitcher.css</file>
+    <file>css/currencyView.css</file>
+    <file>css/settingsWindow.css</file>
+
     <file>img/USD.png</file>
     <file>img/XRP.png</file>
     <file>img/TUSD.png</file>

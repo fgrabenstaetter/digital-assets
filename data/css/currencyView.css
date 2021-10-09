@@ -3,32 +3,12 @@
 	LICENSE: GPL 3.0
 */
 
-/* general */
-
-.green {
-	color: #66BB6A;
-}
-
-.red {
-	color: #EF5350;
-}
-
-.grey {
-	color: currentColor;
-}
-
-.quote {
-	opacity: 0.8;
-}
-
-/* currency view */
-
 #errorBarText {
 	font-weight: bold;
 	font-size: 1.1em;
 }
 
-#currencyMain {
+#currencyView {
 	padding: 3em;
 }
 
@@ -115,52 +95,4 @@
 
 #day {
 	min-width: 60px;
-}
-
-/* currency switcher */
-
-#currencyRowTemplate {
-	padding: 0.8em;
-}
-
-#rowCurrencyName {
-	font-weight: bold;
-}
-
-#currencySearch {
-	padding: 0.4em;
-}
-
-/* header bar */
-
-#quoteRowTemplate {
-	padding: 0.5em 0.8em 0.5em 0.4em;
-}
-
-#rowQuoteName {
-	font-weight: bold;
-}
-
-#quoteButtonName {
-	font-weight: bold;
-}
-
-/* settings window */
-
-#settingsWindowMainBox {
-	padding: 1.6em;
-}
-
-#settingsApiKey {
-	margin-right: 2em;
-}
-
-#settingsApiKeyInfos {
-	padding: 1em 1em 0.4em 1em;
-}
-
-#settingsApiKeyInfosText {
-	color: alpha(currentColor, 0.7);
-	font-size: 0.9em;
-	margin-right: 2em;
 }

@@ -1,0 +1,16 @@
+/*
+	AUTHOR: François Grabenstaetter
+	LICENSE: GPL 3.0
+*/
+
+#currencySearch {
+	padding: 0.4em;
+}
+
+#currencyRowTemplate {
+	padding: 0.8em;
+}
+
+#rowCurrencyName {
+	font-weight: bold;
+}

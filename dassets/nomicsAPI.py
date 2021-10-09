@@ -17,22 +17,15 @@
  along with Digital Assets. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from dassets.sys import currencies, tools
-from dassets.sys.settings import Settings
+from dassets import currencies, tools
 from collections.abc import Iterable
-import urllib.request, urllib.error, threading, json, random, datetime
+import urllib.request, urllib.error, threading, json, datetime
 
-class APIData ():
+class NomicsAPI ():
 
-    def __init__ (self, mainWindow):
-        """
-            Init APIData
-        """
-        self.__mainWindow = mainWindow
-        self.__settings = Settings()
+    def __init__ (self, app):
+        self.__app = app
         self.__APIUrl = 'https://api.nomics.com/v1/'
-        self.__APIKey = self.__settings.loadNomicsAPIKey()
-        self.__thread = None
 
         self.__loopCounter = 0
         self.__loopInterval = 2 # each 2 seconds
@@ -44,7 +37,7 @@ class APIData ():
         self.__tooManyRequestsMaxAlert = 3
 
         self.__nomicsIDToSymbol = {}
-        for cur in self.__mainWindow.currencies.values():
+        for cur in self.__app.currencies.values():
             self.__nomicsIDToSymbol[cur.nomicsID] = cur.symbol
 
         self.__loop()
@@ -54,24 +47,21 @@ class APIData ():
     ###########
 
     def __reloadData (self):
-        """
-            API calls and currencies data load
-        """
-        bitcoin = self.__mainWindow.currencies['BTC']
+        bitcoin = self.__app.currencies['BTC']
         # only one request per loop tick
         # reload only once month, year and all graphs (when the app start)
 
-        if bitcoin.priceUSD is None or self.__loopCounter >= self.__loopAskInfosLast + self.__loopAskInfosInterval:
-            if self.__reloadInfos() is not False:
+        if not bitcoin.priceUSD or self.__loopCounter >= self.__loopAskInfosLast + self.__loopAskInfosInterval:
+            if self.__reloadInfos():
                 self.__loopAskInfosLast += self.__loopAskInfosInterval
-        elif bitcoin.dayCandlesUSD is None or self.__loopCounter >= self.__loopAskDayCandlesLast + self.__loopAskDayCandlesInterval:
-            if self.__reloadCandles('day') is not False:
+        elif not bitcoin.dayCandlesUSD or self.__loopCounter >= self.__loopAskDayCandlesLast + self.__loopAskDayCandlesInterval:
+            if self.__reloadCandles('day'):
                 self.__loopAskDayCandlesLast += self.__loopAskDayCandlesInterval
-        elif bitcoin.monthCandlesUSD is None:
+        elif not bitcoin.monthCandlesUSD:
             self.__reloadCandles('month')
-        elif bitcoin.yearCandlesUSD is None:
+        elif not bitcoin.yearCandlesUSD:
             self.__reloadCandles('year')
-        elif bitcoin.allCandlesUSD is None:
+        elif not bitcoin.allCandlesUSD:
             self.__reloadCandles('all')
 
         self.__setRequest('resortCurrencySwitcher')
@@ -79,26 +69,24 @@ class APIData ():
         self.__loopCounter += 1
 
     def __loop (self):
-        """
-            Start the API call loop
-        """
-        def funcWrapper():
+        # Reload the Nomics API Key
+        self.__APIKey = self.__app.settings.loadNomicsAPIKey()
+
+        def threadFun():
             self.__reloadData()
             self.__loop()
 
-        # Reload the Nomics API Key
-        self.__APIKey = self.__settings.loadNomicsAPIKey()
         # Set a new timeout
-        self.__thread = threading.Timer(self.__loopInterval, funcWrapper)
+        self.__thread = threading.Timer(self.__loopInterval, threadFun)
         self.__thread.daemon = True
         self.__thread.start()
 
     def __setRequest (self, str):
         """
-            Reload actual currency view values
+            Tell the (other) main thread to do an action
         """
-        if str in self.__mainWindow.apiDataRequests.keys():
-            self.__mainWindow.apiDataRequests[str] = True
+        if str in self.__app.nomicsAPIRequests.keys():
+            self.__app.nomicsAPIRequests[str] = True
 
     def __apiRequest (self, path):
         """
@@ -113,29 +101,29 @@ class APIData ():
 
                 if self.__tooManyRequestsCounter >= self.__tooManyRequestsMaxAlert:
                     errorText = _('Too many requests with current Nomics API key, please take a new one')
-                    self.__mainWindow.showError(errorText, True)
+                    self.__app.showError(errorText, True)
                 else:
-                    self.__mainWindow.hideError()
+                    self.__app.hideError()
             else:
                 self.__tooManyRequestsCounter = 0
 
                 if err.code == 401:
                     errorText = _('Unauthorized access to Nomics API, please verify your key')
-                    self.__mainWindow.showError(errorText, True)
+                    self.__app.showError(errorText, True)
                 else:
                     errorText = _('HTTP error occurred') + ' (' + str(err.code) + ' - ' + str(err.reason) + ')'
-                    self.__mainWindow.showError(errorText)
+                    self.__app.showError(errorText)
 
             return False
 
         except urllib.error.URLError as err:
             errorText = _('There is a network problem, please verify your connection')
-            self.__mainWindow.showError(errorText)
+            self.__app.showError(errorText)
             return False
 
         # to show for 4sec minimum the too many requests error message
         if self.__tooManyRequestsCounter < self.__tooManyRequestsMaxAlert:
-            self.__mainWindow.hideError()
+            self.__app.hideError()
         self.__tooManyRequestsCounter = 0
 
         try:
@@ -152,7 +140,7 @@ class APIData ():
         """
         nomicsIDs = ','.join(self.__nomicsIDToSymbol.keys())
         dataInfos = self.__apiRequest('currencies/ticker?interval=1d&ids=' + nomicsIDs)
-        if dataInfos is False or not isinstance(dataInfos, Iterable):
+        if not dataInfos or not isinstance(dataInfos, Iterable):
             return False
 
         for row in dataInfos:
@@ -161,8 +149,9 @@ class APIData ():
             nomicsID = row['currency']
             if nomicsID not in self.__nomicsIDToSymbol:
                 continue
+
             symbol = self.__nomicsIDToSymbol[nomicsID]
-            currency = self.__mainWindow.currencies[symbol]
+            currency = self.__app.currencies[symbol]
 
             if 'price' in row:
                 price = float(row['price'])
@@ -192,14 +181,14 @@ class APIData ():
                     currency.dayVolumeUSD = float(row['1d']['volume'])
 
                 # last day
-                if currency.priceUSD is not None and 'price_change' in row['1d']:
+                if currency.priceUSD and 'price_change' in row['1d']:
                     dayPriceChangeUSD = float(row['1d']['price_change'])
                     currency.lastDayPriceUSD = currency.priceUSD - dayPriceChangeUSD
-                if currency.marketcapUSD is not None and 'market_cap_change' in row['1d']:
+                if currency.marketcapUSD and 'market_cap_change' in row['1d']:
                     dayMarketcapChangeUSD = float(row['1d']['market_cap_change'])
                     currency.lastDayMarketcapUSD = currency.marketcapUSD - dayMarketcapChangeUSD
 
-                if currency.dayVolumeUSD is not None and 'volume_change' in row['1d']:
+                if currency.dayVolumeUSD and 'volume_change' in row['1d']:
                     dayVolumeChangeUSD = float(row['1d']['volume_change'])
                     currency.lastDayVolumeUSD = currency.dayVolumeUSD - dayVolumeChangeUSD
 
@@ -219,10 +208,13 @@ class APIData ():
             candlesStartTime = datetime.datetime.today() - datetime.timedelta(days = 365)
         elif graphName == 'all':
             candlesStartTime = datetime.datetime(2010, 1, 1)
+        else:
+            return False
 
         candlesStartTimeStr = tools.datetimeToStr(candlesStartTime)
         candlesData = self.__apiRequest('currencies/sparkline?start=' + candlesStartTimeStr + '&ids=' + nomicsIDs)
-        if candlesData is False or not isinstance(candlesData, Iterable):
+
+        if not candlesData or not isinstance(candlesData, Iterable):
             return False
 
         for row in candlesData:
@@ -234,7 +226,7 @@ class APIData ():
                 continue
 
             symbol = self.__nomicsIDToSymbol[nomicsID]
-            currency = self.__mainWindow.currencies[symbol]
+            currency = self.__app.currencies[symbol]
 
             if 'timestamps' not in row \
                     or 'prices' not in row \

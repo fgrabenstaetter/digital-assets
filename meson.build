@@ -1,10 +1,10 @@
-project('digital-assets', version: '1.2.0', meson_version: '>= 0.50.0')
+project('digital-assets', version: '1.2.0')
 
 pymod = import('python')
 pyins = pymod.find_installation('python3')
 dependency('glib-2.0')
-dependency('gtk+-3.0', version: '>=3.20')
-dependency('gobject-introspection-1.0', version: '>=1.56')
+dependency('gtk4')
+dependency('gobject-introspection-1.0')
 dependency('py3cairo')
 
 PRGM_PATH = '/fr/fgrabenstaetter/digital-assets/'
@@ -19,7 +19,6 @@ LOCALE_DIR = join_paths(get_option('prefix'), get_option('localedir'))
 conf = configuration_data()
 conf.set('PYTHON_DIR', PYTHON_DIR)
 conf.set('LOCALE_DIR', LOCALE_DIR)
-conf.set('LOCALE_DOMAIN', meson.project_name())
 conf.set('DATA_DIR', join_paths(DATA_DIR, meson.project_name()))
 conf.set('PRGM_VERSION', meson.project_version())
 conf.set('PRGM_NAME', meson.project_name())
@@ -28,7 +27,7 @@ conf.set('PRGM_PATH', PRGM_PATH)
 conf.set('APP_ID', APP_ID)
 
 # Configure and install exec file
-configure_file(input: meson.project_name() + '.in',
+configure_file(input: join_paths(PYTHON_PACKAGE_NAME, meson.project_name() + '.in'),
                output: meson.project_name(),
                configuration: conf)
 install_data(join_paths(meson.current_build_dir(), meson.project_name()),
@@ -44,6 +43,6 @@ install_data(join_paths(meson.current_build_dir(), 'env.py'),
 # Install the python package
 install_subdir(PYTHON_PACKAGE_NAME,
                install_dir: PYTHON_DIR,
-               exclude_files: ['env.in'])
+               exclude_files: ['env.in', meson.project_name() + '.in'])
 
 subdir('data')

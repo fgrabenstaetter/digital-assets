@@ -37,7 +37,7 @@ def beautifyNumber (number):
 
     for char in numberStr:
         newNumberStr = char + newNumberStr
-        if canPutSpace is True:
+        if canPutSpace:
             i += 1
             if (i % 3) == 0:
                 newNumberStr = ' ' + newNumberStr
@@ -64,12 +64,6 @@ def datetimeToStr (dt):
                                         str(dt.minute).zfill(2),
                                         str(dt.second).zfill(2))
     return dtStr
-
-def print_warning (str):
-    """
-        Print warning message followed by the str string and continue the app
-    """
-    print(' >>> WARNING: ' + str)
 
 def utcToLocal (dt):
     return dt.replace(tzinfo = datetime.timezone.utc).astimezone(tz = None)

@@ -4,3 +4,4 @@ build*
 flatpak
 *.compiled
 tags
+*.mo

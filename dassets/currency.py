@@ -17,16 +17,9 @@
  along with Digital Assets. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import gi
-gi.require_version('Gtk', '4.0')
-from gi.repository import Gtk
-
 class Currency ():
 
     def __init__ (self, name, symbol, nomicsID, websiteURL):
-        """
-            Init Currency
-        """
         self.name = name
         self.symbol = symbol
         self.nomicsID = nomicsID
@@ -34,7 +27,7 @@ class Currency ():
         self.favorite = False
 
         self.priceUSD = None
-        self.lastPriceUSD = None # useful to know if price has up or down since last price
+        self.lastPriceUSD = None # to know if price has go up/down since last price
 
         self.rank = None
         self.marketcapUSD = None
@@ -58,8 +51,7 @@ class Currency ():
 
     def calculateAth (self, quote):
         """
-            Calcululate the ATH price and date for the self currency
-            compared to the quote
+            Calcululate the ATH price and date for this currency and quote
             @return tuple (ath, date)
         """
         if quote.symbol == 'USD' and self.athUSD is not None:

@@ -26,12 +26,6 @@ test('Validating the gschema file',
      glib_compile_schemas,
      args: ['--strict', '--dry-run', meson.current_source_dir()])
 
-# Install locale files
-install_subdir('locale',
-               install_dir: LOCALE_DIR,
-               strip_directory: true,
-               exclude_files: ['fr/LC_MESSAGES/' + meson.project_name() + '.po'])
-
 # Install the desktop file
 desktop_file_install = find_program('desktop-file-install')
 run_command(desktop_file_install, meson.project_name() + '.desktop')
@@ -74,3 +68,5 @@ run_command('gtk-update-icon-cache', '-qtf', join_paths(DATA_DIR, 'icons/hicolor
 install_data('ui/currencyRowTemplate.ui',
              'ui/quoteRowTemplate.ui',
              install_dir: join_paths(DATA_DIR, meson.project_name() + '/ui'))
+
+subdir('po')

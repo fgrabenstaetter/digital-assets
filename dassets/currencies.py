@@ -92,7 +92,7 @@ def getCurrencies ():
         ('Amp', 'AMP', 'AMP2' , 'https://amptoken.org/'),
         ('Quant', 'QNT', 'QNT' , 'https://www.quant.network/'),
         ('THORChain', 'RUNE', 'RUNE' , 'https://thorchain.org/'),
-        ('TerraUSD', 'UST', 'UST2' , 'https://www.terra.money/'),
+        ('TerraUSD', 'UST', 'UST' , 'https://www.terra.money/'),
         ('Near', 'NEAR', 'NEAR' , 'https://near.org/'),
         ('Huobi Token', 'HT', 'HT' , 'https://www.huobi.com/'),
         ('Celsius Network', 'CEL', 'CEL' , 'https://celsius.network/'),

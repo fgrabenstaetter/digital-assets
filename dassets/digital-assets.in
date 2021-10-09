@@ -20,13 +20,19 @@
 
 import gi
 gi.require_version('Gtk', '4.0')
+
+import sys, gettext, locale
 from gi.repository import Gtk, Gio
-import sys, gettext
+from dassets.application import Application
+
+gettext.install('@PRGM_NAME@', '@LOCALE_DIR@')
+gettext.bindtextdomain('@PRGM_NAME@', '@LOCALE_DIR@')
+gettext.textdomain('@PRGM_NAME@')
+locale.bindtextdomain('@PRGM_NAME@', '@LOCALE_DIR@')
+locale.textdomain('@PRGM_NAME@')
 
 # be sure the package is found
 sys.path.append('@PYTHON_DIR@')
-gettext.install('@LOCALE_DOMAIN@', '@LOCALE_DIR@')
-from dassets.ui.application import Application
 
 resource = Gio.Resource.load('@DATA_DIR@' + '/@PRGM_NAME@.gresource')
 Gio.resources_register(resource)

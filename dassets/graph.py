@@ -17,26 +17,21 @@
  along with Digital Assets. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import gi
-gi.require_version('Gtk', '4.0')
-from gi.repository import Gtk, Gdk, cairo
-from dassets.sys import tools
+from gi.repository import cairo
+from dassets import tools
 import math, datetime
 
 class Graph ():
 
     def __init__ (self, builder):
-        """
-            Init Graph
-        """
         self.__builder = builder
-        self.__uiObj = self.__builder.get_object('currencyGraphDrawingArea')
-        self.__uiObj.set_draw_func(self.__render)
+        self.__node = self.__builder.get_object('currencyGraphDrawingArea')
+        self.__node.set_draw_func(self.__render)
 
         self.__textBorderSpace = 10
-        self.__padding = {'top': 40, 'right': 20, 'bottom': 60, 'left': 90}
-        self.__candles = None
+        self.__padding = { 'top': 40, 'right': 20, 'bottom': 60, 'left': 90 }
         self.__graphInfos = {}
+        self.__candles = None
         self.__quote = None
 
     def setGraph (self, currency, quote, graphTime):
@@ -46,13 +41,13 @@ class Graph ():
         self.__quote = quote
         currencyCandles = getattr(currency, graphTime + 'CandlesUSD')
 
-        # Change prices to consider quote prices
+        # change prices to consider quote prices
         if quote.symbol == 'USD':
             newCandles = currencyCandles
         else:
             quoteCandles = getattr(quote, graphTime + 'CandlesUSD')
 
-            if currencyCandles is None or quoteCandles is None or len(currencyCandles) == 0 or len(quoteCandles) == 0:
+            if not currencyCandles or not quoteCandles or len(currencyCandles) == 0 or len(quoteCandles) == 0:
                 newCandles = None
             else:
                 newCandles = []
@@ -77,17 +72,17 @@ class Graph ():
                         i2 += 1
 
         self.__candles = newCandles
-        if currency.priceUSD is not None and quote.priceUSD is not None:
+        if currency.priceUSD and quote.priceUSD:
             self.__priceNbDigitsAfterDecimalPoint = tools.bestDigitsNumberAfterDecimalPoint(currency.priceUSD, quote.priceUSD)
 
         # loading graph infos
         minPrice, maxPrice, nbPrices = None, None, 0
 
-        if self.__candles is not None:
+        if self.__candles:
             for gp in self.__candles:
-                if minPrice is None or gp[1] < minPrice:
+                if not minPrice or gp[1] < minPrice:
                     minPrice = gp[1]
-                if maxPrice is None or gp[1] > maxPrice:
+                if not maxPrice or gp[1] > maxPrice:
                     maxPrice = gp[1]
                 nbPrices += 1
 
@@ -96,7 +91,7 @@ class Graph ():
         self.__graphInfos['nbPrices'] = nbPrices
         self.__graphInfos['time'] = graphTime
 
-        self.__uiObj.queue_draw()
+        self.__node.queue_draw()
 
     ###########
     # PRIVATE #
@@ -107,20 +102,20 @@ class Graph ():
             Draw the current graph
         """
         # candles is an array of (timestamp, price)
-        if self.__candles is None or len(self.__candles) < 3:
-            # no data for this period and this currency / quote currency
+        if not self.__candles or len(self.__candles) < 3:
+            # no enough data for this period and this currency / quote currency
             ctx.set_source_rgba(0, 0, 0, 0)
             ctx.fill()
             return
 
-        areaWidth = self.__uiObj.get_size_request()[0] - self.__padding['left'] - self.__padding['right']
-        areaHeight = self.__uiObj.get_size_request()[1] - self.__padding['top'] - self.__padding['bottom']
+        areaWidth = self.__node.get_size_request()[0] - self.__padding['left'] - self.__padding['right']
+        areaHeight = self.__node.get_size_request()[1] - self.__padding['top'] - self.__padding['bottom']
         coords = []
         cnt = 0
 
         # calculate coords and draw dates
         dateTextModulo = math.ceil(self.__graphInfos['nbPrices'] / 8)
-        fontColor = self.__uiObj.get_style_context().get_color()
+        fontColor = self.__node.get_style_context().get_color()
         fontColor.parse('rgba')
         ctx.set_source_rgba(fontColor.red, fontColor.green, fontColor.blue, fontColor.alpha)
         ctx.set_font_size(12)

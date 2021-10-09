@@ -1,0 +1,115 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Digital Assets\n"
+"POT-Creation-Date: 2021-10-07 20:09+0200\n"
+"PO-Revision-Date: 2021-10-07 20:09+0200\n"
+"Last-Translator: François Grabenstaetter <francoisgrabenstaetter@gmail.com>\n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"X-Poedit-Basepath: ../..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SearchPath-0: dassets\n"
+"X-Poedit-SearchPath-1: data/ui\n"
+
+#: dassets/currencyView.py:124 dassets/currencyView.py:135
+#: dassets/currencyView.py:157 dassets/currencyView.py:165
+#: dassets/currencyView.py:186
+msgid "Undefined"
+msgstr ""
+
+#: dassets/currencyView.py:172
+msgid "Unlimited"
+msgstr ""
+
+#: dassets/graph.py:209
+msgid "Hour"
+msgstr ""
+
+#: dassets/graph.py:211 data/ui/currencyView.ui:293
+msgid "Day"
+msgstr ""
+
+#: dassets/graph.py:213 data/ui/currencyView.ui:315
+msgid "Month"
+msgstr ""
+
+#: dassets/graph.py:215 data/ui/currencyView.ui:337
+msgid "Year"
+msgstr ""
+
+#: dassets/graph.py:224
+msgid "Price"
+msgstr ""
+
+#: dassets/nomicsAPI.py:115
+msgid "Too many requests with current Nomics API key, please take a new one"
+msgstr ""
+
+#: dassets/nomicsAPI.py:123
+msgid "Unauthorized access to Nomics API, please verify your key"
+msgstr ""
+
+#: dassets/nomicsAPI.py:126
+msgid "HTTP error occurred"
+msgstr ""
+
+#: dassets/nomicsAPI.py:132
+msgid "There is a network problem, please verify your connection"
+msgstr ""
+
+#: data/ui/application.ui:57 data/ui/headerBar.ui:139
+#: data/ui/settingsWindow.ui:8
+msgid "Settings"
+msgstr ""
+
+#: data/ui/currencyView.ui:102
+msgid "Marketcap"
+msgstr ""
+
+#: data/ui/currencyView.ui:135 data/ui/headerBar.ui:48
+msgid "Volume"
+msgstr ""
+
+#: data/ui/currencyView.ui:172
+msgid "Supply"
+msgstr ""
+
+#: data/ui/currencyView.ui:228 data/ui/headerBar.ui:54
+msgid "ATH"
+msgstr ""
+
+#: data/ui/currencyView.ui:359
+msgid "All"
+msgstr ""
+
+#: data/ui/currencyView.ui:384
+msgid "Website"
+msgstr ""
+
+#: data/ui/headerBar.ui:30
+msgid "Rank"
+msgstr ""
+
+#: data/ui/headerBar.ui:36
+msgid "Name"
+msgstr ""
+
+#: data/ui/headerBar.ui:42
+msgid "Change"
+msgstr ""
+
+#: data/ui/headerBar.ui:143
+msgid "About"
+msgstr ""
+
+#: data/ui/settingsWindow.ui:20
+msgid "Nomics API Key"
+msgstr ""
+
+#: data/ui/settingsWindow.ui:38
+msgid "Please choose a new Nomics API key, as the default one can be overloaded"
+msgstr ""

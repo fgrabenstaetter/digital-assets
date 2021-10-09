@@ -1,0 +1,17 @@
+/*
+	AUTHOR: François Grabenstaetter
+	LICENSE: GPL 3.0
+*/
+
+#quoteButtonName {
+	font-weight: bold;
+}
+
+#quoteRowTemplate {
+	padding: 0.5em 0.8em 0.5em 0.4em;
+}
+
+#rowQuoteName {
+	font-weight: bold;
+}
+

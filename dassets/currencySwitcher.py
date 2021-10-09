@@ -20,123 +20,115 @@
 import gi
 gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk, Gdk
-from dassets.sys import currencies
+from dassets import currencies
 from dassets.env import *
 
 @Gtk.Template(filename = DATA_DIR + '/ui/currencyRowTemplate.ui')
 class CurrencyRowTemplate (Gtk.ListBoxRow):
     __gtype_name__ = 'CurrencyRowTemplate'
-    logoUiObj = Gtk.Template.Child('currencyLogo')
-    nameUiObj = Gtk.Template.Child('currencyName')
-    symbolUiObj = Gtk.Template.Child('currencySymbol')
-    favoriteRevealerUiObj = Gtk.Template.Child('currencyFavoriteRevealer')
+    logoNode = Gtk.Template.Child('currencyLogo')
+    nameNode = Gtk.Template.Child('currencyName')
+    symbolNode = Gtk.Template.Child('currencySymbol')
+    favoriteRevealerNode = Gtk.Template.Child('currencyFavoriteRevealer')
 
 class CurrencySwitcher ():
 
-    def __init__ (self, mainWindow, firstSymbol):
-        """
-            Init CurrencySwitcher
-        """
-        self.__mainWindow = mainWindow
-        self.__builder = self.__mainWindow.builder
-        self.__uiObj = self.__builder.get_object('currencyList')
-        self.__uiObj.set_sort_func(self.__currenciesSort)
-        self.__uiObj.set_filter_func(self.__currenciesFilter)
-        self.__uiObj.connect('row-activated', self.__rowActivatedEvent)
-        self.__currencySearchRevealerUiObj = self.__builder.get_object('currencySearchRevealer')
-        self.__currencySearchUiObj = self.__builder.get_object('currencySearch')
+    def __init__ (self, app):
+        self.__app = app
+        self.__app.addCssProvider('currencySwitcher')
+        self.__node = self.__app.builder.get_object('currencyList')
+        self.__node.set_sort_func(self.__currenciesSort)
+        self.__node.set_filter_func(self.__currenciesFilter)
+        self.__node.connect('row-activated', self.__rowActivated)
         self.actualRow = None
 
-        for symbol in self.__mainWindow.currencies.keys():
-            if symbol != 'USD':
-                self.__addCurrency(self.__mainWindow.currencies[symbol], firstSymbol)
-        self.__currencySearchUiObj.connect('search-changed', self.__searchChangedEvent)
+        self.__currencySearchRevealerNode = self.__app.builder.get_object('currencySearchRevealer')
+        self.__currencySearchNode = self.__app.builder.get_object('currencySearch')
+        self.__currencySearchNode.connect('search-changed', self.__searchChanged)
+
         controllerKey = Gtk.EventControllerKey()
-        self.__currencySearchUiObj.add_controller(controllerKey)
-        controllerKey.connect('key-pressed', self.__searchKeyPressedEvent)
+        self.__currencySearchNode.add_controller(controllerKey)
+        controllerKey.connect('key-pressed', self.__searchKeyPressed)
+
+        # determinate the first currency
+        firstSymbol = 'BTC'
+        lastCurrencySymbol = self.__app.settings.loadLastCurrencySymbol()
+        if lastCurrencySymbol in self.__app.currencies.keys():
+            firstSymbol = lastCurrencySymbol
+
+        for symbol in self.__app.currencies.keys():
+            if symbol != 'USD':
+                self.__addCurrency(self.__app.currencies[symbol], firstSymbol)
 
     def sort (self):
         """
             Sort again all currencies with the current sort method
         """
-        self.__uiObj.invalidate_sort()
+        self.__node.invalidate_sort()
 
     def setCurrentFavorite (self, favorite):
         """
             Make the current row favorite or not
         """
-        self.actualRow.favoriteRevealerUiObj.set_reveal_child(favorite)
+        self.actualRow.favoriteRevealerNode.set_reveal_child(favorite)
 
     def changeSearchVisibility (self, visible):
         """
             Change search entry state to visible or hidden
         """
-        self.__currencySearchUiObj.set_text('')
-        self.__currencySearchRevealerUiObj.set_reveal_child(visible)
-        self.__uiObj.invalidate_filter()
+        self.__currencySearchNode.set_text('')
+        self.__currencySearchRevealerNode.set_reveal_child(visible)
+        self.__node.invalidate_filter()
 
         if visible:
-            self.__currencySearchUiObj.grab_focus()
+            self.__currencySearchNode.grab_focus()
 
     def searchInsertChar (self, char):
-        self.__currencySearchUiObj.insert_text(chr(char), -1)
-        self.__currencySearchUiObj.set_position(-1)
+        self.__currencySearchNode.insert_text(chr(char), -1)
+        self.__currencySearchNode.set_position(-1)
 
     ###########
     # PRIVATE #
     ###########
 
-    def __searchKeyPressedEvent (self, ctrl, keyval, keycode, state):
-        """
-            An key has been pressed in the search entry
-        """
+    def __searchKeyPressed (self, ctrl, keyval, keycode, state):
         if keyval == Gdk.KEY_Escape:
-            self.__mainWindow.headerBar.stopSearch()
+            self.__app.headerBar.setSearch(False)
 
-    def __searchChangedEvent (self, obj, data = None):
-        """
-            Called when the text in currency search entry has changed
-        """
-        self.__uiObj.invalidate_filter()
+    def __searchChanged (self, obj, data = None):
+        self.__node.invalidate_filter()
 
     def __addCurrency (self, currency, firstSymbol):
-        """
-            Add a currency to the currency switcher and activate firstSymbol
-            correponding row
-        """
         row = CurrencyRowTemplate()
-        row.nameUiObj.set_text(currency.name)
-        row.symbolUiObj.set_text(currency.symbol)
-        row.logoUiObj.set_from_resource(PRGM_PATH + 'img/' + currency.symbol + '.png')
+        row.nameNode.set_text(currency.name)
+        row.symbolNode.set_text(currency.symbol)
+        row.logoNode.set_from_resource(IMG_RPATH + currency.symbol + '.png')
 
         if currency.favorite:
-            row.favoriteRevealerUiObj.set_reveal_child(True)
+            row.favoriteRevealerNode.set_reveal_child(True)
 
         row.currencySymbol = currency.symbol
         row.currencyName = currency.name
-        self.__uiObj.append(row)
+        self.__node.append(row)
 
         if currency.symbol == firstSymbol:
             row.activate()
 
-    def __rowActivatedEvent (self, obj, row):
-        """
-            A currency row has been activated
-        """
+    def __rowActivated (self, obj, row):
         lastRow = self.actualRow
         self.actualRow = row
 
-        if lastRow is not row and hasattr(self.__mainWindow, 'currencyView'):
-            self.__mainWindow.currencyView.reload(True)
+        if lastRow is not row and hasattr(self.__app, 'currencyView'):
+            self.__app.currencyView.reload()
 
-        if self.__currencySearchRevealerUiObj.get_reveal_child() is True:
-            self.__mainWindow.headerBar.stopSearch()
+        if self.__currencySearchRevealerNode.get_reveal_child() is True:
+            self.__app.headerBar.setSearch(False)
 
     def __currenciesFilter (self, row):
         """
             Tell if row should be visible or not in the list box
         """
-        searchText = self.__currencySearchUiObj.get_text().lower()
+        searchText = self.__currencySearchNode.get_text().lower()
         if searchText not in row.currencyName.lower() and searchText not in row.currencySymbol.lower():
             return False
 
@@ -146,14 +138,13 @@ class CurrencySwitcher ():
         """
             Sort between currencies row1 and row2
         """
-
-        if self.__currencySearchUiObj.get_text():
+        if self.__currencySearchNode.get_text():
             sortMethodName = 'rank'
         else:
-            sortMethodName = self.__mainWindow.getActualSortMethodName()
-        quote = self.__mainWindow.getActualQuote()
-        cur1 = self.__mainWindow.currencies[row1.currencySymbol]
-        cur2 = self.__mainWindow.currencies[row2.currencySymbol]
+            sortMethodName = self.__app.getActualSortMethodName()
+        quote = self.__app.getActualQuote()
+        cur1 = self.__app.currencies[row1.currencySymbol]
+        cur2 = self.__app.currencies[row2.currencySymbol]
 
         if not cur1.favorite and cur2.favorite:
             return 1

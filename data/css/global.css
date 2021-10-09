@@ -1,0 +1,21 @@
+/*
+	AUTHOR: François Grabenstaetter
+	LICENSE: GPL 3.0
+*/
+
+.green {
+	color: #66BB6A;
+}
+
+.red {
+	color: #EF5350;
+}
+
+.grey {
+	color: currentColor;
+}
+
+.quote {
+	opacity: 0.8;
+}
+

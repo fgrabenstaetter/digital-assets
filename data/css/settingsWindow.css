@@ -1,0 +1,22 @@
+/*
+	AUTHOR: François Grabenstaetter
+	LICENSE: GPL 3.0
+*/
+
+#settingsWindowMainBox {
+	padding: 1.5em 2em;
+}
+
+#settingsApiKey {
+	margin-right: 2em;
+}
+
+#settingsApiKeyInfos {
+	padding: 1em 0.5em 0.5em 0.5em;
+}
+
+#settingsApiKeyInfosText {
+	color: alpha(currentColor, 0.7);
+	font-size: 0.9em;
+	margin-right: 2em;
+}

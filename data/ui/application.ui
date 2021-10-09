@@ -1,0 +1,89 @@
+<interface>
+  <!-- Main Window -->
+  <object class="GtkApplicationWindow" id="window">
+    <property name="default-width">900</property>
+    <property name="default-height">600</property>
+    <property name="icon-name">digital-assets</property>
+    <child>
+      <object class="GtkBox">
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkRevealer" id="currencySearchRevealer">
+                <property name="child">
+                  <object class="GtkSearchEntry" id="currencySearch">
+                    <property name="name">currencySearch</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="min-content-width">220</property>
+                <property name="propagate-natural-height">true</property>
+                <property name="vexpand">true</property>
+                <child>
+                  <object class="GtkListBox" id="currencyList">
+                    <!-- put here all CurrencyRowTemplate -->
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSeparator">
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkInfoBar" id="errorBar">
+                <property name="message-type">error</property>
+                <property name="revealed">false</property>
+                <property name="hexpand">true</property>
+                <child>
+                  <object class="GtkBox">
+                    <child>
+                      <object class="GtkLabel" id="errorBarText">
+                        <property name="hexpand">true</property>
+                        <property name="name">errorBarText</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="errorBarButton">
+                        <property name="label" translatable="yes">Settings</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="currencyViewbox">
+                <property name="propagate-natural-height">true</property>
+                <property name="hscrollbar-policy">GTK_POLICY_NEVER</property>
+                <!-- put here currencyView in child -->
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <!-- AboutDialog Window -->
+  <object class="GtkAboutDialog" id="aboutDialog">
+    <property name="hide-on-close">true</property>
+    <property name="modal">true</property>
+    <property name="logo-icon-name">digital-assets</property>
+    <property name="authors">François Grabenstaetter &lt;francoisgrabenstaetter@gmail.com&gt;</property>
+    <property name="license-type">GTK_LICENSE_GPL_3_0</property>
+    <property name="version">1.2</property>
+    <property name="website">https://gitlab.gnome.org/fgrabenstaetter/digital-assets</property>
+    <property name="website-label">GitLab</property>
+    <property name="copyright">Crypto market cap &amp; pricing data provided by Nomics&#10;https://nomics.com</property>
+    <property name="comments">Cryptocurrencies prices and statistics&#10;BTC:  bc1q4vupl5zwxctn7lwacqdqp4u07gfwj2jsy7ums0&#10;ETH:  0xE7F52826f22B0F48BD045b4f9B61a219A64cb5f8</property>
+  </object>
+</interface>

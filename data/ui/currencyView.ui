@@ -1,0 +1,398 @@
+<interface>
+  <object class="GtkBox" id="currencyView">
+    <property name="name">currencyView</property>
+    <property name="orientation">vertical</property>
+    <property name="spacing">36</property>
+    <property name="halign">GTK_ALIGN_CENTER</property>
+    <child>
+      <object class="GtkBox">
+        <property name="hexpand">true</property>
+        <property name="spacing">32</property>
+        <property name="halign">GTK_ALIGN_CENTER</property>
+        <child>
+          <object class="GtkLabel" id="currencyRank">
+            <property name="name">currencyRank</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkImage" id="currencyLogo">
+            <property name="name">currencyLogo</property>
+            <property name="pixel-size">80</property>
+            <property name="valign">GTK_ALIGN_CENTER</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="valign">GTK_ALIGN_CENTER</property>
+            <property name="spacing">8</property>
+            <child>
+              <object class="GtkLabel" id="currencyName">
+                <property name="name">currencyName</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="currencySymbol">
+                <property name="name">currencySymbol</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="name">currencyBoxPrice</property>
+            <property name="orientation">vertical</property>
+            <property name="valign">GTK_ALIGN_CENTER</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkBox">
+                <child>
+                  <object class="GtkLabel" id="currencyPriceIndicator">
+                    <property name="name">currencyPriceIndicator</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="currencyPrice">
+                    <property name="name">currencyPrice</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="currencyPriceQuote">
+                    <property name="name">currencyPriceQuote</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="spacing">10</property>
+                <child>
+                  <object class="GtkLabel" id="currencyPriceChangePercentage">
+                    <property name="name">currencyPriceChangePercentage</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="currencyPriceChangeValue">
+                    <property name="name">currencyPriceChangeValue</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkRevealer" id="currencyInfosRevealer">
+        <child>
+          <object class="GtkBox">
+            <property name="name">currencyInfos</property>
+            <property name="orientation">vertical</property>
+            <property name="halign">GTK_ALIGN_CENTER</property>
+            <child>
+              <object class="GtkBox">
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="css-classes">infoBox</property>
+                    <property name="hexpand">true</property>
+                    <child>
+                      <object class="GtkLabel" id="currencyMarketcapTitle">
+                        <property name="label" translatable="yes">Marketcap</property>
+                        <property name="css-classes">infoTitle</property>
+                        <property name="xalign">0</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">10</property>
+                        <child>
+                          <object class="GtkLabel" id="currencyMarketcapValue">
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="currencyMarketcapQuote">
+                            <property name="css-classes">quote</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="currencyMarketcapChange">
+                            <property name="name">currencyMarketcapChange</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="css-classes">infoBox</property>
+                    <property name="hexpand">true</property>
+                    <child>
+                      <object class="GtkLabel" id="currencyVolumeTitle">
+                        <property name="label" translatable="yes">Volume</property>
+                        <property name="css-classes">infoTitle</property>
+                        <property name="xalign">0</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">10</property>
+                        <child>
+                          <object class="GtkLabel" id="currencyVolumeValue">
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="currencyVolumeQuote">
+                            <property name="css-classes">quote</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="currencyVolumeChange">
+                            <property name="name">currencyVolumeChange</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="css-classes">infoBox</property>
+                    <property name="hexpand">true</property>
+                    <child>
+                      <object class="GtkLabel" id="currencySuppyTitle">
+                        <property name="label" translatable="yes">Supply</property>
+                        <property name="css-classes">infoTitle</property>
+                        <property name="xalign">0</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkProgressBar" id="currencySupplyBar">
+                        <property name="show-text">true</property>
+                        <property name="name">currencySupplyBar</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">10</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="hexpand">true</property>
+                            <child>
+                              <object class="GtkLabel" id="currencySupplyCirculating">
+                                <property name="name">currencySupplyCirculating</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="currencySupplyCirculatingQuote">
+                                <property name="css-classes">quote</property>
+                                <property name="name">currencySupplyCirculatingQuote</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <child>
+                              <object class="GtkLabel" id="currencySupplyMax">
+                                <property name="name">currencySupplyMax</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="currencySupplyMaxQuote">
+                                <property name="css-classes">quote</property>
+                                <property name="name">currencySupplyMax</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="css-classes">infoBox</property>
+                    <property name="hexpand">true</property>
+                    <child>
+                      <object class="GtkLabel" id="currencyAthTitle">
+                        <property name="label" translatable="yes">ATH</property>
+                        <property name="css-classes">infoTitle</property>
+                        <property name="xalign">0</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">10</property>
+                        <child>
+                          <object class="GtkLabel" id="currencyAthValue">
+                            <property name="label">. . .</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="currencyAthQuote">
+                            <property name="css-classes">quote</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="currencyAthChange">
+                            <property name="name">currencyAthChange</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSpinner" id="currencySpinner">
+        <property name="spinning">true</property>
+        <property name="height-request">64</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkRevealer" id="currencyGraphRevealer">
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="spacing">20</property>
+            <property name="halign">GTK_ALIGN_CENTER</property>
+            <child>
+              <object class="GtkBox" id="currencyGraphButtons">
+                <property name="halign">GTK_ALIGN_CENTER</property>
+                <property name="homogeneous">true</property>
+                <child>
+                  <object class="GtkToggleButton" id="currencyGraphButtonDay">
+                    <property name="name">day</property>
+                    <property name="active">true</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="halign">GTK_ALIGN_CENTER</property>
+                        <property name="spacing">10</property>
+                        <child>
+                          <object class="GtkSpinner">
+                            <property name="spinning">true</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Day</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton">
+                    <property name="name">month</property>
+                    <property name="group">currencyGraphButtonDay</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="halign">GTK_ALIGN_CENTER</property>
+                        <property name="spacing">10</property>
+                        <child>
+                          <object class="GtkSpinner">
+                            <property name="spinning">true</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Month</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton">
+                    <property name="name">year</property>
+                    <property name="group">currencyGraphButtonDay</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="halign">GTK_ALIGN_CENTER</property>
+                        <property name="spacing">10</property>
+                        <child>
+                          <object class="GtkSpinner">
+                            <property name="spinning">true</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Year</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton">
+                    <property name="name">all</property>
+                    <property name="group">currencyGraphButtonDay</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="halign">GTK_ALIGN_CENTER</property>
+                        <property name="spacing">10</property>
+                        <child>
+                          <object class="GtkSpinner">
+                            <property name="spinning">true</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">All</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkDrawingArea" id="currencyGraphDrawingArea">
+                <property name="width-request">600</property>
+                <property name="height-request">250</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="spacing">30</property>
+        <property name="halign">GTK_ALIGN_CENTER</property>
+        <child>
+          <object class="GtkLinkButton" id="currencyWebsite">
+            <property name="label" translatable="yes">Website</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToggleButton" id="currencyFavoriteButton">
+            <child>
+              <object class="GtkImage" id="currencyFavoriteImage">
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
