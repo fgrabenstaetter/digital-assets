@@ -97,7 +97,6 @@ class Application (Gtk.Application):
     def __startup (self, app = None):
         self.builder = self.newBuilder('application')
         self.settings = Settings()
-        self.addCssProvider('global')
         self.run() # emit 'activate'
 
     def __activate (self, app = None):
@@ -105,7 +104,9 @@ class Application (Gtk.Application):
         self.__initActions()
         self.__initWindows()
         self.__initWidgets()
-        self.__initDataThread()
+
+        self.addCssProvider('global')
+        self.__nomicsAPI = NomicsAPI(self)
 
     def __initWindows (self):
         self.__windowNode = self.builder.get_object('window')
@@ -135,22 +136,6 @@ class Application (Gtk.Application):
         self.actionAbout = Gio.SimpleAction.new('about')
         self.actionAbout.connect('activate', actionAboutEvent)
         self.add_action(self.actionAbout)
-
-    def __initDataThread (self):
-        # NomicsAPI requests (to avoid crash due to thread colision)
-        self.nomicsAPIRequests = { 'reloadCurrencyView': False, 'resortCurrencySwitcher': False }
-
-        def __nextRequestsTimer ():
-            if self.nomicsAPIRequests['reloadCurrencyView'] is True:
-                self.nomicsAPIRequests['reloadCurrencyView'] = False
-                self.currencyView.reload()
-            if self.nomicsAPIRequests['resortCurrencySwitcher'] is True:
-                self.nomicsAPIRequests['resortCurrencySwitcher'] = False
-                self.currencySwitcher.sort()
-            return True # keep the timeout interval
-
-        GLib.timeout_add(500, __nextRequestsTimer)
-        self.__nomicsAPI = NomicsAPI(self)
 
     def __initWidgets (self):
         # load widgets

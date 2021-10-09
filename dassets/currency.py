@@ -43,6 +43,7 @@ class Currency ():
         self.circulatingSupply = None
         self.maxSupply = None
 
+        self.candlesLastUpdate = 0
         # graph data is a list of (object datetime, float price)
         self.dayCandlesUSD = None
         self.monthCandlesUSD = None

@@ -17,9 +17,12 @@
  along with Digital Assets. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from dassets import currencies, tools
+from gi.repository import GLib
 from collections.abc import Iterable
-import urllib.request, urllib.error, threading, json, datetime
+import urllib.request, urllib.error
+import threading, time, json, datetime
+from dassets import currencies, tools
+from dassets.settings import Settings
 
 class NomicsAPI ():
 
@@ -40,53 +43,26 @@ class NomicsAPI ():
         for cur in self.__app.currencies.values():
             self.__nomicsIDToSymbol[cur.nomicsID] = cur.symbol
 
-        self.__loop()
+        self.__thread = threading.Thread(target = self.__threadLoop, daemon = True)
+        self.__thread.start()
 
     ###########
     # PRIVATE #
     ###########
 
-    def __reloadData (self):
-        bitcoin = self.__app.currencies['BTC']
-        # only one request per loop tick
-        # reload only once month, year and all graphs (when the app start)
+    # Methods to call only in MAIN thread
 
-        if not bitcoin.priceUSD or self.__loopCounter >= self.__loopAskInfosLast + self.__loopAskInfosInterval:
-            if self.__reloadInfos():
-                self.__loopAskInfosLast += self.__loopAskInfosInterval
-        elif not bitcoin.dayCandlesUSD or self.__loopCounter >= self.__loopAskDayCandlesLast + self.__loopAskDayCandlesInterval:
-            if self.__reloadCandles('day'):
-                self.__loopAskDayCandlesLast += self.__loopAskDayCandlesInterval
-        elif not bitcoin.monthCandlesUSD:
-            self.__reloadCandles('month')
-        elif not bitcoin.yearCandlesUSD:
-            self.__reloadCandles('year')
-        elif not bitcoin.allCandlesUSD:
-            self.__reloadCandles('all')
+    def __requestApplicationUpdate (self):
+        self.__app.currencyView.reload()
+        self.__app.currencySwitcher.sort()
 
-        self.__setRequest('resortCurrencySwitcher')
-        self.__setRequest('reloadCurrencyView')
-        self.__loopCounter += 1
+    # Methods to call only in DATA thread
 
-    def __loop (self):
-        # Reload the Nomics API Key
-        self.__APIKey = self.__app.settings.loadNomicsAPIKey()
-
-        def threadFun():
+    def __threadLoop (self):
+        while True:
+            self.__APIKey = self.__app.settings.loadNomicsAPIKey()
             self.__reloadData()
-            self.__loop()
-
-        # Set a new timeout
-        self.__thread = threading.Timer(self.__loopInterval, threadFun)
-        self.__thread.daemon = True
-        self.__thread.start()
-
-    def __setRequest (self, str):
-        """
-            Tell the (other) main thread to do an action
-        """
-        if str in self.__app.nomicsAPIRequests.keys():
-            self.__app.nomicsAPIRequests[str] = True
+            time.sleep(self.__loopInterval)
 
     def __apiRequest (self, path):
         """
@@ -133,17 +109,37 @@ class NomicsAPI ():
 
         return data
 
+    def __reloadData (self):
+        bitcoin = self.__app.currencies['BTC']
+        # only one request per loop tick
+        # reload only once month, year and all graphs (when the app start)
+
+        if not bitcoin.priceUSD or self.__loopCounter >= self.__loopAskInfosLast + self.__loopAskInfosInterval:
+            if self.__reloadInfos() is not False:
+                self.__loopAskInfosLast += self.__loopAskInfosInterval
+        elif not bitcoin.dayCandlesUSD or self.__loopCounter >= self.__loopAskDayCandlesLast + self.__loopAskDayCandlesInterval:
+            if self.__reloadCandles('day') is not False:
+                self.__loopAskDayCandlesLast += self.__loopAskDayCandlesInterval
+        elif not bitcoin.monthCandlesUSD:
+            self.__reloadCandles('month')
+        elif not bitcoin.yearCandlesUSD:
+            self.__reloadCandles('year')
+        elif not bitcoin.allCandlesUSD:
+            self.__reloadCandles('all')
+
+        self.__loopCounter += 1
+
     def __reloadInfos (self):
         """
             Reload general informations data
             (price, volume, price change, supply, ATH, etc.)
         """
         nomicsIDs = ','.join(self.__nomicsIDToSymbol.keys())
-        dataInfos = self.__apiRequest('currencies/ticker?interval=1d&ids=' + nomicsIDs)
-        if not dataInfos or not isinstance(dataInfos, Iterable):
+        infosData = self.__apiRequest('currencies/ticker?interval=1d&ids=' + nomicsIDs)
+        if not infosData or not isinstance(infosData, Iterable):
             return False
 
-        for row in dataInfos:
+        for row in infosData:
             if 'currency' not in row:
                 continue
             nomicsID = row['currency']
@@ -191,6 +187,8 @@ class NomicsAPI ():
                 if currency.dayVolumeUSD and 'volume_change' in row['1d']:
                     dayVolumeChangeUSD = float(row['1d']['volume_change'])
                     currency.lastDayVolumeUSD = currency.dayVolumeUSD - dayVolumeChangeUSD
+
+        GLib.idle_add(self.__requestApplicationUpdate)
 
     def __reloadCandles (self, graphName):
         """
@@ -241,3 +239,6 @@ class NomicsAPI ():
                 candles.append((dateTime, float(row['prices'][index])))
 
             setattr(currency, graphName + 'CandlesUSD', candles)
+            currency.candlesLastUpdate = time.time()
+
+        GLib.idle_add(self.__requestApplicationUpdate)
