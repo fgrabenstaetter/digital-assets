@@ -2,7 +2,6 @@
   <object class="GtkWindow" id="settingsWindow">
     <property name="resizable">false</property>
     <property name="default-width">500</property>
-    <property name="default-height">250</property>
     <property name="hide-on-close">true</property>
     <property name="modal">true</property>
     <property name="title" translatable="yes">Settings</property>
