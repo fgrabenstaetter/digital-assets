@@ -19,7 +19,7 @@
     <content_rating type="oars-1.0"></content_rating>
     <screenshots>
         <screenshot type="default">
-            <image type="source" width="1052" height="814">https://gitlab.gnome.org/fgrabenstaetter/digital-assets/raw/master/screenshot.png</image>
+            <image type="source">https://gitlab.gnome.org/fgrabenstaetter/digital-assets/raw/master/screenshot.png</image>
         </screenshot>
     </screenshots>
     <releases>
