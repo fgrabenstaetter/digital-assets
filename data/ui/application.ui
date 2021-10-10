@@ -79,7 +79,6 @@
     <property name="logo-icon-name">digital-assets</property>
     <property name="authors">François Grabenstaetter &lt;francoisgrabenstaetter@gmail.com&gt;</property>
     <property name="license-type">GTK_LICENSE_GPL_3_0</property>
-    <property name="version">1.2</property>
     <property name="website">https://gitlab.gnome.org/fgrabenstaetter/digital-assets</property>
     <property name="website-label">GitLab</property>
     <property name="copyright">Crypto market cap &amp; pricing data provided by Nomics&#10;https://nomics.com</property>

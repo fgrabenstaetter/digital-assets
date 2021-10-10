@@ -121,6 +121,7 @@ class Application (Gtk.Application):
         self.__settingsWindow = SettingsWindow(self)
         self.__aboutDialogNode = self.builder.get_object('aboutDialog')
         self.__aboutDialogNode.set_transient_for(self.__windowNode)
+        self.__aboutDialogNode.set_version(PRGM_VERSION)
 
     def __initActions (self):
         def actionSettingsEvent (action = None, data = None):
