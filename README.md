@@ -35,7 +35,7 @@ A Flatpak version is available here: https://flathub.org/apps/details/fr.fgraben
 
 ```bash
 	mkdir build && cd build
-	meson ..
+	meson .. --prefix=/usr/local
 	sudo ninja install
-	digital-assets
+	/usr/local/bin/digital-assets
 ```
