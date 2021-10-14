@@ -274,6 +274,7 @@
               <object class="GtkBox" id="currencyGraphButtons">
                 <property name="halign">GTK_ALIGN_CENTER</property>
                 <property name="homogeneous">true</property>
+                <property name="css-classes">linked</property>
                 <child>
                   <object class="GtkToggleButton" id="currencyGraphButtonDay">
                     <property name="name">day</property>
